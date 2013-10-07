@@ -18,7 +18,7 @@ IUSE="archive crypt +introspection +quvi test"
 RDEPEND="
 	>=dev-libs/glib-2.31:2
 	dev-libs/gmime:2.6
-	>=net-libs/libsoup-gnome-2.30:2.4
+	>=net-libs/libsoup-gnome-2.43:2.4
 	archive? ( >=app-arch/libarchive-2.8.4 )
 	crypt? ( dev-libs/libgcrypt )
 	introspection? ( >=dev-libs/gobject-introspection-0.9.5 )
