@@ -36,13 +36,7 @@ src_prepare() {
 	DOCS="AUTHORS ChangeLog HACKING NEWS README"
 
 	# Don't show KDE standalone settings desktop files in GNOME others menu
-	epatch "${FILESDIR}/${PN}-3.8.0-ignore_kde_standalone.patch"
-
-	# Adapt for gnome-calculator -> gcalctool desktop file rename (from 'master')
-	epatch "${FILESDIR}/${PN}-3.8.0-gnome-calculator.patch"
-
-	# Fix "Others" menu
-	epatch "${FILESDIR}/${PN}-3.8.0-dont-use-OnlyUnallocated-for-sections.patch"
+	epatch "${FILESDIR}/${PN}-3.10.0-ignore_kde_standalone.patch"
 
 	gnome2_src_prepare
 }
