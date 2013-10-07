@@ -41,7 +41,7 @@ RDEPEND="
 	gnome-keyring? ( app-crypt/libsecret )
 	gphoto2? ( >=media-libs/libgphoto2-2.4.7:= )
 	gtk? ( >=x11-libs/gtk+-3.0:3 )
-	http? ( >=net-libs/libsoup-gnome-2.34.0:2.4 )
+	http? ( >=net-libs/libsoup-2.43.0:2.4 )
 	ios? (
 		>=app-pda/libimobiledevice-1.1.0:=
 		>=app-pda/libplist-1:= )
