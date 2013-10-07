@@ -96,12 +96,6 @@ pkg_setup() {
 }
 
 src_prepare() {
-	# Prevent pylint usage by tests, bug #482538
-	sed -i -e 's/ check-pylint//' src/plugins/Makefile.plugins || die
-
-	# Add hack to allow streaming of Vimeo videos (from 3.8 branch)
-	epatch "${FILESDIR}/${P}-vimeo-compat.patch"
-
 	eautoreconf
 	gnome2_src_prepare
 
