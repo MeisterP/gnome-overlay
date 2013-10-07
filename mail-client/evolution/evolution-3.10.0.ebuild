@@ -50,7 +50,6 @@ COMMON_DEPEND="
 	>=net-libs/libsoup-2.43:2.4
 	>=x11-misc/shared-mime-info-0.22
 	>=x11-themes/gnome-icon-theme-2.30.2.1
-	>=dev-libs/libgdata-0.10:=
 	>=net-libs/webkit-gtk-1.10.0
 
 	x11-libs/libSM
