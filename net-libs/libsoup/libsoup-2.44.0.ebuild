@@ -31,12 +31,6 @@ DEPEND="${RDEPEND}
 	>=dev-util/gtk-doc-am-1.10
 	sys-devel/gettext
 	virtual/pkgconfig"
-#	test? (	www-servers/apache[ssl,apache2_modules_auth_digest,apache2_modules_alias,apache2_modules_auth_basic,
-#		apache2_modules_authn_file,apache2_modules_authz_host,apache2_modules_authz_user,apache2_modules_dir,
-#		apache2_modules_mime,apache2_modules_proxy,apache2_modules_proxy_http,apache2_modules_proxy_connect]
-#		dev-lang/php[apache2,xmlrpc]
-#		net-misc/curl
-#		net-libs/glib-networking[ssl])"
 
 src_prepare() {
 	if ! use test; then
@@ -60,5 +54,5 @@ src_configure() {
 		--without-gnome \
 		--without-apache-httpd \
 		$(use_enable introspection) \
-		$(use_with samba ntlm-auth '${EPREFIX}'/usr/bin/ntlm_auth)
+		$(use_with samba)
 }
