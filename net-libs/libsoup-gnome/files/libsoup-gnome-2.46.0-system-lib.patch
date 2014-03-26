@@ -1,36 +1,39 @@
-diff -urN libsoup-2.44.0.old/configure.ac libsoup-2.44.0/configure.ac
---- libsoup-2.44.0.old/configure.ac	2013-09-24 02:21:30.000000000 +0400
-+++ libsoup-2.44.0/configure.ac	2013-10-07 14:03:54.524427669 +0400
-@@ -78,19 +78,25 @@
+diff -ru libsoup-2.46.0.orig/configure.ac libsoup-2.46.0/configure.ac
+--- libsoup-2.46.0.orig/configure.ac	2014-03-25 01:20:11.000000000 +0400
++++ libsoup-2.46.0/configure.ac	2014-03-27 00:11:56.887019040 +0400
+@@ -78,21 +78,26 @@
  dnl *** Checks for glib ***
  dnl ***********************
  
--GLIB_REQUIRED=2.36.0
+-GLIB_REQUIRED=2.38.0
 -AM_PATH_GLIB_2_0($GLIB_REQUIRED,,,gobject gio)
 -if test "$GLIB_LIBS" = ""; then
 -   AC_MSG_ERROR(GLIB $GLIB_REQUIRED or later is required to build libsoup)
 +PKG_PROG_PKG_CONFIG
 +enable_ssl=no
 +AC_ARG_WITH(libsoup-system,
-+   AS_HELP_STRING([--with-libsoup-system], [Use libsoup system library to build(default=no)]),
-+   [with_libsoup_system=$withval], [with_libsoup_system=no])
++    AS_HELP_STRING([--with-libsoup-system], [Use libsoup system library to build(default=no)]),
++    [with_libsoup_system=$withval], [with_libsoup_system=no])
 +if test "$with_libsoup_system" = "no"; then
-+    GLIB_REQUIRED=2.36.0
++    GLIB_REQUIRED=2.38.0
 +    AM_PATH_GLIB_2_0($GLIB_REQUIRED,,,gobject gio)
 +    if test "$GLIB_LIBS" = ""; then
 +        AC_MSG_ERROR(GLIB $GLIB_REQUIRED or later is required to build libsoup)
 +    fi
-+    GLIB_CFLAGS="$GLIB_CFLAGS -DGLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_2_36"
++    GLIB_CFLAGS="$GLIB_CFLAGS -DGLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_2_38"
 +    GLIB_MAKEFILE='$(top_srcdir)/Makefile.glib'
 +    AC_SUBST(GLIB_MAKEFILE)
++    GLIB_TESTS
 +    PKG_CHECK_MODULES(XML, libxml-2.0)
 +    AC_SUBST(XML_CFLAGS)
 +    AC_SUBST(XML_LIBS)
  fi
--GLIB_CFLAGS="$GLIB_CFLAGS -DGLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_2_36"
+-GLIB_CFLAGS="$GLIB_CFLAGS -DGLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_2_38"
 -
 -GLIB_MAKEFILE='$(top_srcdir)/Makefile.glib'
 -AC_SUBST(GLIB_MAKEFILE)
+-
+-GLIB_TESTS
 -
 -PKG_CHECK_MODULES(XML, libxml-2.0)
 -AC_SUBST(XML_CFLAGS)
@@ -39,20 +42,19 @@ diff -urN libsoup-2.44.0.old/configure.ac libsoup-2.44.0/configure.ac
  
  PKG_CHECK_MODULES(SQLITE, sqlite3)
  AC_SUBST(SQLITE_CFLAGS)
-@@ -139,6 +145,10 @@
+@@ -141,6 +146,9 @@
  
  if test $with_gnome != no; then
  	AC_DEFINE(HAVE_GNOME, 1, [Defined if GNOME support is enabled])
-+
-+   if test $with_libsoup_system != no; then
-+       PKG_CHECK_MODULES(LIBSOUP, libsoup-$SOUP_API_VERSION = $VERSION)
-+   fi
++    if test $with_libsoup_system != no; then
++        PKG_CHECK_MODULES(LIBSOUP, libsoup-$SOUP_API_VERSION = $VERSION)
++    fi
  fi
  AC_SUBST(HAVE_GNOME)
  
-diff -urN libsoup-2.44.0.old/libsoup/Makefile.am libsoup-2.44.0/libsoup/Makefile.am
---- libsoup-2.44.0.old/libsoup/Makefile.am	2013-09-23 17:08:20.000000000 +0400
-+++ libsoup-2.44.0/libsoup/Makefile.am	2013-10-07 14:30:52.693289768 +0400
+diff -ru libsoup-2.46.0.orig/libsoup/Makefile.am libsoup-2.46.0/libsoup/Makefile.am
+--- libsoup-2.46.0.orig/libsoup/Makefile.am	2014-03-27 00:11:03.702374811 +0400
++++ libsoup-2.46.0/libsoup/Makefile.am	2014-03-27 00:12:31.472437809 +0400
 @@ -1,14 +1,19 @@
  ## Process this file with automake to produce Makefile.in
  
@@ -71,7 +73,7 @@ diff -urN libsoup-2.44.0.old/libsoup/Makefile.am libsoup-2.44.0/libsoup/Makefile
 +CLEANFILES =
 +
 +if BUILD_LIBSOUP
-+AM_CPPFLAGS += 				\
++AM_CPPFLAGS +=
  	-DG_LOG_DOMAIN=\"libsoup\" 	\
  	-DLOCALEDIR=\"$(localedir)\"	\
  	-I$(top_srcdir)			\
@@ -162,20 +164,19 @@ diff -urN libsoup-2.44.0.old/libsoup/Makefile.am libsoup-2.44.0/libsoup/Makefile
  
  # Core library
  gi_soup_files = \
-@@ -263,20 +283,28 @@
+@@ -262,21 +282,27 @@
+ 	      $(f)))
  
  INTROSPECTION_GIRS += Soup-2.4.gir
- 
 +endif
-+
- if BUILD_LIBSOUP_GNOME
  
+ if BUILD_LIBSOUP_GNOME
 +if BUILD_LIBSOUP
 +SOUP_GIR = Soup-2.4.gir
 +else
 +SOUP_GIR =
 +endif
-+
+ 
  # GNOME extensions
  gi_soup_gnome_files = $(filter-out soup-gnome.h,\
  		          $(libsoupgnomeinclude_HEADERS) \
@@ -195,7 +196,7 @@ diff -urN libsoup-2.44.0.old/libsoup/Makefile.am libsoup-2.44.0/libsoup/Makefile
  SoupGNOME_2_4_gir_FILES = $(addprefix $(srcdir)/,$(gi_soup_gnome_files))
  SoupGNOME_2_4_gir_EXPORT_PACKAGES = libsoup-gnome-2.4
  
-@@ -290,6 +318,6 @@
+@@ -290,6 +316,6 @@
  typelibdir = $(libdir)/girepository-1.0
  typelib_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
  
@@ -203,29 +204,27 @@ diff -urN libsoup-2.44.0.old/libsoup/Makefile.am libsoup-2.44.0/libsoup/Makefile
 +CLEANFILES += $(gir_DATA) $(typelib_DATA) $(BUILT_SOURCES)
  
  endif
-diff -urN libsoup-2.44.0.old/Makefile.am libsoup-2.44.0/Makefile.am
---- libsoup-2.44.0.old/Makefile.am	2013-08-24 20:48:49.000000000 +0400
-+++ libsoup-2.44.0/Makefile.am	2013-10-07 14:00:11.714446657 +0400
-@@ -1,7 +1,11 @@
+diff -ru libsoup-2.46.0.orig/Makefile.am libsoup-2.46.0/Makefile.am
+--- libsoup-2.46.0.orig/Makefile.am	2014-03-27 00:11:03.712374932 +0400
++++ libsoup-2.46.0/Makefile.am	2014-03-27 00:12:55.746731650 +0400
+@@ -1,7 +1,10 @@
  ## Process this file with automake to produce Makefile.in
  ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
  
 -SUBDIRS = libsoup po tests examples docs
 +SUBDIRS = libsoup
-+
 +if BUILD_LIBSOUP
 +SUBDIRS += po tests docs
 +endif
  
  EXTRA_DIST =				\
  	data/effective_tld_names.dat	\
-@@ -16,7 +20,11 @@
+@@ -18,7 +21,10 @@
  
  pkgconfigdir = $(libdir)/pkgconfig
  
 -pkgconfig_DATA = libsoup-2.4.pc
 +pkgconfig_DATA =
-+
 +if BUILD_LIBSOUP
 +pkgconfig_DATA += libsoup-2.4.pc
 +endif
