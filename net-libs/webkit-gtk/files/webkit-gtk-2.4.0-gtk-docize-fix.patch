@@ -1,10 +1,11 @@
---- configure.ac.old	2013-03-02 09:22:53.791750644 +0200
-+++ configure.ac	2013-03-02 09:24:56.725213764 +0200
-@@ -24,6 +24,7 @@
+diff -ru webkitgtk-2.4.0.orig/configure.ac webkitgtk-2.4.0/configure.ac
+--- webkitgtk-2.4.0.orig/configure.ac	2014-03-19 15:10:17.000000000 +0400
++++ webkitgtk-2.4.0/configure.ac	2014-03-27 02:14:13.828213981 +0400
+@@ -27,6 +27,7 @@
  m4_include([Source/autotools/SetupLibtool.m4])
  m4_include([Source/autotools/ReadCommandLineArguments.m4])
  m4_include([Source/autotools/FindDependencies.m4])
 +GTK_DOC_CHECK([1.10])
  m4_include([Source/autotools/SetupCompilerFlags.m4])
  m4_include([Source/autotools/SetupAutoconfHeader.m4])
- 
+ m4_include([Source/autotools/SetupWebKitFeatures.m4])
