@@ -23,11 +23,11 @@ diff -ru libsoup-2.46.0.orig/configure.ac libsoup-2.46.0/configure.ac
 +    GLIB_CFLAGS="$GLIB_CFLAGS -DGLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_2_38"
 +    GLIB_MAKEFILE='$(top_srcdir)/Makefile.glib'
 +    AC_SUBST(GLIB_MAKEFILE)
-+    GLIB_TESTS
 +    PKG_CHECK_MODULES(XML, libxml-2.0)
 +    AC_SUBST(XML_CFLAGS)
 +    AC_SUBST(XML_LIBS)
  fi
++GLIB_TESTS
 -GLIB_CFLAGS="$GLIB_CFLAGS -DGLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_2_38"
 -
 -GLIB_MAKEFILE='$(top_srcdir)/Makefile.glib'
