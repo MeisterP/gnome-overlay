@@ -62,7 +62,7 @@ RDEPEND="
 		>=dev-libs/libgee-0.3:0.8
 		>=x11-libs/gtk+-3:3 )
 	iptc? ( media-libs/libiptcdata )
-	iso? ( >=sys-libs/libosinfo-0.0.2:= )
+	iso? ( >=sys-libs/libosinfo-0.2.9:= )
 	jpeg? ( virtual/jpeg:0 )
 	laptop? ( >=sys-power/upower-0.9 )
 	libsecret? ( >=app-crypt/libsecret-0.5 )
@@ -138,10 +138,6 @@ src_prepare() {
 	# https://bugzilla.gnome.org/show_bug.cgi?id=699408
 	sed -e '\%/libtracker-common/file-utils/has_write_access_or_was_created%,+1 d' \
 		-i tests/libtracker-common/tracker-file-utils-test.c || die
-	# https://bugzilla.gnome.org/show_bug.cgi?id=699410
-	sed -e '\%/libtracker-miner/tracker-password-provider/setting%,+1 d' \
-		-e '\%/libtracker-miner/tracker-password-provider/getting%,+1 d' \
-		-i tests/libtracker-miner/tracker-password-provider-test.c || die
 	# https://bugzilla.gnome.org/show_bug.cgi?id=699412
 	sed -e '/#if HAVE_TRACKER_FTS/,/#endif/ d' \
 		-i tests/libtracker-sparql/tracker-test.c || die
