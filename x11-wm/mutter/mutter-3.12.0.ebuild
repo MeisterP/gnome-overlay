@@ -19,25 +19,26 @@ COMMON_DEPEND="
 	>=x11-libs/pango-1.2[X,introspection?]
 	>=x11-libs/cairo-1.10[X]
 	x11-libs/gdk-pixbuf:2[introspection?]
-	>=x11-libs/gtk+-3.3.7:3[X,introspection?]
+	>=x11-libs/gtk+-3.9.11:3[X,introspection?]
 	>=dev-libs/glib-2.36.0:2
-	>=media-libs/clutter-1.14.3:1.0[introspection?]
-	>=media-libs/cogl-1.15.0:1.0=[introspection?]
+	>=media-libs/clutter-1.15.90:1.0[introspection?]
+	>=media-libs/cogl-1.17.1:1.0=[introspection?]
 	>=media-libs/libcanberra-0.26[gtk3]
 	>=x11-libs/startup-notification-0.7
 	>=x11-libs/libXcomposite-0.2
 	>=gnome-base/gsettings-desktop-schemas-3.7.3[introspection?]
+	>=sys-power/upower-0.99
 
 	x11-libs/libICE
 	x11-libs/libSM
 	x11-libs/libX11
 	x11-libs/libXcursor
-	x11-libs/libXdamage
+	>=x11-libs/libXdamage-1.6.0
 	x11-libs/libXext
-	x11-libs/libXfixes
+	>=x11-libs/libXfixes-1.6.0
 	x11-libs/libXinerama
 	x11-libs/libXrandr
-	x11-libs/libXrender
+	>=x11-libs/libXrender-1.6.0
 	>=x11-libs/libXi-1.7
 
 	gnome-extra/zenity
