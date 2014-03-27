@@ -33,12 +33,12 @@ COMMON_DEPEND="
 	x11-libs/libSM
 	x11-libs/libX11
 	x11-libs/libXcursor
-	>=x11-libs/libXdamage-1.6.0
+	x11-libs/libXdamage
 	x11-libs/libXext
-	>=x11-libs/libXfixes-1.6.0
+	x11-libs/libXfixes
 	x11-libs/libXinerama
 	x11-libs/libXrandr
-	>=x11-libs/libXrender-1.6.0
+	x11-libs/libXrender
 	>=x11-libs/libXi-1.7
 
 	gnome-extra/zenity
