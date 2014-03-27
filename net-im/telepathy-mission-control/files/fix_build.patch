@@ -1,0 +1,21 @@
+diff -ru telepathy-mission-control-5.99.8.orig/mission-control-plugins/account-storage.c telepathy-mission-control-5.99.8/mission-control-plugins/account-storage.c
+--- telepathy-mission-control-5.99.8.orig/mission-control-plugins/account-storage.c	2014-03-19 22:35:53.000000000 +0400
++++ telepathy-mission-control-5.99.8/mission-control-plugins/account-storage.c	2014-03-27 20:11:12.894846369 +0400
+@@ -525,13 +525,14 @@
+ {
+   McpAccountStorageIface *iface = MCP_ACCOUNT_STORAGE_GET_IFACE (storage);
+ 
+-  if (type == NULL)
++  if (type == NULL) {
+     SDEBUG (storage, "%s.%s (if type is stored)", account, parameter);
+-  else
++  }
++  else {
+     SDEBUG (storage, "%s.%s (type '%.*s')", account, parameter,
+         (int) g_variant_type_get_string_length (type),
+         g_variant_type_peek_string (type));
+-
++  }
+   g_return_val_if_fail (iface != NULL, FALSE);
+   g_return_val_if_fail (iface->get_parameter != NULL, FALSE);
+ 

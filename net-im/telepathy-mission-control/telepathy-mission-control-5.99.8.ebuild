@@ -40,6 +40,11 @@ DEPEND="${RDEPEND}
 # upstream doesn't want it enabled everywhere
 #RESTRICT="test"
 
+src_prepare() {
+	epatch "${FILESDIR}"/fix_build.patch
+	eautoreconf
+}
+
 src_configure() {
 	# creds is not available
 	econf --disable-static \
