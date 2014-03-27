@@ -18,7 +18,7 @@ HOMEPAGE="https://live.gnome.org/Evolution http://projects.gnome.org/evolution/"
 # Note: explicitly "|| ( LGPL-2 LGPL-3 )", not "LGPL-2+".
 LICENSE="|| ( LGPL-2 LGPL-3 ) CC-BY-SA-3.0 FDL-1.3+ OPENLDAP"
 SLOT="2.0"
-IUSE="+bogofilter crypt gstreamer highlight kerberos ldap map spamassassin ssl +weather"
+IUSE="+bogofilter crypt gstreamer highlight kerberos ldap map spamassassin ssl +weather +gtkspell"
 if [[ ${PV} = 9999 ]]; then
 	IUSE="${IUSE} doc"
 	KEYWORDS=""
@@ -51,6 +51,7 @@ COMMON_DEPEND="
 	>=x11-misc/shared-mime-info-0.22
 	>=x11-themes/gnome-icon-theme-2.30.2.1
 	>=net-libs/webkit-gtk-2.0.1
+	gtkspell? ( app-text/gtkspell:3 )
 
 	x11-libs/libSM
 	x11-libs/libICE
@@ -150,6 +151,7 @@ src_configure() {
 			--without-nss-libs
 			--without-nss-includes") \
 		$(use_enable weather) \
+		$(use_enable gtkspell) \
 		${myconf}
 }
 
