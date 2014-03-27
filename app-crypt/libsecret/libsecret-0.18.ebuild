@@ -42,11 +42,6 @@ DEPEND="${COMMON_DEPEND}
 	vala? ( $(vala_depend) )"
 
 src_prepare() {
-	# FIXME: disable failing test
-	sed -e '/test_get_sync);/d' \
-		-e '/test_get_async);/d' \
-		-i libsecret/tests/test-service.c || die
-
 	use vala && vala_src_prepare
 	gnome2_src_prepare
 }

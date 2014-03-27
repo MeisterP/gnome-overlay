@@ -46,7 +46,7 @@ COMMON_DEPEND="
 
 	net-libs/farstream:0.2
 	>=net-libs/telepathy-farstream-0.6.0:=
-	>=net-libs/telepathy-glib-0.19.9
+	>=net-libs/telepathy-glib-0.22.0
 	>=net-im/telepathy-logger-0.8.0:=
 
 	app-crypt/gcr
