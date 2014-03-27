@@ -47,6 +47,8 @@ src_configure() {
 	gnome2_src_configure \
 		--disable-static \
 		--disable-installed-tests \
+		--disable-farstream \
+		--disable-logger \
 		$(use_enable debug backtrace) \
 		$(use_enable debug debug-cache) \
 		$(use_enable introspection) \
