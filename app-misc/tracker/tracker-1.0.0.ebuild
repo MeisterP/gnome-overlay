@@ -101,6 +101,7 @@ DEPEND="${RDEPEND}
 	test? (
 		>=dev-libs/dbus-glib-0.82-r1
 		>=sys-apps/dbus-1.3.1[X] )
+	media-libs/libmediaart:0.3
 "
 PDEPEND="nautilus? ( ~gnome-extra/nautilus-tracker-tags-${PV} )"
 
