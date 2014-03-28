@@ -133,8 +133,8 @@ src_prepare() {
 src_configure() {
 	# Do not error out on warnings
 	gnome2_src_configure \
+		--enable-browser-plugin \
 		--enable-man \
-		--disable-jhbuild-wrapper-script \
 		$(use_with bluetooth) \
 		$(use_enable networkmanager) \
 		BROWSER_PLUGIN_DIR="${EPREFIX}"/usr/$(get_libdir)/nsbrowser/plugins
