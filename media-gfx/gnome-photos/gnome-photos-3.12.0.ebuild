@@ -38,8 +38,3 @@ DEPEND="${RDEPEND}
 	>=dev-util/intltool-0.50.1
 	virtual/pkgconfig
 "
-
-src_install() {
-	default
-	rm -r "${D}/usr/share/doc/${PN}" || die
-}
