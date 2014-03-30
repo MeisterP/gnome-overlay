@@ -88,7 +88,6 @@ RDEPEND="${COMMON_DEPEND}
 
 	>=app-accessibility/caribou-0.4.8
 	>=gnome-base/gdm-3.5[introspection]
-	>=gnome-base/libgnomekbd-2.91.4[introspection]
 	media-libs/cogl[introspection]
 	>=sys-apps/accountsservice-0.6.14[introspection]
 	sys-power/upower[introspection]
