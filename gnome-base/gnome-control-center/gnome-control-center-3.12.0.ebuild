@@ -34,7 +34,6 @@ COMMON_DEPEND="
 	>=gnome-base/gsettings-desktop-schemas-3.9.91
 	>=gnome-base/gnome-desktop-3.9.90:3=
 	>=gnome-base/gnome-settings-daemon-3.8.3[colord?,policykit]
-	>=gnome-base/libgnomekbd-2.91.91
 
 	>=dev-libs/libpwquality-1.2.2
 	dev-libs/libxml2:2
