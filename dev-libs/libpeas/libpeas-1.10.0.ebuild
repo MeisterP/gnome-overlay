@@ -5,7 +5,7 @@
 EAPI="5"
 GCONF_DEBUG="no"
 GNOME2_LA_PUNT="yes"
-PYTHON_COMPAT=( python{2_6,2_7,3_2,3_3} )
+PYTHON_COMPAT=( python{2_6,2_7,3_2,3_3,3_4} )
 
 inherit eutils gnome2 multilib python-r1 virtualx
 
@@ -15,13 +15,12 @@ HOMEPAGE="http://developer.gnome.org/libpeas/stable/"
 LICENSE="LGPL-2+"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc ~x86 ~amd64-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~ia64-linux ~x86-linux"
-IUSE="gjs +gtk glade +python seed"
+IUSE="+gtk glade +python seed"
 REQUIRED_USE="python? ( ${PYTHON_REQUIRED_USE} )"
 
 RDEPEND="
 	>=dev-libs/glib-2.32:2
 	>=dev-libs/gobject-introspection-0.10.1
-	gjs? ( >=dev-libs/gjs-1.31.11 )
 	glade? ( >=dev-util/glade-3.9.1:3.10 )
 	gtk? ( >=x11-libs/gtk+-3:3[introspection] )
 	python? (
@@ -51,7 +50,6 @@ src_prepare() {
 
 src_configure() {
 	G2CONF="${G2CONF}
-		$(use_enable gjs)
 		$(use_enable glade glade-catalog)
 		$(use_enable gtk)
 		$(use_enable seed)
