@@ -22,7 +22,6 @@ RDEPEND="!gnome-base/gnome
 	>=gnome-base/gnome-core-libs-${PV}[cups?]
 
 	>=gnome-base/gnome-session-${PV}
-	>=gnome-base/gnome-menus-3.8.0:3
 	>=gnome-base/gnome-settings-daemon-${PV}[cups?]
 	>=gnome-base/gnome-control-center-${PV}[cups?]
 
@@ -32,8 +31,8 @@ RDEPEND="!gnome-base/gnome
 		>=x11-wm/mutter-${PV}
 		>=gnome-base/gnome-shell-${PV} )
 
-	>=x11-themes/gnome-icon-theme-3.9.5
-	>=x11-themes/gnome-icon-theme-symbolic-3.9.5
+	>=x11-themes/gnome-icon-theme-3.12.0
+	>=x11-themes/gnome-icon-theme-symbolic-3.12.0
 	>=x11-themes/gnome-themes-standard-${PV}
 
 	>=x11-terms/gnome-terminal-${PV}
