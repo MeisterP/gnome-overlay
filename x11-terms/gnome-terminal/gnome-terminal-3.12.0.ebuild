@@ -33,6 +33,7 @@ RDEPEND="
 DEPEND="${RDEPEND}
 	|| ( dev-util/gtk-builder-convert <=x11-libs/gtk+-2.24.10:2 )
 	app-text/yelp-tools
+	dev-util/appdata-tools
 	>=dev-util/intltool-0.40
 	>=gnome-base/dconf-0.14.0
 	sys-devel/gettext
