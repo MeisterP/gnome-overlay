@@ -18,6 +18,7 @@ IUSE="server"
 
 RDEPEND="
 	>=dev-libs/glib-2.34:2
+	>=dev-cpp/glibmm-2.34:2
 	>=dev-libs/json-glib-0.14
 	net-libs/libsoup:2.4
 	sys-apps/dbus
