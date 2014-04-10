@@ -116,6 +116,8 @@ DEPEND="${COMMON_DEPEND}
 	virtual/pkgconfig
 	!!=dev-lang/spidermonkey-1.8.2*
 "
+
+# https://bugzilla.gnome.org/show_bug.cgi?id=727948
 pkg_setup() {
 	append-ldflags $(no-as--needed)
 }
@@ -123,6 +125,8 @@ pkg_setup() {
 src_prepare() {
 	# Change favorites defaults, bug #479918
 	epatch "${FILESDIR}/${PN}-defaults.patch"
+	#https://bugzilla.gnome.org/show_bug.cgi?id=727948
+	epatch "${FILESDIR}/${P}-as-needed.patch"
 
 	epatch_user
 
