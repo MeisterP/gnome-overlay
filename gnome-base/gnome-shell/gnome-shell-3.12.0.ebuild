@@ -7,7 +7,7 @@ GCONF_DEBUG="no"
 GNOME2_LA_PUNT="yes"
 PYTHON_COMPAT=( python2_{6,7} )
 
-inherit autotools eutils gnome2 multilib pax-utils python-r1 systemd
+inherit autotools eutils gnome2 multilib pax-utils python-r1 systemd flag-o-matic
 
 DESCRIPTION="Provides core UI functions for the GNOME 3 desktop"
 HOMEPAGE="https://download.gnome.org/sources/gnome-shell/3.11"
@@ -116,8 +116,9 @@ DEPEND="${COMMON_DEPEND}
 	virtual/pkgconfig
 	!!=dev-lang/spidermonkey-1.8.2*
 "
-# libmozjs.so is picked up from /usr/lib while compiling, so block at build-time
-# https://bugs.gentoo.org/show_bug.cgi?id=360413
+pkg_setup() {
+	append-ldflags $(no-as--needed)
+}
 
 src_prepare() {
 	# Change favorites defaults, bug #479918
