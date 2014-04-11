@@ -117,11 +117,6 @@ DEPEND="${COMMON_DEPEND}
 	!!=dev-lang/spidermonkey-1.8.2*
 "
 
-# https://bugzilla.gnome.org/show_bug.cgi?id=727948
-pkg_setup() {
-	append-ldflags $(no-as--needed)
-}
-
 src_prepare() {
 	# Change favorites defaults, bug #479918
 	epatch "${FILESDIR}/${PN}-defaults.patch"
@@ -142,10 +137,6 @@ src_configure() {
 		$(use_with bluetooth) \
 		$(use_enable networkmanager) \
 		BROWSER_PLUGIN_DIR="${EPREFIX}"/usr/$(get_libdir)/nsbrowser/plugins
-}
-
-src_compile() {
-	emake -j1
 }
 
 src_install() {
