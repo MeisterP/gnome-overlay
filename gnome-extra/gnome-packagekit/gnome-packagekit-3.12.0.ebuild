@@ -4,7 +4,7 @@
 
 EAPI="5"
 GCONF_DEBUG="no"
-PYTHON_COMPAT=( python2_{6,7} python3_{2,3} )
+PYTHON_COMPAT=( python2_{6,7} python3_{2,3,4} )
 
 inherit eutils gnome2 python-r1 virtualx
 
