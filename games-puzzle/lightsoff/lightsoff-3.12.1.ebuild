@@ -1,6 +1,6 @@
 # Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/games-puzzle/swell-foop/swell-foop-3.10.1.ebuild,v 1.5 2014/03/09 11:57:51 pacho Exp $
+# $Header: /var/cvsroot/gentoo-x86/games-puzzle/lightsoff/lightsoff-3.10.1.ebuild,v 1.5 2014/03/09 11:57:43 pacho Exp $
 
 EAPI="5"
 GCONF_DEBUG="no"
@@ -8,8 +8,8 @@ VALA_MIN_API_VERSION="0.22"
 
 inherit gnome-games vala
 
-DESCRIPTION="Clear the screen by removing groups of colored and shaped tiles"
-HOMEPAGE="https://wiki.gnome.org/Swell%20Foop"
+DESCRIPTION="Turn off all the lights"
+HOMEPAGE="https://wiki.gnome.org/Lightsoff"
 
 LICENSE="GPL-2+"
 SLOT="0"
@@ -18,8 +18,8 @@ IUSE=""
 
 RDEPEND="
 	dev-libs/glib:2
-	>=media-libs/clutter-1:1.0
-	>=media-libs/clutter-gtk-0.91.6:1.0
+	>=media-libs/clutter-1.14
+	>=media-libs/clutter-gtk-1.4.0
 	>=x11-libs/gtk+-3.10.0:3
 "
 DEPEND="${RDEPEND}

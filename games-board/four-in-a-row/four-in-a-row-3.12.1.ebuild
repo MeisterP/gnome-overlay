@@ -20,7 +20,7 @@ RDEPEND="
 	>=gnome-base/librsvg-2.32.0
 	>=media-libs/libcanberra-0.26[gtk3]
 	sys-libs/zlib
-	>=x11-libs/gtk+-3.4.0:3
+	>=x11-libs/gtk+-3.10.0:3
 "
 DEPEND="${RDEPEND}
 	app-text/yelp-tools
