@@ -5,12 +5,9 @@
 EAPI="5"
 GCONF_DEBUG="no"
 VALA_USE_DEPEND="vapigen"
-VALA_MIN_API_VERSION="0.23.3.1"
+VALA_MIN_API_VERSION="0.24"
 
 inherit linux-info gnome2 vala
-if [[ ${PV} = 9999 ]]; then
-	inherit gnome2-live
-fi
 
 DESCRIPTION="Simple GNOME 3 application to access remote or virtual systems"
 HOMEPAGE="https://live.gnome.org/Design/Apps/Boxes"
@@ -18,11 +15,7 @@ HOMEPAGE="https://live.gnome.org/Design/Apps/Boxes"
 LICENSE="LGPL-2"
 SLOT="0"
 IUSE="bindist"
-if [[ ${PV} = 9999 ]]; then
-	KEYWORDS=""
-else
-	KEYWORDS="~amd64" # qemu-kvm[spice] is 64bit-only
-fi
+KEYWORDS="~amd64" # qemu-kvm[spice] is 64bit-only
 
 # NOTE: sys-fs/* stuff is called via exec()
 RDEPEND="
@@ -51,15 +44,6 @@ DEPEND="${RDEPEND}
 	>=sys-devel/gettext-0.17
 	virtual/pkgconfig
 "
-
-if [[ ${PV} = 9999 ]]; then
-	DEPEND="${DEPEND}
-		$(vala_depend)
-		sys-libs/libosinfo[introspection,vala]
-		app-emulation/libvirt-glib[introspection,vala]
-		net-libs/gtk-vnc[introspection,vala]
-		net-misc/spice-gtk[introspection,vala]"
-fi
 
 pkg_pretend() {
 	linux_config_exists
