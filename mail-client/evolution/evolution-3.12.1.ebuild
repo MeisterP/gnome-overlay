@@ -50,7 +50,7 @@ COMMON_DEPEND="
 	>=net-libs/libsoup-2.43:2.4
 	>=x11-misc/shared-mime-info-0.22
 	>=x11-themes/gnome-icon-theme-2.30.2.1
-	>=net-libs/webkit-gtk-2.0.1
+	>=net-libs/webkit-gtk-2.0.1:3
 	gtkspell? ( app-text/gtkspell:3 )
 
 	x11-libs/libSM
