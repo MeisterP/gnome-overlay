@@ -31,8 +31,6 @@ DEPEND="${RDEPEND}
 "
 
 src_prepare() {
-	# atk: Update and fix metadata (from 'master', backport from Debian), bug #508704
-	epatch "${FILESDIR}/${PN}-0.24.0-atk-metadata.patch"
 	gnome2_src_prepare
 }
 
