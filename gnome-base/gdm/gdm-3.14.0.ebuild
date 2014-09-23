@@ -76,7 +76,7 @@ RDEPEND="${COMMON_DEPEND}
 	>=gnome-base/gnome-shell-3.1.90
 	gnome-extra/polkit-gnome:0
 	x11-apps/xhost
-	x11-themes/gnome-icon-theme-symbolic
+	x11-themes/adwaita-icon-theme
 
 	accessibility? (
 		>=app-accessibility/orca-3.10

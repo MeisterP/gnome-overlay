@@ -85,7 +85,7 @@ COMMON_DEPEND="
 RDEPEND="${COMMON_DEPEND}
 	|| ( ( app-admin/openrc-settingsd sys-auth/consolekit ) >=sys-apps/systemd-31 )
 	>=sys-apps/accountsservice-0.6.30
-	x11-themes/gnome-icon-theme-symbolic
+	x11-themes/adwaita-icon-theme
 	colord? ( >=gnome-extra/gnome-color-manager-3 )
 	cups? (
 		>=app-admin/system-config-printer-gnome-1.3.5

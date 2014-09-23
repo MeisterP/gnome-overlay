@@ -63,9 +63,7 @@ RDEPEND="${COMMON_DEPEND}
 #	dev-util/gtk-doc-am"
 
 PDEPEND="
-	gnome? (
-		>=x11-themes/gnome-icon-theme-1.1.91
-		x11-themes/gnome-icon-theme-symbolic )
+	gnome? ( x11-themes/adwaita-icon-theme )
 	tracker? ( >=gnome-extra/nautilus-tracker-tags-0.12 )
 	previewer? ( >=gnome-extra/sushi-0.1.9 )
 	sendto? ( >=gnome-extra/nautilus-sendto-3.0.1 )

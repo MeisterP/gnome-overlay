@@ -21,7 +21,7 @@ COMMON_DEPEND="
 "
 RDEPEND="${COMMON_DEPEND}
 	gnome-base/gsettings-desktop-schemas
-	x11-themes/gnome-icon-theme-extras
+	x11-themes/adwaita-icon-theme
 	!<gnome-extra/gnome-utils-3.4
 "
 # ${PN} was part of gnome-utils before 3.4

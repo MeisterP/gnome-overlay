@@ -33,7 +33,7 @@ src_prepare() {
 	if use branding; then
 		for i in 16 22 24 32 48; do
 			cp "${WORKDIR}"/tango-gentoo-v1.1/${i}x${i}/gentoo.png \
-			"${S}"/gnome//${i}x${i}/places/start-here.png \
+			"${S}"/Adwaita//${i}x${i}/places/start-here.png \
 			|| die "Copying gentoo logos failed"
 		done
 	fi

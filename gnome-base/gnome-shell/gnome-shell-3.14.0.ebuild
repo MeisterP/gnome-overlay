@@ -97,7 +97,7 @@ RDEPEND="${COMMON_DEPEND}
 	x11-misc/xdg-utils
 
 	media-fonts/dejavu
-	x11-themes/gnome-icon-theme-symbolic
+	x11-themes/adwaita-icon-theme
 
 	i18n? ( >=app-i18n/ibus-1.4.99[dconf(+),gtk3,introspection] )
 	networkmanager? (

@@ -21,11 +21,12 @@ REQUIRED_USE="python? ( ${PYTHON_REQUIRED_USE} )"
 KEYWORDS="~alpha amd64 ~arm ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~ia64-linux ~x86-linux"
 
 # X libs are not needed for OSX (aqua)
+
 COMMON_DEPEND="
 	>=dev-libs/libxml2-2.5.0:2
 	>=dev-libs/glib-2.39.5:2
-	>=x11-libs/gtk+-3.11.6:3[introspection?]
-	>=x11-libs/gtksourceview-3.11.2:3.0[introspection?]
+	>=x11-libs/gtk+-3.14.0:3[introspection?]
+	>=x11-libs/gtksourceview-3.14:3.0[introspection?]
 	>=dev-libs/libpeas-1.7.0[gtk]
 
 	gnome-base/gsettings-desktop-schemas
@@ -49,7 +50,7 @@ COMMON_DEPEND="
 	zeitgeist? ( >=gnome-extra/zeitgeist-0.9.12 )
 "
 RDEPEND="${COMMON_DEPEND}
-	x11-themes/gnome-icon-theme-symbolic
+	x11-themes/adwaita-icon-theme
 "
 DEPEND="${COMMON_DEPEND}
 	app-text/docbook-xml-dtd:4.1.2
@@ -63,10 +64,6 @@ DEPEND="${COMMON_DEPEND}
 # yelp-tools, gnome-common needed to eautoreconf
 
 src_prepare() {
-	# FIXME: Not able to set some metadata
-	sed -e '/g_test_add_func/d' \
-		-i tests/document-loader.c || die
-
 	gnome2_src_prepare
 }
 
