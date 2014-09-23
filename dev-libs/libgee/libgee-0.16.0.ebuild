@@ -5,7 +5,7 @@
 EAPI="5"
 GCONF_DEBUG="no"
 
-inherit gnome2
+inherit gnome2 vala
 
 DESCRIPTION="GObject-based interfaces and classes for commonly used data structures"
 HOMEPAGE="https://wiki.gnome.org/Projects/Libgee"
@@ -13,7 +13,7 @@ HOMEPAGE="https://wiki.gnome.org/Projects/Libgee"
 LICENSE="LGPL-2.1+"
 SLOT="0.8"
 KEYWORDS="alpha amd64 ~arm ia64 ppc ppc64 ~sh sparc x86 ~x86-linux"
-IUSE="+introspection"
+IUSE="+introspection +vala"
 
 # FIXME: add doc support, requires valadoc
 RDEPEND="
@@ -25,8 +25,10 @@ DEPEND="${RDEPEND}
 "
 
 src_configure() {
+	vala_src_prepare
 	DOCS="AUTHORS ChangeLog* MAINTAINERS NEWS README"
 	gnome2_src_configure \
-		$(use_enable introspection)
-		VALAC="$(type -P false)"
+		$(use_enable introspection) \
+		$(use_enable vala)
 }
+

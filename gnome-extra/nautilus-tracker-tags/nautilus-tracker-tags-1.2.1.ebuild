@@ -35,7 +35,5 @@ pkg_setup() {
 }
 
 src_prepare() {
-	cp "${FILESDIR}/0.12.5-Makefile" Makefile || die "cp failed"
-	# config.h is not used, but is included in every source file...
 	sed -e 's:#include "config.h"::' -i *.c *.h || die "sed failed"
 }
