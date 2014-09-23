@@ -1,0 +1,16 @@
+Общие подкаталоги: uhttpmock-0.3.1.old/autom4te.cache и uhttpmock-0.3.1/autom4te.cache
+Общие подкаталоги: uhttpmock-0.3.1.old/build-aux и uhttpmock-0.3.1/build-aux
+diff -u uhttpmock-0.3.1.old/configure.ac uhttpmock-0.3.1/configure.ac
+--- uhttpmock-0.3.1.old/configure.ac	2014-08-22 22:56:37.000000000 +0400
++++ uhttpmock-0.3.1/configure.ac	2014-09-24 01:14:18.990412899 +0400
+@@ -83,7 +83,7 @@
+ 
+ GOBJECT_INTROSPECTION_CHECK([0.9.7])
+ 
+-VAPIGEN_CHECK()
++VAPIGEN_CHECK([0.26], [0.26])
+ 
+ AC_SUBST([AM_CPPFLAGS])
+ AC_SUBST([AM_CFLAGS])
+Общие подкаталоги: uhttpmock-0.3.1.old/libuhttpmock и uhttpmock-0.3.1/libuhttpmock
+Общие подкаталоги: uhttpmock-0.3.1.old/m4 и uhttpmock-0.3.1/m4

@@ -21,6 +21,7 @@ REQUIRED_IUSE="vala? ( introspection )"
 # gtk+ is needed for gdk
 # configure checks for gtk:3, but only uses it for demos which are not installed
 RDEPEND="
+	>=net-misc/uhttpmock-0.3.1[vala?]
 	>=dev-libs/glib-2.31:2
 	>=dev-libs/libxml2-2:2
 	>=net-libs/liboauth-0.9.4
