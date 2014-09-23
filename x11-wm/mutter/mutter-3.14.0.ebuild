@@ -21,7 +21,7 @@ COMMON_DEPEND="
 	x11-libs/gdk-pixbuf:2[introspection?]
 	>=x11-libs/gtk+-3.9.11:3[X,introspection?]
 	>=dev-libs/glib-2.36.0:2
-	>=media-libs/clutter-1.14.3:1.0[introspection?]
+	>=media-libs/clutter-1.19.5:1.0[egl,introspection?]
 	>=media-libs/cogl-1.17.1:1.0=[introspection?]
 	>=media-libs/libcanberra-0.26[gtk3]
 	>=x11-libs/startup-notification-0.7
@@ -41,6 +41,7 @@ COMMON_DEPEND="
 	x11-libs/libXrandr
 	x11-libs/libXrender
 	>=x11-libs/libXi-1.7
+	>=x11-libs/libxkbcommon-0.4.3
 
 	gnome-extra/zenity
 
@@ -61,7 +62,7 @@ RDEPEND="${COMMON_DEPEND}
 "
 
 src_prepare() {
-	DOCS="AUTHORS ChangeLog HACKING MAINTAINERS NEWS README *.txt doc/*.txt"
+	DOCS="doc/*.txt"
 
 	# Compat with Ubuntu metacity themes (e.g. x11-themes/light-themes)
 	epatch "${FILESDIR}/${PN}-3.2.1-ignore-shadow-and-padding.patch"
@@ -72,10 +73,8 @@ src_prepare() {
 src_configure() {
 	gnome2_src_configure \
 		--disable-static \
-		--enable-shape \
 		--enable-sm \
 		--enable-startup-notification \
-		--enable-xsync \
 		--enable-verbose-mode \
 		--with-libcanberra \
 		$(use_enable introspection)

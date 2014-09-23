@@ -44,7 +44,7 @@ COMMON_DEPEND="
 	>=sys-auth/polkit-0.100[introspection]
 	>=x11-libs/libXfixes-5.0
 	x11-libs/libXtst
-	>=x11-wm/mutter-3.12.1[introspection]
+	>=x11-wm/mutter-3.14.0[introspection]
 	>=x11-libs/startup-notification-0.11
 
 	${PYTHON_DEPS}
@@ -120,7 +120,7 @@ DEPEND="${COMMON_DEPEND}
 
 src_prepare() {
 	# Change favorites defaults, bug #479918
-	epatch "${FILESDIR}/${PN}-defaults.patch"
+	#epatch "${FILESDIR}/${PN}-defaults.patch"
 
 	# Fix automagic gnome-bluetooth dep, bug #398145
 	epatch "${FILESDIR}/${PN}-3.12-bluetooth-flag.patch"

@@ -1,8 +1,7 @@
-diff --git a/configure.ac b/configure.ac
-index dd95dd4..03d651c 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -248,7 +248,20 @@ dnl ---------------------------------------------------------------------------
+diff -ru gnome-settings-daemon-3.14.0.old/configure.ac gnome-settings-daemon-3.14.0/configure.ac
+--- gnome-settings-daemon-3.14.0.old/configure.ac	2014-09-22 20:10:28.000000000 +0400
++++ gnome-settings-daemon-3.14.0/configure.ac	2014-09-23 22:09:19.323502011 +0400
+@@ -225,7 +225,20 @@
  dnl - color
  dnl ---------------------------------------------------------------------------
  
@@ -24,7 +23,7 @@ index dd95dd4..03d651c 100644
  
  dnl ---------------------------------------------------------------------------
  dnl - datetime
-@@ -279,15 +292,25 @@ case $host_os in
+@@ -256,15 +269,25 @@
      if test "$host_cpu" = s390 -o "$host_cpu" = s390x; then
        have_wacom=no
      else
@@ -55,11 +54,10 @@ index dd95dd4..03d651c 100644
      fi
      ;;
    *)
-diff --git a/plugins/Makefile.am b/plugins/Makefile.am
-index 04f8e2a..55ed94c 100644
---- a/plugins/Makefile.am
-+++ b/plugins/Makefile.am
-@@ -4,7 +4,6 @@ enabled_plugins =	\
+diff -ru gnome-settings-daemon-3.14.0.old/plugins/Makefile.am gnome-settings-daemon-3.14.0/plugins/Makefile.am
+--- gnome-settings-daemon-3.14.0.old/plugins/Makefile.am	2014-09-22 20:02:18.000000000 +0400
++++ gnome-settings-daemon-3.14.0/plugins/Makefile.am	2014-09-23 22:10:26.951175987 +0400
+@@ -4,7 +4,6 @@
  	a11y-keyboard	\
  	a11y-settings	\
  	clipboard	\
@@ -67,7 +65,7 @@ index 04f8e2a..55ed94c 100644
  	cursor		\
  	datetime	\
  	dummy		\
-@@ -21,6 +20,12 @@ enabled_plugins =	\
+@@ -22,6 +21,12 @@
  
  disabled_plugins = $(NULL)
  
@@ -77,6 +75,6 @@ index 04f8e2a..55ed94c 100644
 +disabled_plugins += color
 +endif
 +
- if HAVE_PACKAGEKIT
- enabled_plugins += updates
+ if SMARTCARD_SUPPORT
+ enabled_plugins += smartcard
  else
