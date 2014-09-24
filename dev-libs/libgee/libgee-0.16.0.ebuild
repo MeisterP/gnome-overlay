@@ -25,7 +25,6 @@ DEPEND="${RDEPEND}
 "
 
 src_configure() {
-	vala_src_prepare
 	DOCS="AUTHORS ChangeLog* MAINTAINERS NEWS README"
 	gnome2_src_configure \
 		$(use_enable introspection) \
