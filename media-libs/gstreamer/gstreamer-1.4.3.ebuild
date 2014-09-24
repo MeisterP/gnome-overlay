@@ -1,14 +1,15 @@
 # Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-libs/gstreamer/gstreamer-1.2.4-r2.ebuild,v 1.12 2014/09/15 08:21:05 ago Exp $
 
 EAPI="5"
 
-inherit eutils multilib multilib-minimal pax-utils
+inherit eutils multilib multilib-minimal pax-utils versionator
 
 DESCRIPTION="Streaming media framework"
 HOMEPAGE="http://gstreamer.freedesktop.org/"
-SRC_URI="http://${PN}.freedesktop.org/src/${PN}/${P}.tar.xz"
+#SRC_URI="http://${PN}.freedesktop.org/src/${PN}/${P}.tar.xz"
+MY_MAJORV=$(get_version_component_range 1-2)
+SRC_URI="http://ftp.gnome.org/pub/gnome/sources/${PN}/${MY_MAJORV}/${P}.tar.xz"
 
 LICENSE="LGPL-2+"
 SLOT="1.0"
