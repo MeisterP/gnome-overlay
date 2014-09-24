@@ -17,7 +17,7 @@ SLOT="0"
 KEYWORDS="amd64 x86"
 IUSE="+exif +flickr map +picasa +python"
 # Let people emerge this by default, bug #472932
-IUSE+=" python_single_target_python3_2 +python_single_target_python3_3"
+IUSE+=" python_single_target_python3_2 python_single_target_python3_3 +python_single_target_python3_4"
 
 REQUIRED_USE="
 	map? ( exif )
