@@ -21,20 +21,21 @@ KEYWORDS="amd64" # qemu-kvm[spice] is 64bit-only
 
 # NOTE: sys-fs/* stuff is called via exec()
 # FIXME: ovirt is not available in tree
+
 RDEPEND="
 	>=dev-libs/glib-2.38:2
 	>=dev-libs/gobject-introspection-0.9.6
 	>=dev-libs/libxml2-2.7.8:2
-	>=sys-libs/libosinfo-0.2.11
+	>=sys-libs/libosinfo-0.2.9
 	>=app-emulation/qemu-1.3.1[spice,smartcard?,usbredir?]
 	>=app-emulation/libvirt-0.9.3[libvirtd,qemu]
-	>=app-emulation/libvirt-glib-0.1.7
+	>=app-emulation/libvirt-glib-0.1.9
 	>=x11-libs/gtk+-3.13.2:3
 	>=net-libs/gtk-vnc-0.4.4[gtk3]
 	>=net-misc/spice-gtk-0.16[gtk3,smartcard?,usbredir?]
 
 	>=app-misc/tracker-0.16:0=[iso]
-
+	>=app-arch/libarchive-3.0
 	>=sys-apps/util-linux-2.20
 	>=net-libs/libsoup-2.38:2.4
 
