@@ -50,9 +50,6 @@ pkg_setup() {
 src_prepare() {
 	# Regenerate gdbus-codegen files to allow using any glib version; bug #436236
 	rm -v lib/bluetooth-client-glue.{c,h} || die
-
-	# Fix link failure with gold; fixed upstream in 3.12.1
-	epatch "${FILESDIR}/${P}-gold.patch"
 	eautoreconf
 
 	gnome2_src_prepare
