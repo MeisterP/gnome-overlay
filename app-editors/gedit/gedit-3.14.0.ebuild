@@ -15,7 +15,7 @@ HOMEPAGE="https://wiki.gnome.org/Apps/Gedit"
 LICENSE="GPL-2+ CC-BY-SA-3.0"
 SLOT="0"
 
-IUSE="+introspection +python spell zeitgeist"
+IUSE="+introspection +python spell vala"
 REQUIRED_USE="python? ( ${PYTHON_REQUIRED_USE} )"
 
 KEYWORDS="~alpha amd64 ~arm ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~ia64-linux ~x86-linux"
@@ -47,7 +47,6 @@ COMMON_DEPEND="
 	spell? (
 		>=app-text/enchant-1.2:=
 		>=app-text/iso-codes-0.35 )
-	zeitgeist? ( >=gnome-extra/zeitgeist-0.9.12 )
 "
 RDEPEND="${COMMON_DEPEND}
 	x11-themes/adwaita-icon-theme
@@ -76,7 +75,7 @@ src_configure() {
 		$(use_enable introspection) \
 		$(use_enable python) \
 		$(use_enable spell) \
-		$(use_enable zeitgeist) \
+		$(use_enable vala) \
 		ITSTOOL=$(type -P true)
 }
 
