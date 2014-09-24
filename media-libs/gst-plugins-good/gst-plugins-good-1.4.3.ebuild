@@ -5,12 +5,10 @@
 EAPI="5"
 
 # order is important, gst-plugins10 after gst-plugins-good
-inherit eutils flag-o-matic gst-plugins-good gst-plugins10 versionator
+inherit eutils flag-o-matic gst-plugins-good gst-plugins10
 
 DESCRIPTION="Basepack of plugins for gstreamer"
 HOMEPAGE="http://gstreamer.freedesktop.org/"
-MY_MAJORV=$(get_version_component_range 1-2)
-SRC_URI="http://ftp.gnome.org/pub/gnome/sources/${PN}/${MY_MAJORV}/${P}.tar.xz"
 
 LICENSE="LGPL-2.1+"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd"

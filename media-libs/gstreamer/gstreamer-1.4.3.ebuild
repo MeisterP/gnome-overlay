@@ -3,13 +3,11 @@
 
 EAPI="5"
 
-inherit eutils multilib multilib-minimal pax-utils versionator
+inherit eutils multilib multilib-minimal pax-utils
 
 DESCRIPTION="Streaming media framework"
 HOMEPAGE="http://gstreamer.freedesktop.org/"
-#SRC_URI="http://${PN}.freedesktop.org/src/${PN}/${P}.tar.xz"
-MY_MAJORV=$(get_version_component_range 1-2)
-SRC_URI="http://ftp.gnome.org/pub/gnome/sources/${PN}/${MY_MAJORV}/${P}.tar.xz"
+SRC_URI="http://${PN}.freedesktop.org/src/${PN}/${P}.tar.xz"
 
 LICENSE="LGPL-2+"
 SLOT="1.0"
