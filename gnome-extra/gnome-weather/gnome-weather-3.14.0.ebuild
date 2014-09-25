@@ -16,11 +16,11 @@ KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND="
-	>=dev-libs/gjs-1.39.91
+	>=dev-libs/gjs-1.41.91
 	>=dev-libs/glib-2.32:2
 	>=dev-libs/gobject-introspection-1.35.9
-	>=dev-libs/libgweather-3.9.5
-	>=x11-libs/gtk+-3.11.4:3
+	>=dev-libs/libgweather-3.14.0
+	>=x11-libs/gtk+-3.13.2:3
 "
 DEPEND="${RDEPEND}
 	>=dev-util/intltool-0.26
