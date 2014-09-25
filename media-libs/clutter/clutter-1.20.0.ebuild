@@ -13,7 +13,7 @@ DESCRIPTION="Clutter is a library for creating graphical user interfaces"
 
 LICENSE="LGPL-2.1+ FDL-1.1+"
 SLOT="1.0"
-IUSE="debug doc gtk +introspection +egl test" # evdev tslib
+IUSE="debug doc gtk +introspection +egl test wayland" # evdev tslib
 KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~mips ~ppc ~ppc64 ~sparc ~x86"
 
 # NOTE: glx flavour uses libdrm + >=mesa-7.3
@@ -24,7 +24,7 @@ RDEPEND="
 	>=dev-libs/glib-2.37.3:2
 	>=dev-libs/atk-2.5.3[introspection?]
 	>=dev-libs/json-glib-0.12[introspection?]
-	>=media-libs/cogl-1.17.5:1.0=[introspection?,pango,gles2]
+	>=media-libs/cogl-1.17.5:1.0=[introspection?,pango,gles2,wayland?]
 	media-libs/fontconfig
 	>=x11-libs/cairo-1.12:=[glib]
 	>=x11-libs/pango-1.30[introspection?]
@@ -40,6 +40,7 @@ RDEPEND="
 
 	gtk? ( >=x11-libs/gtk+-3.3.18:3 )
 	introspection? ( >=dev-libs/gobject-introspection-0.9.6 )
+	wayland? ( >=dev-libs/wayland-1.5.90 )
 "
 DEPEND="${RDEPEND}
 	>=dev-util/gtk-doc-am-1.20
@@ -79,7 +80,6 @@ src_configure() {
 		--disable-gcov \
 		--disable-cex100-backend \
 		--disable-quartz-backend \
-		--disable-wayland-backend \
 		--disable-win32-backend \
 		--disable-tslib-input \
 		--disable-evdev-input \
@@ -88,7 +88,9 @@ src_configure() {
 		$(use_enable gtk gdk-backend) \
 		$(use_enable introspection) \
 		$(use_enable test gdk-pixbuf) \
-		$(use_enable egl egl-backend)
+		$(use_enable egl egl-backend) \
+		$(use_enable wayland wayland-backend) \
+		$(use_enable wayland wayland-compositor)
 }
 
 src_test() {

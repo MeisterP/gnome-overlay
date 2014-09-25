@@ -12,7 +12,7 @@ HOMEPAGE="http://git.gnome.org/browse/mutter/"
 
 LICENSE="GPL-2+"
 SLOT="0"
-IUSE="+introspection test"
+IUSE="+introspection test wayland"
 KEYWORDS="~alpha amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc x86"
 
 COMMON_DEPEND="
@@ -21,7 +21,7 @@ COMMON_DEPEND="
 	x11-libs/gdk-pixbuf:2[introspection?]
 	>=x11-libs/gtk+-3.9.11:3[X,introspection?]
 	>=dev-libs/glib-2.36.0:2
-	>=media-libs/clutter-1.19.5:1.0[egl,introspection?]
+	>=media-libs/clutter-1.19.5:1.0[egl,introspection?,wayland?]
 	>=media-libs/cogl-1.17.1:1.0=[introspection?]
 	>=media-libs/libcanberra-0.26[gtk3]
 	>=x11-libs/startup-notification-0.7
@@ -56,6 +56,7 @@ DEPEND="${COMMON_DEPEND}
 	x11-proto/xineramaproto
 	x11-proto/xproto
 	test? ( app-text/docbook-xml-dtd:4.5 )
+	wayland? ( dev-libs/wayland )
 "
 RDEPEND="${COMMON_DEPEND}
 	!x11-misc/expocity
