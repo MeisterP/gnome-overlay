@@ -116,6 +116,7 @@ src_configure() {
 		--disable-pst-import \
 		--enable-canberra \
 		--enable-gnome-desktop \
+		--disable-autoar \
 		$(use_enable bogofilter) \
 		$(use_enable highlight text-highlight) \
 		$(use_enable map contact-maps) \
