@@ -46,7 +46,7 @@ RDEPEND="
 	)
 	charmap? ( >=gnome-extra/gucharmap-3:2.90[introspection] )
 	git? ( >=dev-libs/libgit2-glib-0.0.6 )
-	terminal? ( x11-libs/vte:2.90[introspection] )
+	terminal? ( >=x11-libs/vte-0.36[introspection] )
 "
 DEPEND="${RDEPEND}
 	>=dev-util/intltool-0.40.0
