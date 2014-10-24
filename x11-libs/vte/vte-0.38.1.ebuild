@@ -16,7 +16,9 @@ SLOT="2.91"
 IUSE="debug glade +introspection"
 KEYWORDS="alpha amd64 ~arm hppa ia64 ~mips ppc ppc64 ~sh sparc x86 ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~arm-linux ~x86-linux ~x64-solaris ~x86-solaris"
 
-PDEPEND="~x11-libs/gnome-pty-helper-${PV}"
+#PDEPEND="~x11-libs/gnome-pty-helper-${PV}"
+#костыль
+PDEPEND="x11-libs/gnome-pty-helper"
 RDEPEND="
 	>=dev-libs/glib-2.31.13:2
 	>=x11-libs/gtk+-3.1.9:3[introspection?]
