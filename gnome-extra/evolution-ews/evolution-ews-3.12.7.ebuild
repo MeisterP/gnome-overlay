@@ -1,6 +1,6 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/gnome-extra/evolution-ews/evolution-ews-3.8.5.ebuild,v 1.2 2013/08/27 20:13:53 maekke Exp $
+# $Header: /var/cvsroot/gentoo-x86/gnome-extra/evolution-ews/evolution-ews-3.12.7.ebuild,v 1.1 2014/10/15 16:15:41 leio Exp $
 
 EAPI="5"
 GCONF_DEBUG="no"
@@ -9,23 +9,22 @@ GNOME2_LA_PUNT="yes"
 inherit gnome2
 
 DESCRIPTION="Evolution module for connecting to Microsoft Exchange Web Services"
-HOMEPAGE="http://www.gnome.org/projects/evolution/"
+HOMEPAGE="https://wiki.gnome.org/Apps/Evolution"
 
 LICENSE="LGPL-2.1"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="kerberos"
+IUSE=""
 
 RDEPEND="
 	dev-db/sqlite:3=
-	dev-libs/libical:=
-	>=mail-client/evolution-${PV}:2.0[kerberos?]
-	>=gnome-extra/evolution-data-server-${PV}:=[kerberos?]
 	>=dev-libs/glib-2.32:2
+	dev-libs/libical:0=
 	>=dev-libs/libxml2-2
-	>=net-libs/libsoup-2.38.1:2.4
+	>=gnome-extra/evolution-data-server-${PV}:0=
+	>=mail-client/evolution-${PV}:2.0
+	>=net-libs/libsoup-2.42:2.4
 	>=x11-libs/gtk+-3:3
-	kerberos? ( virtual/krb5:= )
 "
 DEPEND="${RDEPEND}
 	>=dev-util/gtk-doc-am-1.9
@@ -33,12 +32,10 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig
 "
 
-# Requires connection to an Exchange server
+# Requires libhttpmock which is not in portage
 RESTRICT="test"
 
 src_configure() {
 	# We don't have libmspack, needing internal lzx
-	gnome2_src_configure \
-		--with-internal-lzx \
-		$(use_with kerberos krb5)
+	gnome2_src_configure --with-internal-lzx
 }
