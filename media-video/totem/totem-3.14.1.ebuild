@@ -15,10 +15,9 @@ HOMEPAGE="https://wiki.gnome.org/Apps/Videos"
 
 LICENSE="GPL-2+ LGPL-2+"
 SLOT="0"
-IUSE="flash +introspection lirc nautilus nsplugin +python test zeitgeist"
+IUSE="+introspection lirc nautilus +python test zeitgeist"
 # see bug #359379
 REQUIRED_USE="
-	flash? ( nsplugin )
 	python? ( introspection ${PYTHON_REQUIRED_USE} )
 	zeitgeist? ( introspection )
 "
@@ -60,11 +59,9 @@ RDEPEND="
 	gnome-base/gsettings-desktop-schemas
 	x11-themes/gnome-icon-theme-symbolic
 
-	flash? ( dev-libs/totem-pl-parser[quvi] )
 	introspection? ( >=dev-libs/gobject-introspection-0.6.7 )
 	lirc? ( app-misc/lirc )
 	nautilus? ( >=gnome-base/nautilus-2.91.3 )
-	nsplugin? ( >=x11-misc/shared-mime-info-0.22 )
 	python? (
 		${PYTHON_DEPS}
 		>=dev-python/pygobject-2.90.3:3[${PYTHON_USEDEP}]
@@ -114,8 +111,6 @@ src_prepare() {
 }
 
 src_configure() {
-	use nsplugin && DOCS="${DOCS} browser-plugin/README.browser-plugin"
-
 	# Disabled: sample-python, sample-vala
 	local plugins="apple-trailers,autoload-subtitles,brasero-disc-recorder"
 	plugins+=",chapters,im-status,gromit,media-player-keys,ontop"
@@ -135,10 +130,8 @@ src_configure() {
 		--disable-static \
 		--enable-easy-codec-installation \
 		--enable-vala \
-		$(use_enable flash vegas-plugin) \
 		$(use_enable introspection) \
 		$(use_enable nautilus) \
-		$(use_enable nsplugin browser-plugins) \
 		$(use_enable python) \
 		PYLINT=$(type -P true) \
 		VALAC=$(type -P true) \
