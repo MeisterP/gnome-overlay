@@ -7,7 +7,6 @@ GCONF_DEBUG="no"
 # python3 not really supported, bug #478678
 PYTHON_COMPAT=( python2_7 pypy pypy2_0 )
 VALA_MIN_API_VERSION="0.18"
-VALA_USE_DEPEND="vapigen"
 
 inherit db-use flag-o-matic gnome2 python-any-r1 vala virtualx
 
