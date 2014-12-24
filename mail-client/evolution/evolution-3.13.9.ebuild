@@ -27,7 +27,7 @@ PINENTRY_DEPEND="|| ( app-crypt/pinentry[gtk] app-crypt/pinentry-qt app-crypt/pi
 # (last one not yet in the tree)
 COMMON_DEPEND="
 	>=app-crypt/gcr-3.4
-	>=dev-libs/glib-2.36:2
+	>=dev-libs/glib-2.40:2
 	>=x11-libs/cairo-1.9.15:=[glib]
 	>=x11-libs/gtk+-3.8.0:3
 	>=x11-libs/gdk-pixbuf-2.24:2
