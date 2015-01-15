@@ -73,8 +73,9 @@ DEPEND="${RDEPEND}
 	${PYTHON_DEPS}
 	dev-lang/perl
 	|| (
-		virtual/rubygems[ruby_targets_ruby20]
+		virtual/rubygems[ruby_targets_ruby22]
 		virtual/rubygems[ruby_targets_ruby21]
+		virtual/rubygems[ruby_targets_ruby20]
 		virtual/rubygems[ruby_targets_ruby19]
 	)
 	>=app-accessibility/at-spi2-core-2.5.3
