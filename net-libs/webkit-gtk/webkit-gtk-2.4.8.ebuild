@@ -1,6 +1,6 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/net-libs/webkit-gtk/webkit-gtk-2.4.7.ebuild,v 1.5 2014/12/22 21:30:49 jer Exp $
+# $Header: /var/cvsroot/gentoo-x86/net-libs/webkit-gtk/webkit-gtk-2.4.8.ebuild,v 1.1 2015/01/14 22:21:12 pacho Exp $
 
 EAPI="5"
 GCONF_DEBUG="no"
@@ -15,7 +15,8 @@ SRC_URI="http://www.webkitgtk.org/releases/${MY_P}.tar.xz"
 
 LICENSE="LGPL-2+ BSD"
 SLOT="3/25" # soname version of libwebkit2gtk-3.0
-KEYWORDS="~alpha amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~amd64-linux ~ia64-linux ~x86-linux ~x86-macos"
+KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~amd64-linux ~ia64-linux ~x86-linux ~x86-macos"
+
 IUSE="aqua coverage debug +egl +geoloc gles2 +gstreamer +introspection +jit libsecret +opengl spell wayland +webgl +X"
 # bugs 372493, 416331
 REQUIRED_USE="
@@ -72,9 +73,8 @@ DEPEND="${RDEPEND}
 	${PYTHON_DEPS}
 	dev-lang/perl
 	|| (
-		virtual/rubygems[ruby_targets_ruby22]
-		virtual/rubygems[ruby_targets_ruby21]
 		virtual/rubygems[ruby_targets_ruby20]
+		virtual/rubygems[ruby_targets_ruby21]
 		virtual/rubygems[ruby_targets_ruby19]
 	)
 	>=app-accessibility/at-spi2-core-2.5.3
@@ -166,11 +166,6 @@ src_prepare() {
 	# bug #459978, upstream bug #113397
 	epatch "${FILESDIR}/${PN}-1.11.90-gtk-docize-fix.patch"
 
-	# FIXME: Needs updating, but probably unneeded in 2.4 as it has a 
-	# "developer mode" for this
-	# Do not build unittests unless requested, upstream bug #128163
-#	epatch "${FILESDIR}"/${PN}-2.2.4-unittests-build.patch
-
 	# Deadlock causing infinite compilations with nvidia-drivers:
 	# https://bugs.gentoo.org/show_bug.cgi?id=463960
 	# http://osdyson.org/issues/161
@@ -229,7 +224,9 @@ src_configure() {
 
 	local myconf=""
 
-	if has_version "virtual/rubygems[ruby_targets_ruby21]"; then
+	if has_version "virtual/rubygems[ruby_targets_ruby22]"; then
+		myconf="${myconf} RUBY=$(type -P ruby22)"
+	elif has_version "virtual/rubygems[ruby_targets_ruby21]"; then
 		myconf="${myconf} RUBY=$(type -P ruby21)"
 	elif has_version "virtual/rubygems[ruby_targets_ruby20]"; then
 		myconf="${myconf} RUBY=$(type -P ruby20)"
@@ -271,6 +268,7 @@ src_compile() {
 	unset DISPLAY
 	gnome2_src_compile
 }
+
 src_test() {
 	# Tests expect an out-of-source build in WebKitBuild
 	ln -s . WebKitBuild || die "ln failed"
