@@ -73,10 +73,9 @@ DEPEND="${RDEPEND}
 	${PYTHON_DEPS}
 	dev-lang/perl
 	|| (
-		virtual/rubygems[ruby_targets_ruby22]
 		virtual/rubygems[ruby_targets_ruby21]
+		virtual/rubygems[ruby_targets_ruby22]
 		virtual/rubygems[ruby_targets_ruby20]
-		virtual/rubygems[ruby_targets_ruby19]
 	)
 	>=app-accessibility/at-spi2-core-2.5.3
 	>=dev-libs/atk-2.8.0
@@ -229,10 +228,8 @@ src_configure() {
 		myconf="${myconf} RUBY=$(type -P ruby22)"
 	elif has_version "virtual/rubygems[ruby_targets_ruby21]"; then
 		myconf="${myconf} RUBY=$(type -P ruby21)"
-	elif has_version "virtual/rubygems[ruby_targets_ruby20]"; then
-		myconf="${myconf} RUBY=$(type -P ruby20)"
 	else
-		myconf="${myconf} RUBY=$(type -P ruby19)"
+		myconf="${myconf} RUBY=$(type -P ruby20)"
 	fi
 
 	# TODO: Check Web Audio support
