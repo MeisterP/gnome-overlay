@@ -125,6 +125,16 @@ pkg_setup() {
 	[[ ${MERGE_TYPE} = "binary" ]] || python-any-r1_pkg_setup
 }
 
+src_prepare() {
+	# Debian patches to fix support for some arches
+	# https://bugs.webkit.org/show_bug.cgi?id=129540
+	epatch "${FILESDIR}"/${PN}-2.6.0-{hppa,ia64}-platform.patch
+	# https://bugs.webkit.org/show_bug.cgi?id=129542
+	epatch "${FILESDIR}"/${PN}-2.8.0-ia64-malloc.patch
+
+	gnome2_src_prepare
+}
+
 src_configure() {
 	# Respect CC, otherwise fails on prefix #395875
 	tc-export CC
@@ -147,10 +157,9 @@ src_configure() {
 	if ! use ia64; then
 		append-ldflags "-Wl,--no-keep-memory"
 	fi
-	if ! $(tc-getLD) --version | grep -q "GNU gold"; then
-		append-ldflags "-Wl,--reduce-memory-overheads"
-	fi
-
+	#if ! $(tc-getLD) --version | grep -q "GNU gold"; then
+	#	append-ldflags "-Wl,--reduce-memory-overheads"
+	#fi
 	local ruby_interpreter=""
 
 	if has_version "virtual/rubygems[ruby_targets_ruby22]"; then
