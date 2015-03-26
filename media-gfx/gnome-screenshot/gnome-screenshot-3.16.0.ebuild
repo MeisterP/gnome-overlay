@@ -40,12 +40,6 @@ DOC_CONTENTS="${P} saves screenshots in ~/Pictures/ and defaults to
 	non-interactive mode when launched from a terminal. If you want to choose
 	where to save the screenshot, run 'gnome-screenshot --interactive'"
 
-src_prepare() {
-	# filename-builder: use dash for time format separator (from 'master')
-	epatch "${FILESDIR}"/${PN}-3.14.0-use-dash.patch
-	gnome2_src_prepare
-}
-
 src_install() {
 	gnome2_src_install
 	readme.gentoo_create_doc
