@@ -15,7 +15,7 @@ LICENSE="GPL-2+ LGPL-2+ FDL-1.1"
 SLOT="0"
 
 # profiling?
-IUSE="debug exif gnome +introspection packagekit +previewer sendto tracker xmp"
+IUSE="exif gnome +introspection packagekit +previewer sendto tracker xmp"
 KEYWORDS="~alpha amd64 ~arm ~ia64 ~ppc ~ppc64 ~sh ~sparc x86 ~x86-fbsd ~x86-interix ~amd64-linux ~arm-linux ~x86-linux"
 
 # FIXME: tests fails under Xvfb, but pass when building manually
@@ -81,7 +81,7 @@ src_prepare() {
 	fi
 
 	# nautilus-application: Parse force-desktop before exiting (from '3.14')
-	epatch "${FILESDIR}/${P}-parse-force-desktop.patch"
+	# epatch "${FILESDIR}/${P}-parse-force-desktop.patch"
 
 	# Remove -D*DEPRECATED flags. Don't leave this for eclass! (bug #448822)
 	sed -e 's/DISABLE_DEPRECATED_CFLAGS=.*/DISABLE_DEPRECATED_CFLAGS=/' \
@@ -95,7 +95,6 @@ src_configure() {
 	gnome2_src_configure \
 		--disable-profiling \
 		--disable-update-mimedb \
-		$(use_enable debug) \
 		$(use_enable exif libexif) \
 		$(use_enable introspection) \
 		$(use_enable packagekit) \
