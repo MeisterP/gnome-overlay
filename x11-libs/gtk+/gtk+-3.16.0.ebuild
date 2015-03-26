@@ -114,12 +114,6 @@ src_prepare() {
 	replace-flags -O3 -O2
 	strip-flags
 
-	if ! use test ; then
-		# don't waste time building tests
-		strip_builddir SRC_SUBDIRS testsuite Makefile.{am,in}
-		strip_builddir SRC_SUBDIRS tests Makefile.{am,in}
-	fi
-
 	if ! use examples; then
 		# don't waste time building demos
 		strip_builddir SRC_SUBDIRS demos Makefile.{am,in}
