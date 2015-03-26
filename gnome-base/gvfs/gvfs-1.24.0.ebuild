@@ -85,9 +85,6 @@ src_prepare() {
 		#eautoreconf
 	fi
 
-	# Fix parallel installation, bug #543812 (from 'master')
-	epatch "${FILESDIR}/${PN}-1.22.4-fix-parallel.patch"
-
 	eautoreconf
 	gnome2_src_prepare
 }
@@ -100,7 +97,6 @@ src_configure() {
 		--with-bash-completion-dir="$(get_bashcompdir)" \
 		--disable-gdu \
 		--disable-hal \
-		--disable-obexftp \
 		--with-dbus-service-dir="${EPREFIX}"/usr/share/dbus-1/services \
 		--enable-documentation \
 		$(use_enable afp) \

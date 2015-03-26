@@ -83,12 +83,6 @@ src_prepare() {
 	# nautilus-application: Parse force-desktop before exiting (from '3.14')
 	epatch "${FILESDIR}/${P}-parse-force-desktop.patch"
 
-	# nautilus-window: make sure active slot is closed last (from '3.14')
-	epatch "${FILESDIR}/${P}-active-slot.patch"
-
-	# nautilus-list-view: Avoid unreadable names (from '3.14')
-	epatch "${FILESDIR}/${P}-unreadable-names.patch"
-
 	# Remove -D*DEPRECATED flags. Don't leave this for eclass! (bug #448822)
 	sed -e 's/DISABLE_DEPRECATED_CFLAGS=.*/DISABLE_DEPRECATED_CFLAGS=/' \
 		-i configure || die "sed failed"
