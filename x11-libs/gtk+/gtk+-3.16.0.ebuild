@@ -32,6 +32,7 @@ COMMON_DEPEND="
 	>=x11-libs/gdk-pixbuf-2.30:2[introspection?,X?,${MULTILIB_USEDEP}]
 	>=x11-libs/gtk+-2.24:2[${MULTILIB_USEDEP}]
 	>=x11-libs/pango-1.36.7[introspection?,${MULTILIB_USEDEP}]
+	>=media-libs/libepoxy-1.0[${MULTILIB_USEDEP}]
 	x11-misc/shared-mime-info
 
 	cloudprint? (
@@ -109,9 +110,6 @@ strip_builddir() {
 }
 
 src_prepare() {
-	# https://bugzilla.gnome.org/show_bug.cgi?id=738835
-	epatch "${FILESDIR}"/${PN}-non-bash-support.patch
-
 	# -O3 and company cause random crashes in applications. Bug #133469
 	replace-flags -O3 -O2
 	strip-flags
