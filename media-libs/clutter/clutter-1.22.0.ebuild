@@ -24,12 +24,11 @@ KEYWORDS="~alpha amd64 ~arm ~ia64 ~mips ~ppc ~ppc64 ~sparc x86"
 # XXX: uprof needed for profiling
 # >=libX11-1.3.1 needed for X Generic Event support
 # do not depend on tslib, it does not build and is disable by default upstream
-# <dev-libs/libinput-0.8 due to Gnome bugzilla #742829
 RDEPEND="
 	>=dev-libs/glib-2.37.3:2
 	>=dev-libs/atk-2.5.3[introspection?]
 	>=dev-libs/json-glib-0.12[introspection?]
-	>=media-libs/cogl-1.17.5:1.0=[introspection?,pango,wayland?]
+	>=media-libs/cogl-1.20:1.0=[introspection?,pango,wayland?]
 	>=x11-libs/cairo-1.12:=[aqua?,glib]
 	>=x11-libs/pango-1.30[introspection?]
 
@@ -37,8 +36,7 @@ RDEPEND="
 	x11-libs/libdrm:=
 
 	egl? (
-		>=dev-libs/libinput-0.4
-		<dev-libs/libinput-0.8
+		>=dev-libs/libinput-0.8
 		media-libs/cogl[gles2,kms]
 		>=virtual/libgudev-136
 		x11-libs/libxkbcommon
