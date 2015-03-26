@@ -39,11 +39,11 @@ RDEPEND="
 	x11-libs/cairo
 	>=dev-libs/libxml2-2.6:2
 	>=media-libs/clutter-1.17.3:1.0[gtk]
-	>=media-libs/clutter-gst-1.5.5:2.0
+	>=media-libs/clutter-gst-2.99.2:3.0
 	>=media-libs/clutter-gtk-1.5.5:1.0
 	x11-libs/mx:1.0
 
-	>=media-libs/grilo-0.2.11:0.2[playlist]
+	>=media-libs/grilo-0.2.12:0.2[playlist]
 	media-plugins/grilo-plugins:0.2
 	>=media-libs/gstreamer-1.3.1:1.0
 	>=media-libs/gst-plugins-base-1.4.2:1.0[X,introspection?,pango]

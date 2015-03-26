@@ -26,7 +26,7 @@ COMMON_DEPEND="
 	>=dev-libs/glib-2.28:2
 	>=dev-libs/gobject-introspection-1.35.9
 	>=media-libs/grilo-0.2.6:0.2[introspection]
-	media-libs/libmediaart:1.0
+	media-libs/libmediaart:2.0
 	>=x11-libs/gtk+-3.13.2:3[introspection]
 "
 # xdg-user-dirs-update needs to be there to create needed dirs
