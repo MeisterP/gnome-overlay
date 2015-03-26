@@ -5,7 +5,7 @@
 EAPI="5"
 GCONF_DEBUG="no"
 GNOME2_LA_PUNT="yes"
-PYTHON_COMPAT=( python2_7 )
+PYTHON_COMPAT=( python3_4 )
 
 inherit autotools eutils gnome2 multilib pax-utils python-r1 systemd
 

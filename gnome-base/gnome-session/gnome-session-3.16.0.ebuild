@@ -69,12 +69,6 @@ DEPEND="${COMMON_DEPEND}
 # gnome-common needed for eautoreconf
 # gnome-base/gdm does not provide gnome.desktop anymore
 
-src_prepare() {
-	# Validate autostart condition gsettings key (from '3.14')
-	epatch "${FILESDIR}"/${P}-validate-autostart.patch
-	gnome2_src_prepare
-}
-
 src_configure() {
 	# 1. Avoid automagic on old upower releases
 	# 2. xsltproc is always checked due to man configure

@@ -80,10 +80,6 @@ src_prepare() {
 			close the previewer, press space again."
 	fi
 
-	# Restore the nautilus-2.x Delete shortcut (Ctrl+Delete will still work);
-	# bug #393663
-	epatch "${FILESDIR}/${PN}-3.5.91-delete.patch"
-
 	# nautilus-application: Parse force-desktop before exiting (from '3.14')
 	epatch "${FILESDIR}/${P}-parse-force-desktop.patch"
 
