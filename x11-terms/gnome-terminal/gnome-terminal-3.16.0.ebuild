@@ -44,16 +44,6 @@ DOC_CONTENTS="To get previous working directory inherited in new opened
 	tab you will need to add the following line to your ~/.bashrc:\n
 	. /etc/profile.d/vte.sh"
 
-src_prepare() {
-	# client: Hide obsolete --title option (from '3.14')
-	epatch "${FILESDIR}/${P}-title-option.patch"
-
-	# screen: Fix crash with empty child process command line (from '3.14')
-	epatch "${FILESDIR}/${P}-fix-crash.patch"
-
-	gnome2_src_prepare
-}
-
 src_configure() {
 	gnome2_src_configure \
 		--disable-static \
