@@ -17,7 +17,7 @@ IUSE=""
 
 RDEPEND="
 	>=x11-libs/gtk+-3.15.0:3
-	>=gnome-base/dconf-3.16
+	>=gnome-base/dconf-0.24
 "
 DEPEND="${RDEPEND}
 	app-text/scrollkeeper
