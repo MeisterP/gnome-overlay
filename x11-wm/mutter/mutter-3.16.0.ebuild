@@ -78,17 +78,6 @@ RDEPEND="${COMMON_DEPEND}
 	!x11-misc/expocity
 "
 
-src_prepare() {
-	# Compat with Ubuntu metacity themes (e.g. x11-themes/light-themes)
-	epatch "${FILESDIR}"/${PN}-3.2.1-ignore-shadow-and-padding.patch
-
-	# Automagic fixes
-	epatch "${FILESDIR}"/${PN}-3.14.2-automagic.patch
-
-	eautoreconf
-	gnome2_src_prepare
-}
-
 src_configure() {
 	gnome2_src_configure \
 		--disable-static \
