@@ -28,7 +28,7 @@ RDEPEND="
 	>=net-libs/libsoup-2.42:2.4
 	net-libs/rest:0.7
 	net-libs/telepathy-glib
-	>=net-libs/webkit-gtk-2.1.90:3
+	>=net-libs/webkit-gtk-2.7.2:4
 	>=x11-libs/gtk+-3.11.1:3
 	x11-libs/pango
 

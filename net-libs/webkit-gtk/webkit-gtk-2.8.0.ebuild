@@ -1,6 +1,6 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/net-libs/webkit-gtk/webkit-gtk-2.6.5.ebuild,v 1.1 2015/01/26 20:42:35 pacho Exp $
+# $Header: /var/cvsroot/gentoo-x86/net-libs/webkit-gtk/webkit-gtk-2.6.5.ebuild,v 1.3 2015/03/15 13:31:15 pacho Exp $
 
 EAPI="5"
 GCONF_DEBUG="no"
@@ -15,7 +15,7 @@ SRC_URI="http://www.webkitgtk.org/releases/${MY_P}.tar.xz"
 
 LICENSE="LGPL-2+ BSD"
 SLOT="4/37" # soname version of libwebkit2gtk-4.0
-KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~amd64-linux ~ia64-linux ~x86-linux ~x86-macos"
+KEYWORDS="~alpha amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~amd64-linux ~ia64-linux ~x86-linux ~x86-macos"
 
 IUSE="coverage doc +egl +geoloc +gstreamer +introspection +jit libsecret +opengl spell +webgl"
 # gles2 wayland X
@@ -77,9 +77,9 @@ DEPEND="${RDEPEND}
 	${PYTHON_DEPS}
 	>=dev-lang/perl-5.10
 	|| (
-		virtual/rubygems[ruby_targets_ruby22]
-		virtual/rubygems[ruby_targets_ruby21]
 		virtual/rubygems[ruby_targets_ruby20]
+		virtual/rubygems[ruby_targets_ruby21]
+		virtual/rubygems[ruby_targets_ruby22]
 		virtual/rubygems[ruby_targets_ruby19]
 	)
 	>=app-accessibility/at-spi2-core-2.5.3
@@ -123,16 +123,6 @@ pkg_setup() {
 	fi
 
 	[[ ${MERGE_TYPE} = "binary" ]] || python-any-r1_pkg_setup
-}
-
-src_prepare() {
-	# Debian patches to fix support for some arches
-	# https://bugs.webkit.org/show_bug.cgi?id=129540
-	epatch "${FILESDIR}"/${PN}-2.6.0-{hppa,ia64}-platform.patch
-	# https://bugs.webkit.org/show_bug.cgi?id=129542
-	epatch "${FILESDIR}"/${PN}-2.6.0-ia64-malloc.patch
-
-	gnome2_src_prepare
 }
 
 src_configure() {
