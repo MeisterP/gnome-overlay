@@ -19,7 +19,7 @@ IUSE="daap +dvd flickr freebox gnome-online-accounts lua pocket thetvdb tracker 
 RDEPEND="
 	>=dev-libs/glib-2.36:2
 	>=media-libs/grilo-0.2.11:${SLOT}[network,playlist]
-	>=media-libs/libmediaart-0.1
+	media-libs/libmediaart:2.0
 	>=dev-libs/gom-0.2.1
 
 	dev-libs/gmime:2.6

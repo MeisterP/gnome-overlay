@@ -22,6 +22,7 @@ REQUIRED_USE="
 "
 
 RDEPEND="
+	!media-libs/libmediaart:1.0
 	>=dev-libs/glib-2.38.0:2
 	gtk? ( >=x11-libs/gdk-pixbuf-2.12:2 )
 	introspection? ( >=dev-libs/gobject-introspection-1.30 )
