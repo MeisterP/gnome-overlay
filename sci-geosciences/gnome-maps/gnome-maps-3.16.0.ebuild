@@ -17,7 +17,7 @@ KEYWORDS="amd64 x86"
 
 RDEPEND="
 	>=app-misc/geoclue-1.99.3:2.0
-	>=dev-libs/gjs-1.39
+	>=dev-libs/gjs-1.43
 	>=dev-libs/gobject-introspection-0.10.1
 	>=dev-libs/glib-2.39.3:2
 	media-libs/clutter-gtk:1.0[introspection]

@@ -35,7 +35,7 @@ COMMON_DEPEND="
 	>=gnome-base/gnome-desktop-3.7.90:3=[introspection]
 	>=gnome-base/gsettings-desktop-schemas-3.14
 	>=gnome-base/gnome-keyring-3.3.90
-	>=gnome-extra/evolution-data-server-3.5.3:=
+	>=gnome-extra/evolution-data-server-3.13.90:=
 	>=media-libs/gstreamer-0.11.92:1.0
 	>=net-im/telepathy-logger-0.2.4[introspection]
 	>=net-libs/telepathy-glib-0.19[introspection]
