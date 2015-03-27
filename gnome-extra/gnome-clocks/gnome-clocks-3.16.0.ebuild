@@ -24,6 +24,7 @@ RDEPEND="
 	>=gnome-base/gnome-desktop-3.7.90:3=
 	>=sci-geosciences/geocode-glib-0.99.4
 	>=app-misc/geoclue-1.99.3:2.0
+	>=media-libs/gsound-0.98
 "
 DEPEND="${RDEPEND}
 	$(vala_depend)

@@ -1,28 +1,27 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-libs/gegl/gegl-0.2.0-r2.ebuild,v 1.15 2015/02/26 18:25:41 mgorny Exp $
+# $Header: /var/cvsroot/gentoo-x86/media-libs/gegl/gegl-9999.ebuild,v 1.9 2015/02/26 18:25:41 mgorny Exp $
 
 EAPI=5
 
-WANT_AUTOMAKE=1.11  # see bug 471990, comment 3
-# vala and introspection support is broken, bug #468208
-#VALA_MIN_API_VERSION=0.14
-#VALA_USE_DEPEND=vapigen
+VALA_MIN_API_VERSION=0.14
+VALA_USE_DEPEND=vapigen
 
-inherit versionator gnome2-utils eutils autotools #vala
+inherit vala gnome2-utils eutils autotools git-r3
 
 DESCRIPTION="A graph based image processing framework"
 HOMEPAGE="http://www.gegl.org/"
-SRC_URI="ftp://ftp.gimp.org/pub/${PN}/${PV:0:3}/${P}.tar.bz2"
+EGIT_REPO_URI="git://git.gnome.org/${PN}"
+EGIT_COMMIT="1197b632a0a4d9d3e000b077cb4586501f0e929a"
+
 
 LICENSE="|| ( GPL-3 LGPL-3 )"
-SLOT="0"
-KEYWORDS="alpha amd64 ~arm hppa ia64 ~mips ppc ppc64 sparc x86 ~amd64-fbsd ~amd64-linux ~arm-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~x64-solaris ~x86-solaris"
+SLOT="0.3"
+KEYWORDS="~alpha amd64 ~arm ~hppa ~ia64 ~mips ppc ppc64 ~s390 ~sh ~sparc x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~arm-linux ~x86-linux ~x64-macos ~x86-macos ~sparc-solaris ~x64-solaris ~x86-solaris"
 
-IUSE="cairo debug ffmpeg jpeg jpeg2k lensfun libav cpu_flags_x86_mmx openexr png raw sdl cpu_flags_x86_sse svg umfpack" # +introspection vala
+IUSE="cairo debug ffmpeg introspection jpeg jpeg2k lensfun libav cpu_flags_x86_mmx openexr png raw sdl cpu_flags_x86_sse svg umfpack vala"
 
-RDEPEND="
-	>=media-libs/babl-0.1.10
+RDEPEND=">=media-libs/babl-0.1.10[introspection?]
 	>=dev-libs/glib-2.28:2
 	>=x11-libs/gdk-pixbuf-2.18:2
 	x11-libs/pango
@@ -36,49 +35,32 @@ RDEPEND="
 	jpeg2k? ( >=media-libs/jasper-1.900.1 )
 	openexr? ( media-libs/openexr )
 	png? ( media-libs/libpng )
-	raw? ( =media-libs/libopenraw-0.0.9 )
+	raw? ( >=media-libs/libopenraw-0.0.5 )
 	sdl? ( media-libs/libsdl )
 	svg? ( >=gnome-base/librsvg-2.14:2 )
 	umfpack? ( sci-libs/umfpack )
-	lensfun? ( >=media-libs/lensfun-0.2.5 )
-"
-#	>=media-libs/babl-0.1.10[introspection?]
-#	introspection? ( >=dev-libs/gobject-introspection-0.10
-#			>=dev-python/pygobject-2.26:2 )
+	introspection? ( >=dev-libs/gobject-introspection-0.10
+			>=dev-python/pygobject-2.26:2 )
+	lensfun? ( >=media-libs/lensfun-0.2.5 )"
 DEPEND="${RDEPEND}
 	>=dev-util/intltool-0.40.1
 	dev-lang/perl
 	virtual/pkgconfig
 	>=sys-devel/libtool-2.2
-"
-#	vala? ( $(vala_depend) )"
+	vala? ( $(vala_depend) )"
 
-DOCS=( ChangeLog INSTALL README NEWS )
+DOCS=( ChangeLog NEWS )
 
 src_prepare() {
-	# https://bugs.gentoo.org/show_bug.cgi?id=442016
-	epatch "${FILESDIR}/${P}-cve-2012-4433-1e92e523.patch"
-	epatch "${FILESDIR}/${P}-cve-2012-4433-4757cdf7.patch"
-
-	# https://bugs.gentoo.org/show_bug.cgi?id=416587
-	epatch "${FILESDIR}/${P}-introspection-version.patch"
-
-	epatch "${FILESDIR}/${P}-ffmpeg-0.11.diff"
 	# fix OSX loadable module filename extension
 	sed -i -e 's/\.dylib/.bundle/' configure.ac || die
 	# don't require Apple's OpenCL on versions of OSX that don't have it
 	if [[ ${CHOST} == *-darwin* && ${CHOST#*-darwin} -le 9 ]] ; then
 		sed -i -e 's/#ifdef __APPLE__/#if 0/' gegl/opencl/* || die
 	fi
-
-	epatch "${FILESDIR}"/${P}-g_log_domain.patch
 	eautoreconf
 
-	# https://bugs.gentoo.org/show_bug.cgi?id=468248
-	local deps_file="${PN}/${PN}-$(get_version_component_range 1-2).deps"
-	[[ -f "${deps_file}" ]] || touch "${deps_file}"
-
-#	use vala && vala_src_prepare
+	use vala && vala_src_prepare
 }
 
 src_configure() {
@@ -99,9 +81,9 @@ src_configure() {
 	#  - Parameter --disable-workshop disables any use of Lua, effectivly
 	# 
 	#  - v4l support does not work with our media-libs/libv4l-0.8.9,
-	#    upstream bug at https://bugzilla.gnome.org/show_bug.cgi?id=654675
+	#    upstream bug https://bugzilla.gnome.org/show_bug.cgi?id=654675
 	#
-	#  - There are two checks for dot, one controllable by --with(out)-graphviz
+	#  - There are two checks for dot, one controlled by --with(out)-graphviz
 	#    which toggles HAVE_GRAPHVIZ that is not used anywhere.  Yes.
 	#
 	# So that's why USE="exif graphviz lua v4l" got resolved.  More at:
@@ -131,11 +113,9 @@ src_configure() {
 		$(use_with svg librsvg) \
 		$(use_with umfpack) \
 		--without-libv4l \
+		$(use_enable introspection) \
 		$(use_with lensfun) \
-		--disable-introspection \
-		--without-vala
-#		$(use_enable introspection) \
-#		$(use_with vala)
+		$(use_with vala)
 }
 
 src_test() {
@@ -146,6 +126,8 @@ src_test() {
 src_compile() {
 	gnome2_environment_reset  # sandbox issues (bug #396687)
 	default
+
+	emake ./ChangeLog  # "./" prevents "Circular ChangeLog <- ChangeLog dependency dropped."
 }
 
 src_install() {

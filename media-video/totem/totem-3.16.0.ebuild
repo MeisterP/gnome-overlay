@@ -87,13 +87,6 @@ DEPEND="${RDEPEND}
 	dev-libs/gobject-introspection-common
 	gnome-base/gnome-common
 "
-# eautoreconf needs:
-#	app-text/yelp-tools
-#	dev-libs/gobject-introspection-common
-#	gnome-base/gnome-common
-# docbook-xml-dtd is needed for user doc
-# Prevent dev-python/pylint dep, bug #482538
-
 pkg_setup() {
 	use python && python-single-r1_pkg_setup
 }
