@@ -40,6 +40,7 @@ RDEPEND="
 	x11-libs/libnotify:=
 	>=x11-libs/gtk+-3.12:3
 	x11-libs/pango
+	>=media-libs/libchamplain-0.12
 	v4l? ( >=media-video/cheese-3.5.91:= )
 "
 DEPEND="${RDEPEND}
