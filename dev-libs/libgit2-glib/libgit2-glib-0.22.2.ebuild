@@ -36,13 +36,6 @@ DEPEND="${RDEPEND}
 	vala? ( $(vala_depend) )
 "
 
-src_prepare() {
-	epatch "${FILESDIR}/${P}-automagic-ssh.patch" # make libgit2[ssh] dep non-magic
-	eautoreconf
-	use vala && vala_src_prepare
-	gnome2_src_prepare
-}
-
 src_configure() {
 	gnome2_src_configure \
 		$(use_enable python) \
