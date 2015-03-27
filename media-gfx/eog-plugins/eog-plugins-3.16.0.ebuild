@@ -26,7 +26,7 @@ RDEPEND="
 	>=media-gfx/eog-3.11.4
 	>=x11-libs/gtk+-3.3.8:3
 	exif? ( >=media-libs/libexif-0.6.16 )
-	flickr? ( media-gfx/postr )
+	flickr? ( media-plugins/grilo-plugins[flickr] )
 	map? (
 		media-libs/libchamplain:0.12[gtk]
 		>=media-libs/clutter-1.9.4:1.0
