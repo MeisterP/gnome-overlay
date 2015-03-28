@@ -44,7 +44,7 @@ COMMON_DEPEND="
 	>=x11-misc/shared-mime-info-0.22
 	>=x11-themes/gnome-icon-theme-2.30.2.1
 	>=dev-libs/libgdata-0.10:=
-	>=net-libs/webkit-gtk-2.0.1:3
+	>=net-libs/webkit-gtk-2.0.1:4
 	x11-libs/libcryptui
 
 	x11-libs/libSM
