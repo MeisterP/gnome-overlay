@@ -81,7 +81,6 @@ COMMON_DEPEND="
 RDEPEND="${COMMON_DEPEND}
 	>=sys-auth/polkit-0.101[introspection]
 
-	>=app-accessibility/caribou-0.4.8
 	media-libs/cogl[introspection]
 	>=sys-apps/accountsservice-0.6.14[introspection]
 	>=sys-power/upower-0.99[introspection]
@@ -89,6 +88,7 @@ RDEPEND="${COMMON_DEPEND}
 	>=gnome-base/gnome-session-2.91.91
 	>=gnome-base/gnome-settings-daemon-3.8.3
 	>=gnome-base/gnome-control-center-3.8.3[bluetooth(+)?]
+	>=app-accessibility/caribou-0.4.8
 
 	!openrc-force? ( >=sys-apps/systemd-31 )
 

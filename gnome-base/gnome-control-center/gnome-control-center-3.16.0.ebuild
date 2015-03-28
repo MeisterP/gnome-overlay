@@ -76,6 +76,7 @@ COMMON_DEPEND="
 "
 # <gnome-color-manager-3.1.2 has file collisions with g-c-c-3.1.x
 # libgnomekbd needed only for gkbd-keyboard-display tool
+#i18n? ( >=gnome-base/libgnomekbd-3 )
 RDEPEND="${COMMON_DEPEND}
 	|| ( ( app-admin/openrc-settingsd sys-auth/consolekit ) >=sys-apps/systemd-31 )
 	>=sys-apps/accountsservice-0.6.33
@@ -85,7 +86,6 @@ RDEPEND="${COMMON_DEPEND}
 		>=app-admin/system-config-printer-gnome-1.3.5
 		net-print/cups-pk-helper )
 	input_devices_wacom? ( gnome-base/gnome-settings-daemon[input_devices_wacom] )
-	i18n? ( >=gnome-base/libgnomekbd-3 )
 
 	!<gnome-base/gdm-2.91.94
 	!<gnome-extra/gnome-color-manager-3.1.2
