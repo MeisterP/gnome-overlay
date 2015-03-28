@@ -28,6 +28,7 @@ RDEPEND="
 	sci-geosciences/geocode-glib[introspection]
 	x11-libs/gdk-pixbuf:2[introspection]
 	>=x11-libs/gtk+-3.10:3[introspection]
+	dev-libs/folks
 "
 
 DEPEND="${RDEPEND}
