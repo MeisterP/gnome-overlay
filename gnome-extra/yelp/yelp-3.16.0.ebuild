@@ -37,13 +37,13 @@ DEPEND="${RDEPEND}
 # If eautoreconf:
 #	gnome-base/gnome-common
 
-src_prepare() {
+#src_prepare() {
 	# Fix compatibility with Gentoo's sys-apps/man
 	# https://bugzilla.gnome.org/show_bug.cgi?id=648854
-	epatch "${FILESDIR}/${PN}-3.0.3-man-compatibility.patch"
-	eautoreconf
-	gnome2_src_prepare
-}
+#	epatch "${FILESDIR}/${PN}-3.16.0-man-compatibility.patch"
+#	eautoreconf
+#	gnome2_src_prepare
+#}
 
 src_configure() {
 	gnome2_src_configure \

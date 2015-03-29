@@ -1,0 +1,30 @@
+diff -ru yelp-3.16.0.old/libyelp/Makefile.am yelp-3.16.0/libyelp/Makefile.am
+--- yelp-3.16.0.old/libyelp/Makefile.am	2015-02-17 02:11:23.000000000 +0300
++++ yelp-3.16.0/libyelp/Makefile.am	2015-03-29 20:22:24.634517967 +0300
+@@ -1,4 +1,5 @@
+ lib_LTLIBRARIES = libyelp.la
++libexec_SCRIPTS = yelp-groff
+ 
+ libyelp_la_SOURCES =                \
+ 	yelp-bookmarks.c            \
+@@ -51,6 +52,7 @@
+ 	$(YELP_CFLAGS)                          \
+ 	-Wno-deprecated-declarations		\
+ 	-DDATADIR=\""$(datadir)"\"              \
++	-DLIBEXECDIR=\"$(libexecdir)\"			\
+ 	-DYELP_ICON_PATH=\"$(YELP_ICON_PATH)\"
+ 
+ libyelp_la_LIBADD = $(YELP_LIBS)
+Только в yelp-3.16.0/libyelp: yelp-groff
+diff -ru yelp-3.16.0.old/libyelp/yelp-man-parser.c yelp-3.16.0/libyelp/yelp-man-parser.c
+--- yelp-3.16.0.old/libyelp/yelp-man-parser.c	2015-02-17 01:55:22.000000000 +0300
++++ yelp-3.16.0/libyelp/yelp-man-parser.c	2015-03-29 20:25:27.034089893 +0300
+@@ -369,7 +369,7 @@
+ {
+     gint ystdout;
+     GError *err = NULL;
+-    const gchar *argv[] = { "man", "-Z", "-Tutf8", "-EUTF-8", path, NULL };
++    gchar *argv[] = { LIBEXECDIR "/yelp-groff", NULL, NULL };
+     gchar **my_argv;
+ 
+     /* g_strdupv() should accept a "const gchar **". */
