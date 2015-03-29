@@ -22,6 +22,7 @@ KEYWORDS="~alpha amd64 ~arm ~hppa ~ia64 ~mips ppc ppc64 ~s390 ~sh ~sparc x86 ~am
 IUSE="cairo debug ffmpeg introspection jpeg jpeg2k lensfun libav cpu_flags_x86_mmx openexr png raw sdl cpu_flags_x86_sse svg umfpack vala"
 
 RDEPEND=">=media-libs/babl-0.1.10[introspection?]
+	!<=media-libs/gegl-0.3
 	>=dev-libs/glib-2.28:2
 	>=x11-libs/gdk-pixbuf-2.18:2
 	x11-libs/pango
