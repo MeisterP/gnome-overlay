@@ -18,7 +18,7 @@ KEYWORDS="amd64 x86"
 COMMON_DEPEND="
 	>=dev-libs/glib-2.26:2
 	>=gnome-base/libgtop-2.28.3[introspection]
-	>=app-admin/eselect-gnome-shell-extensions-20111211
+	>=app-eselect/eselect-gnome-shell-extensions-20111211
 "
 RDEPEND="${COMMON_DEPEND}
 	>=dev-libs/gjs-1.29
