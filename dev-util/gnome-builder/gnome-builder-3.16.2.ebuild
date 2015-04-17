@@ -22,7 +22,7 @@ COMMON_DEPEND="
 	>=dev-libs/glib-2.44:2
 	>=x11-libs/gtksourceview-3.16:3.0
 	>=x11-libs/gtk+-3.16:3
-	>=dev-libs/libgit2-glib-0.0.24
+	>=dev-libs/libgit2-glib-0.22.6
 	sys-devel/clang
 	${PYTHON_DEPS}
 
