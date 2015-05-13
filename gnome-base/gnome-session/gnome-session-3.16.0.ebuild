@@ -80,6 +80,7 @@ src_configure() {
 		$(use_enable gconf) \
 		$(use_enable ipv6) \
 		$(use_enable systemd) \
+		$(use_enable !systemd consolekit) \
 		UPOWER_CFLAGS="" \
 		UPOWER_LIBS=""
 		# gnome-session-selector pre-generated man page is missing

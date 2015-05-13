@@ -152,14 +152,15 @@ src_install() {
 	# Required for gnome-shell on hardened/PaX, bug #398941
 	# Future-proof for >=spidermonkey-1.8.7 following polkit's example
 	if has_version '<dev-lang/spidermonkey-1.8.7'; then
-		pax-mark mr "${ED}usr/bin/gnome-shell"
+		pax-mark mr "${ED}usr/bin/gnome-shell"{,-extension-prefs}
 	elif has_version '>=dev-lang/spidermonkey-1.8.7[jit]'; then
-		pax-mark m "${ED}usr/bin/gnome-shell"
-	fi
+		pax-mark m "${ED}usr/bin/gnome-shell"{,-extension-prefs}
 	# Required for gnome-shell on hardened/PaX #457146 and #457194
 	# PaX EMUTRAMP need to be on
-	if has_version '>=dev-libs/libffi-3.0.13[pax_kernel]'; then
-		pax-mark E "${ED}usr/bin/gnome-shell"
+	elif has_version '>=dev-libs/libffi-3.0.13[pax_kernel]'; then
+		pax-mark E "${ED}usr/bin/gnome-shell"{,-extension-prefs}
+	else
+		pax-mark m "${ED}usr/bin/gnome-shell"{,-extension-prefs}
 	fi
 }
 
