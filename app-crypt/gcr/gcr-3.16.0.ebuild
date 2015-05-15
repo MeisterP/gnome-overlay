@@ -53,9 +53,6 @@ pkg_setup() {
 }
 
 src_prepare() {
-	# Fix race building gdbus-codegen header and source (from '3.14')
-	epatch "${FILESDIR}"/${P}-race-building.patch
-
 	# Disable stupid flag changes
 	sed -e 's/CFLAGS="$CFLAGS -g"//' \
 		-e 's/CFLAGS="$CFLAGS -O0"//' \
