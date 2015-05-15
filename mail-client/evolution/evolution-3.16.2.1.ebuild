@@ -35,7 +35,7 @@ COMMON_DEPEND="
 	>=gnome-base/gsettings-desktop-schemas-2.91.92
 	>=media-libs/libcanberra-0.25[gtk3]
 	>=x11-libs/libnotify-0.7:=
-	>=gnome-extra/evolution-data-server-${PV}:=[weather?]
+	>=gnome-extra/evolution-data-server-3.16:=[weather?]
 	>=gnome-extra/gtkhtml-4.5.2:4.0
 	dev-libs/atk
 	>=dev-libs/dbus-glib-0.6
