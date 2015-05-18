@@ -22,7 +22,7 @@ COMMON_DEPEND="
 	>=dev-libs/glib-2.44:2
 	>=x11-libs/gtksourceview-3.16:3.0
 	>=x11-libs/gtk+-3.16:3
-	>=dev-libs/libgit2-glib-0.22.6
+	>=dev-libs/libgit2-glib-0.22.6[ssh]
 	sys-devel/clang
 	${PYTHON_DEPS}
 
@@ -41,7 +41,7 @@ pkg_setup() {
 
 src_prepare() {
 	sed -e 's:python3-config:python3.4-config:g' \
-		-i build/autotools/autoconf.d/post-am.m4 || die "sed failed"
+		-i configure.ac || die "sed failed"
 	eautoreconf
 	gnome2_src_prepare
 }
