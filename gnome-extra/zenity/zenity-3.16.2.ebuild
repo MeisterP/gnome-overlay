@@ -22,7 +22,7 @@ RDEPEND="
 	x11-libs/libX11
 	x11-libs/pango
 	libnotify? ( >=x11-libs/libnotify-0.6.1:= )
-	webkit? ( >=net-libs/webkit-gtk-1.4.0:3 )
+	webkit? ( net-libs/webkit-gtk:4 )
 "
 DEPEND="${RDEPEND}
 	>=dev-util/intltool-0.40
