@@ -29,7 +29,7 @@ COMMON_DEPEND="
 	>=net-libs/gnome-online-accounts-3.2.0
 	>=net-libs/libsoup-2.41.3:2.4
 	>=net-libs/libzapojit-0.0.2
-	>=net-libs/webkit-gtk-1.10.0:3
+	>=net-libs/webkit-gtk-2.6.0:4
 	>=x11-libs/gdk-pixbuf-2.25:2[introspection]
 	>=x11-libs/gtk+-3.13.2:3[introspection]
 	x11-libs/pango[introspection]
