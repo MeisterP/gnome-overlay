@@ -1,6 +1,6 @@
 diff -ru webkitgtk-2.4.8.old/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamerBase.cpp webkitgtk-2.4.8/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamerBase.cpp
 --- webkitgtk-2.4.8.old/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamerBase.cpp	2015-01-07 12:45:43.000000000 +0300
-+++ webkitgtk-2.4.8/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamerBase.cpp	2015-05-20 14:05:42.412949208 +0300
++++ webkitgtk-2.4.8/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamerBase.cpp	2015-05-20 16:58:45.605273234 +0300
 @@ -316,7 +316,7 @@
  #if USE(ACCELERATED_COMPOSITING) && USE(TEXTURE_MAPPER_GL) && !USE(COORDINATED_GRAPHICS)
  PassRefPtr<BitmapTexture> MediaPlayerPrivateGStreamerBase::updateTexture(TextureMapper* textureMapper)
@@ -30,7 +30,7 @@ diff -ru webkitgtk-2.4.8.old/Source/WebCore/platform/graphics/gstreamer/MediaPla
  
 diff -ru webkitgtk-2.4.8.old/Source/WebCore/platform/graphics/gstreamer/VideoSinkGStreamer.cpp webkitgtk-2.4.8/Source/WebCore/platform/graphics/gstreamer/VideoSinkGStreamer.cpp
 --- webkitgtk-2.4.8.old/Source/WebCore/platform/graphics/gstreamer/VideoSinkGStreamer.cpp	2015-01-07 12:45:43.000000000 +0300
-+++ webkitgtk-2.4.8/Source/WebCore/platform/graphics/gstreamer/VideoSinkGStreamer.cpp	2015-05-20 14:07:29.005137776 +0300
++++ webkitgtk-2.4.8/Source/WebCore/platform/graphics/gstreamer/VideoSinkGStreamer.cpp	2015-05-20 17:00:17.019592925 +0300
 @@ -118,7 +118,7 @@
      WebKitVideoSink* sink = reinterpret_cast<WebKitVideoSink*>(data);
      WebKitVideoSinkPrivate* priv = sink->priv;
@@ -58,6 +58,15 @@ diff -ru webkitgtk-2.4.8.old/Source/WebCore/platform/graphics/gstreamer/VideoSin
  
      if (priv->buffer) {
          gst_buffer_unref(priv->buffer);
+@@ -305,7 +305,7 @@
+     WebKitVideoSinkPrivate* priv = WEBKIT_VIDEO_SINK(baseSink)->priv;
+ 
+     {
+-        GMutexLocker lock(priv->bufferMutex);
++        WebCore::GMutexLocker lock(priv->bufferMutex);
+         priv->unlocked = false;
+     }
+ 
 @@ -330,7 +330,7 @@
  {
      WebKitVideoSinkPrivate* priv = WEBKIT_VIDEO_SINK(baseSink)->priv;
@@ -69,7 +78,7 @@ diff -ru webkitgtk-2.4.8.old/Source/WebCore/platform/graphics/gstreamer/VideoSin
  }
 diff -ru webkitgtk-2.4.8.old/Source/WebCore/platform/graphics/gstreamer/WebKitWebSourceGStreamer.cpp webkitgtk-2.4.8/Source/WebCore/platform/graphics/gstreamer/WebKitWebSourceGStreamer.cpp
 --- webkitgtk-2.4.8.old/Source/WebCore/platform/graphics/gstreamer/WebKitWebSourceGStreamer.cpp	2015-01-07 12:45:43.000000000 +0300
-+++ webkitgtk-2.4.8/Source/WebCore/platform/graphics/gstreamer/WebKitWebSourceGStreamer.cpp	2015-05-20 14:13:40.223311010 +0300
++++ webkitgtk-2.4.8/Source/WebCore/platform/graphics/gstreamer/WebKitWebSourceGStreamer.cpp	2015-05-20 16:58:45.605273234 +0300
 @@ -346,7 +346,7 @@
  
      switch (propID) {
@@ -222,6 +231,15 @@ diff -ru webkitgtk-2.4.8.old/Source/WebCore/platform/graphics/gstreamer/WebKitWe
 +    WebCore::GMutexLocker locker(GST_OBJECT_GET_LOCK(src));
      priv->buffer = adoptGRef(buffer);
      locker.unlock();
+ 
+@@ -867,7 +867,7 @@
+         return;
+     }
+ 
+-    GMutexLocker locker(GST_OBJECT_GET_LOCK(src));
++    WebCore::GMutexLocker locker(GST_OBJECT_GET_LOCK(src));
+ 
+     priv->corsAccessCheck = corsAccessCheck;
  
 @@ -966,7 +966,7 @@
      WebKitWebSrc* src = WEBKIT_WEB_SRC(m_src);
