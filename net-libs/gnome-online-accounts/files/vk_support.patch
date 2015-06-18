@@ -491,7 +491,7 @@ index 0000000..0054ebe
 +get_provider_features (GoaProvider *provider)
 +{
 +  return GOA_PROVIDER_FEATURE_BRANDED |
-+         /* GOA_PROVIDER_FEATURE_CHAT | */
++         GOA_PROVIDER_FEATURE_CHAT |
 +         GOA_PROVIDER_FEATURE_MUSIC;
 +}
 +
@@ -534,7 +534,7 @@ index 0000000..0054ebe
 +get_scope (GoaOAuth2Provider *oauth2_provider)
 +{
 +  return
-+    /* "messages," */ /* to use the chat */
++    "messages," /* to use the chat */
 +    "friends,"  /* to see the list of friends (contact list) */
 +    "audio,"    /* to play the music */
 +    "offline";  /* to be able to use API even when user is not logged into the website */
@@ -1286,10 +1286,10 @@ index 0000000..0054ebe
 +              GError             **error)
 +{
 +  GoaAccount *account = NULL;
-+  /*
++
 +  GoaChat *chat = NULL;
 +  gboolean chat_enabled;
-+  */
++
 +  GoaMusic *music = NULL;
 +  gboolean music_enabled;
 +  gboolean ret = FALSE;
@@ -1307,7 +1307,7 @@ index 0000000..0054ebe
 +  account = goa_object_get_account (GOA_OBJECT (object));
 +
 +  /* Chat */
-+  /*
++
 +  chat = goa_object_get_chat (GOA_OBJECT (object));
 +  chat_enabled = g_key_file_get_boolean (key_file, group, "ChatEnabled", NULL);
 +  if (chat_enabled)
@@ -1323,7 +1323,7 @@ index 0000000..0054ebe
 +      if (chat != NULL)
 +        goa_object_skeleton_set_chat (object, NULL);
 +    }
-+  */
++
 +  /* Music */
 +  music = goa_object_get_music (GOA_OBJECT (object));
 +  music_enabled = g_key_file_get_boolean (key_file, group, "MusicEnabled", NULL);
@@ -1343,13 +1343,13 @@ index 0000000..0054ebe
 +
 +  if (just_added)
 +    {
-+      /*
++
 +      goa_account_set_chat_disabled (account, !chat_enabled);
 +      g_signal_connect (account,
 +                        "notify::chat-disabled",
 +                        G_CALLBACK (goa_util_account_notify_property_cb),
 +                        "ChatEnabled");
-+      */
++
 +      goa_account_set_music_disabled (account, !music_enabled);
 +      g_signal_connect (account,
 +                        "notify::music-disabled",
@@ -1360,7 +1360,7 @@ index 0000000..0054ebe
 +  ret = TRUE;
 +
 + out:
-+  /* g_clear_object (&chat); */
++  g_clear_object (&chat);
 +  g_clear_object (&music);
 +  g_clear_object (&account);
 +  return ret;
@@ -1377,12 +1377,12 @@ index 0000000..0054ebe
 +  gint row = 0;
 +
 +  goa_util_add_account_info (grid, row++, object);
-+  /*
++
 +  goa_util_add_row_switch_from_keyfile_with_blurb (grid, row++, object,
 +                                                   _("Use for"),
 +                                                   "chat-disabled",
 +                                                   _("C_hat"));
-+  */
++
 +  goa_util_add_row_switch_from_keyfile_with_blurb (grid, row++, object,
 +                                                   _("Use for"),
 +                                                   "music-disabled",
@@ -1393,7 +1393,7 @@ index 0000000..0054ebe
 +add_account_key_values (GoaOAuth2Provider *oauth2_provider,
 +                        GVariantBuilder   *builder)
 +{
-+  /* g_variant_builder_add (builder, "{ss}", "ChatEnabled", "true"); */
++  g_variant_builder_add (builder, "{ss}", "ChatEnabled", "true");
 +  g_variant_builder_add (builder, "{ss}", "MusicEnabled", "true");
 +}
 +
