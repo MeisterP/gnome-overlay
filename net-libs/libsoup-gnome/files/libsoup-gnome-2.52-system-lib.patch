@@ -1,0 +1,1135 @@
+Только в libsoup-2.52.0: autom4te.cache
+diff -ru libsoup-2.52.0.old/configure.ac libsoup-2.52.0/configure.ac
+--- libsoup-2.52.0.old/configure.ac	2015-09-21 18:35:26.000000000 +0300
++++ libsoup-2.52.0/configure.ac	2015-09-22 22:32:12.712952657 +0300
+@@ -77,23 +77,33 @@
+ dnl ***********************
+ dnl *** Checks for glib ***
+ dnl ***********************
+-
+-GLIB_REQUIRED=2.38.0
+-AM_PATH_GLIB_2_0($GLIB_REQUIRED,,,gobject gio)
+-if test "$GLIB_LIBS" = ""; then
+-   AC_MSG_ERROR(GLIB $GLIB_REQUIRED or later is required to build libsoup)
++PKG_PROG_PKG_CONFIG
++enable_ssl=no
++AC_ARG_WITH(libsoup-system,
++   AS_HELP_STRING([--with-libsoup-system], [Use libsoup system library to build(default=no)]),
++   [with_libsoup_system=$withval], [with_libsoup_system=no])
++if test "$with_libsoup_system" = "no"; then
++    GLIB_REQUIRED=2.38.0
++    AM_PATH_GLIB_2_0($GLIB_REQUIRED,,,gobject gio)
++    if test "$GLIB_LIBS" = ""; then
++       AC_MSG_ERROR(GLIB $GLIB_REQUIRED or later is required to build libsoup)
++    fi
++    GLIB_CFLAGS="$GLIB_CFLAGS -DGLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_2_38"
++    GLIB_MAKEFILE='$(top_srcdir)/Makefile.glib'
++    AC_SUBST(GLIB_MAKEFILE)
++ 
++    PKG_CHECK_MODULES(XML, libxml-2.0)
++    AC_SUBST(XML_CFLAGS)
++    AC_SUBST(XML_LIBS)
+ fi
+-GLIB_CFLAGS="$GLIB_CFLAGS -DGLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_2_38"
++AM_CONDITIONAL(BUILD_LIBSOUP, test $with_libsoup_system = no)
++
+ 
+ GLIB_MAKEFILE='$(top_srcdir)/Makefile.glib'
+ AC_SUBST(GLIB_MAKEFILE)
+ 
+ GLIB_TESTS
+ 
+-PKG_CHECK_MODULES(XML, libxml-2.0)
+-AC_SUBST(XML_CFLAGS)
+-AC_SUBST(XML_LIBS)
+-
+ PKG_CHECK_MODULES(SQLITE, sqlite3)
+ AC_SUBST(SQLITE_CFLAGS)
+ AC_SUBST(SQLITE_LIBS)
+@@ -148,6 +158,9 @@
+ 
+ if test $with_gnome != no; then
+ 	AC_DEFINE(HAVE_GNOME, 1, [Defined if GNOME support is enabled])
++    if test $with_libsoup_system != no; then
++        PKG_CHECK_MODULES(LIBSOUP, libsoup-$SOUP_API_VERSION = $VERSION)
++    fi
+ fi
+ AC_SUBST(HAVE_GNOME)
+ 
+diff -ru libsoup-2.52.0.old/docs/Makefile.in libsoup-2.52.0/docs/Makefile.in
+--- libsoup-2.52.0.old/docs/Makefile.in	2015-09-21 18:36:16.000000000 +0300
++++ libsoup-2.52.0/docs/Makefile.in	2015-09-22 22:34:37.373991487 +0300
+@@ -257,6 +257,8 @@
+ LDFLAGS = @LDFLAGS@
+ LIBOBJS = @LIBOBJS@
+ LIBS = @LIBS@
++LIBSOUP_CFLAGS = @LIBSOUP_CFLAGS@
++LIBSOUP_LIBS = @LIBSOUP_LIBS@
+ LIBTOOL = @LIBTOOL@
+ LIPO = @LIPO@
+ LN_S = @LN_S@
+diff -ru libsoup-2.52.0.old/docs/reference/Makefile.in libsoup-2.52.0/docs/reference/Makefile.in
+--- libsoup-2.52.0.old/docs/reference/Makefile.in	2015-09-21 18:36:16.000000000 +0300
++++ libsoup-2.52.0/docs/reference/Makefile.in	2015-09-22 22:34:37.432992319 +0300
+@@ -204,6 +204,8 @@
+ LDFLAGS = @LDFLAGS@
+ LIBOBJS = @LIBOBJS@
+ LIBS = @LIBS@
++LIBSOUP_CFLAGS = @LIBSOUP_CFLAGS@
++LIBSOUP_LIBS = @LIBSOUP_LIBS@
+ LIBTOOL = @LIBTOOL@
+ LIPO = @LIPO@
+ LN_S = @LN_S@
+diff -ru libsoup-2.52.0.old/examples/Makefile.in libsoup-2.52.0/examples/Makefile.in
+--- libsoup-2.52.0.old/examples/Makefile.in	2015-09-21 18:36:16.000000000 +0300
++++ libsoup-2.52.0/examples/Makefile.in	2015-09-22 22:34:37.487993095 +0300
+@@ -258,6 +258,8 @@
+ 	$(top_builddir)/libsoup/libsoup-2.4.la \
+ 	$(GLIB_LIBS)
+ 
++LIBSOUP_CFLAGS = @LIBSOUP_CFLAGS@
++LIBSOUP_LIBS = @LIBSOUP_LIBS@
+ LIBTOOL = @LIBTOOL@
+ LIPO = @LIPO@
+ LN_S = @LN_S@
+diff -ru libsoup-2.52.0.old/libsoup/Makefile.am libsoup-2.52.0/libsoup/Makefile.am
+--- libsoup-2.52.0.old/libsoup/Makefile.am	2015-09-15 17:08:46.000000000 +0300
++++ libsoup-2.52.0/libsoup/Makefile.am	2015-09-22 22:34:23.517796018 +0300
+@@ -2,7 +2,7 @@
+ 
+ EXTRA_DIST =
+ CLEANFILES =
+-
++BUILT_SOURCES =
+ 
+ include $(GLIB_MAKEFILE)
+ 
+@@ -10,7 +10,11 @@
+ LIBWS2_32 = -lws2_32
+ endif
+ 
+-AM_CPPFLAGS = 				\
++lib_LTLIBRARIES =
++AM_CPPFLAGS =
++
++if BUILD_LIBSOUP
++AM_CPPFLAGS +=	\
+ 	-DG_LOG_DOMAIN=\"libsoup\" 	\
+ 	-DLIBSOUP_COMPILATION		\
+ 	-DLOCALEDIR=\"$(localedir)\"	\
+@@ -84,7 +88,7 @@
+ nodist_libsoupinclude_HEADERS =	\
+ 	soup-version.h
+ 
+-lib_LTLIBRARIES = libsoup-2.4.la
++lib_LTLIBRARIES += libsoup-2.4.la
+ 
+ libsoup_2_4_la_LDFLAGS =	\
+ 	-version-info $(SOUP_CURRENT):$(SOUP_REVISION):$(SOUP_AGE) \
+@@ -200,18 +204,23 @@
+ 	soup-xmlrpc.c			\
+ 	soup-xmlrpc-old.c
+ 
+-# TLD rules
+-EXTRA_DIST += tld-parser.py
+-
++BUILT_SOURCES += tld_data.inc
+ TLD_DATA_FILE=$(top_srcdir)/data/effective_tld_names.dat
+ 
+ tld_data.inc: tld-parser.py $(TLD_DATA_FILE)
+-	$(srcdir)/tld-parser.py $(TLD_DATA_FILE) tld_data.inc
++	$(AM_V_GEN) python $(srcdir)/tld-parser.py $(TLD_DATA_FILE) tld_data.inc
++
++# TLD rules
++EXTRA_DIST += tld-parser.py
++
++endif
+ 
+ if BUILD_LIBSOUP_GNOME
+ 
+ libsoupgnomeincludedir = $(includedir)/libsoup-gnome-2.4/libsoup
+ 
++AM_CPPFLAGS += $(LIBSOUP_CFLAGS)
++
+ libsoupgnomeinclude_HEADERS =	\
+ 	soup-cookie-jar-sqlite.h\
+ 	soup-gnome.h		\
+@@ -219,17 +228,26 @@
+ 
+ lib_LTLIBRARIES += libsoup-gnome-2.4.la
+ 
++if BUILD_LIBSOUP
++libsoup_gnome_2_4_la_LDFLAGS = $(libsoup_2_4_la_LDFLAGS)
++else
+ libsoup_gnome_2_4_la_LDFLAGS =	\
+ 	-version-info $(SOUP_CURRENT):$(SOUP_REVISION):$(SOUP_AGE) \
+ 	-no-undefined \
+ 	-export-symbols $(srcdir)/libsoup-gnome-2.4.sym
++endif
+ 
+ EXTRA_DIST += libsoup-gnome-2.4.sym
+ 
+ libsoup_gnome_2_4_la_LIBADD =		\
+-	libsoup-2.4.la			\
+ 	$(GLIB_LIBS)
+ 
++if BUILD_LIBSOUP
++libsoup_gnome_2_4_la_LIBADD += libsoup-2.4.la
++else
++libsoup_gnome_2_4_la_LIBADD += $(LIBSOUP_LIBS)
++endif
++
+ libsoup_gnome_2_4_la_SOURCES =		\
+ 	soup-cookie-jar-sqlite.c	\
+ 	soup-gnome-features.c		\
+@@ -241,9 +259,8 @@
+ endif
+ 
+ GLIB_GENERATED = soup-enum-types.c soup-enum-types.h
+-BUILT_SOURCES = \
+-	$(GLIB_GENERATED)   \
+-	tld_data.inc
++BUILT_SOURCES += \
++	$(GLIB_GENERATED)
+ 
+ soup_enum_types_sources = $(libsoupinclude_HEADERS) $(libsoupgnomeinclude_HEADERS)
+ soup_enum_types_MKENUMS_C_FLAGS = --fhead "\#define LIBSOUP_USE_UNSTABLE_REQUEST_API"
+@@ -258,6 +275,8 @@
+ 
+ if HAVE_INTROSPECTION
+ 
++if BUILD_LIBSOUP
++
+ # Core library
+ gi_soup_files = \
+ 	$(filter-out soup.h soup-enum-types.% soup-proxy-resolver.h,\
+@@ -290,20 +309,27 @@
+ 
+ EXTRA_DIST += Soup-2.4.metadata Soup-2.4-custom.vala
+ 
++endif
++
+ if BUILD_LIBSOUP_GNOME
+ 
++if BUILD_LIBSOUP
++SOUP_GIR = Soup-2.4.gir
++else
++SOUP_GIR =
++endif
++
+ # GNOME extensions
+ gi_soup_gnome_files = $(filter-out soup-gnome.h,\
+ 		          $(libsoupgnomeinclude_HEADERS) \
+ 	                  $(filter-out %.h, $(libsoup_gnome_2_4_la_SOURCES)))
+-SoupGNOME-2.4.gir: libsoup-gnome-2.4.la Soup-2.4.gir
++SoupGNOME-2.4.gir: libsoup-gnome-2.4.la $(SOUP_GIR)
+ SoupGNOME_2_4_gir_SCANNERFLAGS =			\
+ 	--identifier-prefix=Soup			\
+ 	--symbol-prefix=soup				\
+-	--c-include "libsoup/soup-gnome.h"		\
+-	--include-uninstalled=$(builddir)/Soup-2.4.gir
++	--c-include "libsoup/soup-gnome.h"
+ SoupGNOME_2_4_gir_CFLAGS = $(AM_CPPFLAGS)
+-SoupGNOME_2_4_gir_LIBS = libsoup-gnome-2.4.la libsoup-2.4.la
++SoupGNOME_2_4_gir_LIBS = libsoup-gnome-2.4.la
+ SoupGNOME_2_4_gir_FILES = $(addprefix $(srcdir)/,$(gi_soup_gnome_files))
+ SoupGNOME_2_4_gir_EXPORT_PACKAGES = libsoup-gnome-2.4
+ 
+@@ -323,6 +349,7 @@
+ 
+ # We only do this check on Linux, so we don't have to worry about
+ # different "nm" output on other platforms
++if BUILD_LIBSOUP
+ if OS_LINUX
+ check-local:
+ 	@echo Checking libsoup-2.4.so symbols
+@@ -332,3 +359,16 @@
+ 		env LC_ALL=C sort -u | \
+ 		diff -U0 $(srcdir)/libsoup-2.4.sym - >&2
+ endif
++endif
++
++if BUILD_LIBSOUP_GNOME
++if OS_LINUX
++check-local:
++	@echo Checking libsoup-gnome-2.4.so symbols
++	@nm $(builddir)/.libs/libsoup-gnome-2.4.so | \
++		grep "^[[:xdigit:]]\+ [BTR] " | \
++		sed "s/^[[:xdigit:]]\+ [BTR] //" | \
++		env LANG=C sort -u | \
++		diff -U0 $(srcdir)/libsoup-gnome-2.4.sym - >&2
++endif
++endif
+diff -ru libsoup-2.52.0.old/libsoup/Makefile.in libsoup-2.52.0/libsoup/Makefile.in
+--- libsoup-2.52.0.old/libsoup/Makefile.in	2015-09-21 18:36:16.000000000 +0300
++++ libsoup-2.52.0/libsoup/Makefile.in	2015-09-22 22:34:37.583994449 +0300
+@@ -80,18 +80,38 @@
+ POST_UNINSTALL = :
+ build_triplet = @build@
+ host_triplet = @host@
+-@BUILD_LIBSOUP_GNOME_TRUE@am__append_1 = libsoup-gnome-2.4.la
+-@BUILD_LIBSOUP_GNOME_TRUE@am__append_2 = libsoup-gnome-2.4.sym
+-@HAVE_INTROSPECTION_TRUE@am__append_3 = Soup-2.4.gir
+-@ENABLE_VAPIGEN_TRUE@@HAVE_INTROSPECTION_TRUE@am__append_4 = $(vapi_DATA)
+-@HAVE_INTROSPECTION_TRUE@am__append_5 = Soup-2.4.metadata Soup-2.4-custom.vala
+-@BUILD_LIBSOUP_GNOME_TRUE@@HAVE_INTROSPECTION_TRUE@am__append_6 = SoupGNOME-2.4.gir
+-@HAVE_INTROSPECTION_TRUE@am__append_7 = $(gir_DATA) $(typelib_DATA) $(BUILT_SOURCES)
++@BUILD_LIBSOUP_TRUE@am__append_1 = \
++@BUILD_LIBSOUP_TRUE@	-DG_LOG_DOMAIN=\"libsoup\" 	\
++@BUILD_LIBSOUP_TRUE@	-DLIBSOUP_COMPILATION		\
++@BUILD_LIBSOUP_TRUE@	-DLOCALEDIR=\"$(localedir)\"	\
++@BUILD_LIBSOUP_TRUE@	-I$(top_srcdir)			\
++@BUILD_LIBSOUP_TRUE@	-I$(top_builddir)		\
++@BUILD_LIBSOUP_TRUE@	$(SOUP_DEBUG_FLAGS)		\
++@BUILD_LIBSOUP_TRUE@	$(GLIB_CFLAGS)			\
++@BUILD_LIBSOUP_TRUE@	$(XML_CFLAGS)			\
++@BUILD_LIBSOUP_TRUE@	$(SQLITE_CFLAGS)		\
++@BUILD_LIBSOUP_TRUE@	$(CODE_COVERAGE_CFLAGS)
++
++@BUILD_LIBSOUP_TRUE@am__append_2 = libsoup-2.4.la
++
++# TLD rules
++@BUILD_LIBSOUP_TRUE@am__append_3 = libsoup-2.4.sym tld-parser.py
++@BUILD_LIBSOUP_TRUE@am__append_4 = tld_data.inc
++@BUILD_LIBSOUP_GNOME_TRUE@am__append_5 = $(LIBSOUP_CFLAGS)
++@BUILD_LIBSOUP_GNOME_TRUE@am__append_6 = libsoup-gnome-2.4.la
++@BUILD_LIBSOUP_GNOME_TRUE@am__append_7 = libsoup-gnome-2.4.sym
++@BUILD_LIBSOUP_GNOME_TRUE@@BUILD_LIBSOUP_TRUE@am__append_8 = libsoup-2.4.la
++@BUILD_LIBSOUP_FALSE@@BUILD_LIBSOUP_GNOME_TRUE@am__append_9 = $(LIBSOUP_LIBS)
++@BUILD_LIBSOUP_TRUE@@HAVE_INTROSPECTION_TRUE@am__append_10 = Soup-2.4.gir
++@BUILD_LIBSOUP_TRUE@@ENABLE_VAPIGEN_TRUE@@HAVE_INTROSPECTION_TRUE@am__append_11 = $(vapi_DATA)
++@BUILD_LIBSOUP_TRUE@@HAVE_INTROSPECTION_TRUE@am__append_12 = Soup-2.4.metadata Soup-2.4-custom.vala
++@BUILD_LIBSOUP_GNOME_TRUE@@HAVE_INTROSPECTION_TRUE@am__append_13 = SoupGNOME-2.4.gir
++@HAVE_INTROSPECTION_TRUE@am__append_14 = $(gir_DATA) $(typelib_DATA) $(BUILT_SOURCES)
+ subdir = libsoup
+ DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
+ 	$(srcdir)/soup-version.h.in $(top_srcdir)/build-aux/depcomp \
+ 	$(am__libsoupgnomeinclude_HEADERS_DIST) \
+-	$(libsoupinclude_HEADERS)
++	$(am__libsoupinclude_HEADERS_DIST)
+ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
+ am__aclocal_m4_deps = $(top_srcdir)/m4/ax_code_coverage.m4 \
+ 	$(top_srcdir)/m4/glibtests.m4 $(top_srcdir)/m4/gtk-doc.m4 \
+@@ -140,38 +160,99 @@
+ 	"$(DESTDIR)$(libsoupincludedir)"
+ LTLIBRARIES = $(lib_LTLIBRARIES)
+ am__DEPENDENCIES_1 =
+-libsoup_2_4_la_DEPENDENCIES = $(am__DEPENDENCIES_1) \
+-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+-	$(am__DEPENDENCIES_1)
+-am_libsoup_2_4_la_OBJECTS = soup-address.lo soup-auth.lo \
+-	soup-auth-basic.lo soup-auth-digest.lo soup-auth-ntlm.lo \
+-	soup-auth-domain.lo soup-auth-domain-basic.lo \
+-	soup-auth-domain-digest.lo soup-auth-manager.lo \
+-	soup-body-input-stream.lo soup-body-output-stream.lo \
+-	soup-cache.lo soup-cache-client-input-stream.lo \
+-	soup-cache-input-stream.lo soup-client-input-stream.lo \
+-	soup-connection.lo soup-connection-auth.lo \
+-	soup-content-decoder.lo soup-content-processor.lo \
+-	soup-content-sniffer.lo soup-content-sniffer-stream.lo \
+-	soup-converter-wrapper.lo soup-cookie.lo soup-cookie-jar.lo \
+-	soup-cookie-jar-db.lo soup-cookie-jar-text.lo soup-date.lo \
+-	soup-directory-input-stream.lo soup-enum-types.lo \
+-	soup-filter-input-stream.lo soup-form.lo soup-headers.lo \
+-	soup-io-stream.lo soup-logger.lo soup-message.lo \
+-	soup-message-body.lo soup-message-client-io.lo \
+-	soup-message-headers.lo soup-message-io.lo \
+-	soup-message-queue.lo soup-message-server-io.lo soup-method.lo \
+-	soup-misc.lo soup-multipart.lo soup-multipart-input-stream.lo \
+-	soup-password-manager.lo soup-path-map.lo \
+-	soup-proxy-resolver.lo soup-proxy-resolver-default.lo \
+-	soup-proxy-resolver-wrapper.lo soup-proxy-uri-resolver.lo \
+-	soup-request.lo soup-request-data.lo soup-request-file.lo \
+-	soup-request-http.lo soup-requester.lo soup-server.lo \
+-	soup-session.lo soup-session-async.lo soup-session-feature.lo \
+-	soup-session-sync.lo soup-socket.lo soup-socket-properties.lo \
+-	soup-status.lo soup-tld.lo soup-uri.lo soup-value-utils.lo \
+-	soup-version.lo soup-websocket.lo soup-websocket-connection.lo \
+-	soup-xmlrpc.lo soup-xmlrpc-old.lo
++@BUILD_LIBSOUP_TRUE@libsoup_2_4_la_DEPENDENCIES =  \
++@BUILD_LIBSOUP_TRUE@	$(am__DEPENDENCIES_1) \
++@BUILD_LIBSOUP_TRUE@	$(am__DEPENDENCIES_1) \
++@BUILD_LIBSOUP_TRUE@	$(am__DEPENDENCIES_1) \
++@BUILD_LIBSOUP_TRUE@	$(am__DEPENDENCIES_1)
++am__libsoup_2_4_la_SOURCES_DIST = soup-address.c soup-auth.c \
++	soup-auth-basic.h soup-auth-basic.c soup-auth-digest.h \
++	soup-auth-digest.c soup-auth-ntlm.h soup-auth-ntlm.c \
++	soup-auth-domain.c soup-auth-domain-basic.c \
++	soup-auth-domain-digest.c soup-auth-manager.c \
++	soup-body-input-stream.h soup-body-input-stream.c \
++	soup-body-output-stream.h soup-body-output-stream.c \
++	soup-cache.c soup-cache-client-input-stream.h \
++	soup-cache-client-input-stream.c soup-cache-input-stream.h \
++	soup-cache-input-stream.c soup-cache-private.h \
++	soup-client-input-stream.h soup-client-input-stream.c \
++	soup-connection.h soup-connection.c soup-connection-auth.h \
++	soup-connection-auth.c soup-content-decoder.c \
++	soup-content-processor.h soup-content-processor.c \
++	soup-content-sniffer.c soup-content-sniffer-stream.h \
++	soup-content-sniffer-stream.c soup-converter-wrapper.h \
++	soup-converter-wrapper.c soup-cookie.c soup-cookie-jar.c \
++	soup-cookie-jar-db.c soup-cookie-jar-text.c soup-date.c \
++	soup-directory-input-stream.h soup-directory-input-stream.c \
++	soup-enum-types.h soup-enum-types.c soup-filter-input-stream.c \
++	soup-filter-input-stream.h soup-form.c soup-headers.c \
++	soup-io-stream.h soup-io-stream.c soup-logger.c soup-message.c \
++	soup-message-body.c soup-message-client-io.c \
++	soup-message-headers.c soup-message-io.c \
++	soup-message-private.h soup-message-queue.h \
++	soup-message-queue.c soup-message-server-io.c soup-method.c \
++	soup-misc.c soup-misc-private.h soup-multipart.c \
++	soup-multipart-input-stream.c soup-password-manager.c \
++	soup-path-map.h soup-path-map.c soup-proxy-resolver.c \
++	soup-proxy-resolver-default.c soup-proxy-resolver-wrapper.h \
++	soup-proxy-resolver-wrapper.c soup-proxy-uri-resolver.c \
++	soup-request.c soup-request-data.c soup-request-file.c \
++	soup-request-http.c soup-requester.c soup-server.c \
++	soup-session.c soup-session-async.c soup-session-feature.c \
++	soup-session-private.h soup-session-sync.c soup-socket.c \
++	soup-socket-private.h soup-socket-properties.c soup-status.c \
++	soup-tld.c soup-tld-private.h soup-uri.c soup-value-utils.c \
++	soup-version.c soup-websocket.c soup-websocket-connection.c \
++	soup-xmlrpc.c soup-xmlrpc-old.c
++@BUILD_LIBSOUP_TRUE@am_libsoup_2_4_la_OBJECTS = soup-address.lo \
++@BUILD_LIBSOUP_TRUE@	soup-auth.lo soup-auth-basic.lo \
++@BUILD_LIBSOUP_TRUE@	soup-auth-digest.lo soup-auth-ntlm.lo \
++@BUILD_LIBSOUP_TRUE@	soup-auth-domain.lo \
++@BUILD_LIBSOUP_TRUE@	soup-auth-domain-basic.lo \
++@BUILD_LIBSOUP_TRUE@	soup-auth-domain-digest.lo \
++@BUILD_LIBSOUP_TRUE@	soup-auth-manager.lo \
++@BUILD_LIBSOUP_TRUE@	soup-body-input-stream.lo \
++@BUILD_LIBSOUP_TRUE@	soup-body-output-stream.lo soup-cache.lo \
++@BUILD_LIBSOUP_TRUE@	soup-cache-client-input-stream.lo \
++@BUILD_LIBSOUP_TRUE@	soup-cache-input-stream.lo \
++@BUILD_LIBSOUP_TRUE@	soup-client-input-stream.lo \
++@BUILD_LIBSOUP_TRUE@	soup-connection.lo soup-connection-auth.lo \
++@BUILD_LIBSOUP_TRUE@	soup-content-decoder.lo \
++@BUILD_LIBSOUP_TRUE@	soup-content-processor.lo \
++@BUILD_LIBSOUP_TRUE@	soup-content-sniffer.lo \
++@BUILD_LIBSOUP_TRUE@	soup-content-sniffer-stream.lo \
++@BUILD_LIBSOUP_TRUE@	soup-converter-wrapper.lo soup-cookie.lo \
++@BUILD_LIBSOUP_TRUE@	soup-cookie-jar.lo soup-cookie-jar-db.lo \
++@BUILD_LIBSOUP_TRUE@	soup-cookie-jar-text.lo soup-date.lo \
++@BUILD_LIBSOUP_TRUE@	soup-directory-input-stream.lo \
++@BUILD_LIBSOUP_TRUE@	soup-enum-types.lo \
++@BUILD_LIBSOUP_TRUE@	soup-filter-input-stream.lo soup-form.lo \
++@BUILD_LIBSOUP_TRUE@	soup-headers.lo soup-io-stream.lo \
++@BUILD_LIBSOUP_TRUE@	soup-logger.lo soup-message.lo \
++@BUILD_LIBSOUP_TRUE@	soup-message-body.lo \
++@BUILD_LIBSOUP_TRUE@	soup-message-client-io.lo \
++@BUILD_LIBSOUP_TRUE@	soup-message-headers.lo soup-message-io.lo \
++@BUILD_LIBSOUP_TRUE@	soup-message-queue.lo \
++@BUILD_LIBSOUP_TRUE@	soup-message-server-io.lo soup-method.lo \
++@BUILD_LIBSOUP_TRUE@	soup-misc.lo soup-multipart.lo \
++@BUILD_LIBSOUP_TRUE@	soup-multipart-input-stream.lo \
++@BUILD_LIBSOUP_TRUE@	soup-password-manager.lo soup-path-map.lo \
++@BUILD_LIBSOUP_TRUE@	soup-proxy-resolver.lo \
++@BUILD_LIBSOUP_TRUE@	soup-proxy-resolver-default.lo \
++@BUILD_LIBSOUP_TRUE@	soup-proxy-resolver-wrapper.lo \
++@BUILD_LIBSOUP_TRUE@	soup-proxy-uri-resolver.lo soup-request.lo \
++@BUILD_LIBSOUP_TRUE@	soup-request-data.lo soup-request-file.lo \
++@BUILD_LIBSOUP_TRUE@	soup-request-http.lo soup-requester.lo \
++@BUILD_LIBSOUP_TRUE@	soup-server.lo soup-session.lo \
++@BUILD_LIBSOUP_TRUE@	soup-session-async.lo \
++@BUILD_LIBSOUP_TRUE@	soup-session-feature.lo \
++@BUILD_LIBSOUP_TRUE@	soup-session-sync.lo soup-socket.lo \
++@BUILD_LIBSOUP_TRUE@	soup-socket-properties.lo soup-status.lo \
++@BUILD_LIBSOUP_TRUE@	soup-tld.lo soup-uri.lo \
++@BUILD_LIBSOUP_TRUE@	soup-value-utils.lo soup-version.lo \
++@BUILD_LIBSOUP_TRUE@	soup-websocket.lo \
++@BUILD_LIBSOUP_TRUE@	soup-websocket-connection.lo \
++@BUILD_LIBSOUP_TRUE@	soup-xmlrpc.lo soup-xmlrpc-old.lo
+ libsoup_2_4_la_OBJECTS = $(am_libsoup_2_4_la_OBJECTS)
+ AM_V_lt = $(am__v_lt_@AM_V@)
+ am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
+@@ -181,8 +262,12 @@
+ 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
+ 	$(AM_CFLAGS) $(CFLAGS) $(libsoup_2_4_la_LDFLAGS) $(LDFLAGS) -o \
+ 	$@
++@BUILD_LIBSOUP_TRUE@am_libsoup_2_4_la_rpath = -rpath $(libdir)
++@BUILD_LIBSOUP_FALSE@@BUILD_LIBSOUP_GNOME_TRUE@am__DEPENDENCIES_2 = $(am__DEPENDENCIES_1)
+ @BUILD_LIBSOUP_GNOME_TRUE@libsoup_gnome_2_4_la_DEPENDENCIES =  \
+-@BUILD_LIBSOUP_GNOME_TRUE@	libsoup-2.4.la $(am__DEPENDENCIES_1)
++@BUILD_LIBSOUP_GNOME_TRUE@	$(am__DEPENDENCIES_1) \
++@BUILD_LIBSOUP_GNOME_TRUE@	$(am__append_8) \
++@BUILD_LIBSOUP_GNOME_TRUE@	$(am__DEPENDENCIES_2)
+ am__libsoup_gnome_2_4_la_SOURCES_DIST = soup-cookie-jar-sqlite.c \
+ 	soup-gnome-features.c soup-proxy-resolver-gnome.h \
+ 	soup-proxy-resolver-gnome.c soup-password-manager-gnome.h \
+@@ -234,7 +319,7 @@
+ am__v_CCLD_0 = @echo "  CCLD    " $@;
+ am__v_CCLD_1 = 
+ SOURCES = $(libsoup_2_4_la_SOURCES) $(libsoup_gnome_2_4_la_SOURCES)
+-DIST_SOURCES = $(libsoup_2_4_la_SOURCES) \
++DIST_SOURCES = $(am__libsoup_2_4_la_SOURCES_DIST) \
+ 	$(am__libsoup_gnome_2_4_la_SOURCES_DIST)
+ am__can_run_installinfo = \
+   case $$AM_UPDATE_INFO_DIR in \
+@@ -244,6 +329,25 @@
+ DATA = $(gir_DATA) $(typelib_DATA) $(vapi_DATA)
+ am__libsoupgnomeinclude_HEADERS_DIST = soup-cookie-jar-sqlite.h \
+ 	soup-gnome.h soup-gnome-features.h
++am__libsoupinclude_HEADERS_DIST = soup.h soup-address.h soup-auth.h \
++	soup-auth-domain.h soup-auth-domain-basic.h \
++	soup-auth-domain-digest.h soup-auth-manager.h \
++	soup-autocleanups.h soup-cache.h soup-content-decoder.h \
++	soup-content-sniffer.h soup-cookie.h soup-cookie-jar.h \
++	soup-cookie-jar-db.h soup-cookie-jar-text.h soup-date.h \
++	soup-form.h soup-headers.h soup-logger.h soup-message.h \
++	soup-message-body.h soup-message-headers.h soup-method.h \
++	soup-misc.h soup-multipart.h soup-multipart-input-stream.h \
++	soup-password-manager.h soup-portability.h \
++	soup-proxy-resolver.h soup-proxy-resolver-default.h \
++	soup-proxy-uri-resolver.h soup-request.h soup-request-data.h \
++	soup-request-file.h soup-request-http.h soup-requester.h \
++	soup-server.h soup-session.h soup-session-async.h \
++	soup-session-feature.h soup-session-sync.h soup-socket.h \
++	soup-status.h soup-tld.h soup-types.h soup-uri.h \
++	soup-value-utils.h soup-websocket.h \
++	soup-websocket-connection.h soup-xmlrpc.h soup-xmlrpc-old.h \
++	soup-enum-types.h
+ HEADERS = $(libsoupgnomeinclude_HEADERS) $(libsoupinclude_HEADERS) \
+ 	$(nodist_libsoupinclude_HEADERS)
+ am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
+@@ -349,6 +453,8 @@
+ LDFLAGS = @LDFLAGS@
+ LIBOBJS = @LIBOBJS@
+ LIBS = @LIBS@
++LIBSOUP_CFLAGS = @LIBSOUP_CFLAGS@
++LIBSOUP_LIBS = @LIBSOUP_LIBS@
+ LIBTOOL = @LIBTOOL@
+ LIPO = @LIPO@
+ LN_S = @LN_S@
+@@ -458,214 +564,200 @@
+ top_build_prefix = @top_build_prefix@
+ top_builddir = @top_builddir@
+ top_srcdir = @top_srcdir@
+-
+-# TLD rules
+-EXTRA_DIST = libsoup-2.4.sym tld-parser.py $(am__append_2) \
+-	$(am__append_5)
+-CLEANFILES = $(am__append_4) $(am__append_7)
++EXTRA_DIST = $(am__append_3) $(am__append_7) $(am__append_12)
++CLEANFILES = $(am__append_11) $(am__append_14)
++BUILT_SOURCES = $(am__append_4) $(GLIB_GENERATED)
+ @OS_WIN32_TRUE@LIBWS2_32 = -lws2_32
+-AM_CPPFLAGS = \
+-	-DG_LOG_DOMAIN=\"libsoup\" 	\
+-	-DLIBSOUP_COMPILATION		\
+-	-DLOCALEDIR=\"$(localedir)\"	\
+-	-I$(top_srcdir)			\
+-	-I$(top_builddir)		\
+-	$(SOUP_DEBUG_FLAGS)		\
+-	$(GLIB_CFLAGS)			\
+-	$(XML_CFLAGS)			\
+-	$(SQLITE_CFLAGS)		\
+-	$(CODE_COVERAGE_CFLAGS)
+-
+-libsoupincludedir = $(includedir)/libsoup-2.4/libsoup
+-soup_headers = \
+-	soup.h			\
+-	soup-address.h		\
+-	soup-auth.h		\
+-	soup-auth-domain.h	\
+-	soup-auth-domain-basic.h  \
+-	soup-auth-domain-digest.h \
+-	soup-auth-manager.h	\
+-	soup-autocleanups.h	\
+-	soup-cache.h		\
+-	soup-content-decoder.h	\
+-	soup-content-sniffer.h	\
+-	soup-cookie.h		\
+-	soup-cookie-jar.h	\
+-	soup-cookie-jar-db.h	\
+-	soup-cookie-jar-text.h	\
+-	soup-date.h		\
+-	soup-form.h		\
+-	soup-headers.h		\
+-	soup-logger.h		\
+-	soup-message.h		\
+-	soup-message-body.h	\
+-	soup-message-headers.h	\
+-	soup-method.h		\
+-	soup-misc.h     	\
+-	soup-multipart.h     	\
+-	soup-multipart-input-stream.h \
+-	soup-password-manager.h	\
+-	soup-portability.h	\
+-	soup-proxy-resolver.h	\
+-	soup-proxy-resolver-default.h	\
+-	soup-proxy-uri-resolver.h \
+-	soup-request.h		\
+-	soup-request-data.h	\
+-	soup-request-file.h	\
+-	soup-request-http.h	\
+-	soup-requester.h	\
+-	soup-server.h		\
+-	soup-session.h		\
+-	soup-session-async.h	\
+-	soup-session-feature.h	\
+-	soup-session-sync.h	\
+-	soup-socket.h		\
+-	soup-status.h		\
+-	soup-tld.h		\
+-	soup-types.h		\
+-	soup-uri.h		\
+-	soup-value-utils.h	\
+-	soup-websocket.h	\
+-	soup-websocket-connection.h	\
+-	soup-xmlrpc.h		\
+-	soup-xmlrpc-old.h
++lib_LTLIBRARIES = $(am__append_2) $(am__append_6)
++AM_CPPFLAGS = $(am__append_1) $(am__append_5)
++@BUILD_LIBSOUP_TRUE@libsoupincludedir = $(includedir)/libsoup-2.4/libsoup
++@BUILD_LIBSOUP_TRUE@soup_headers = \
++@BUILD_LIBSOUP_TRUE@	soup.h			\
++@BUILD_LIBSOUP_TRUE@	soup-address.h		\
++@BUILD_LIBSOUP_TRUE@	soup-auth.h		\
++@BUILD_LIBSOUP_TRUE@	soup-auth-domain.h	\
++@BUILD_LIBSOUP_TRUE@	soup-auth-domain-basic.h  \
++@BUILD_LIBSOUP_TRUE@	soup-auth-domain-digest.h \
++@BUILD_LIBSOUP_TRUE@	soup-auth-manager.h	\
++@BUILD_LIBSOUP_TRUE@	soup-autocleanups.h	\
++@BUILD_LIBSOUP_TRUE@	soup-cache.h		\
++@BUILD_LIBSOUP_TRUE@	soup-content-decoder.h	\
++@BUILD_LIBSOUP_TRUE@	soup-content-sniffer.h	\
++@BUILD_LIBSOUP_TRUE@	soup-cookie.h		\
++@BUILD_LIBSOUP_TRUE@	soup-cookie-jar.h	\
++@BUILD_LIBSOUP_TRUE@	soup-cookie-jar-db.h	\
++@BUILD_LIBSOUP_TRUE@	soup-cookie-jar-text.h	\
++@BUILD_LIBSOUP_TRUE@	soup-date.h		\
++@BUILD_LIBSOUP_TRUE@	soup-form.h		\
++@BUILD_LIBSOUP_TRUE@	soup-headers.h		\
++@BUILD_LIBSOUP_TRUE@	soup-logger.h		\
++@BUILD_LIBSOUP_TRUE@	soup-message.h		\
++@BUILD_LIBSOUP_TRUE@	soup-message-body.h	\
++@BUILD_LIBSOUP_TRUE@	soup-message-headers.h	\
++@BUILD_LIBSOUP_TRUE@	soup-method.h		\
++@BUILD_LIBSOUP_TRUE@	soup-misc.h     	\
++@BUILD_LIBSOUP_TRUE@	soup-multipart.h     	\
++@BUILD_LIBSOUP_TRUE@	soup-multipart-input-stream.h \
++@BUILD_LIBSOUP_TRUE@	soup-password-manager.h	\
++@BUILD_LIBSOUP_TRUE@	soup-portability.h	\
++@BUILD_LIBSOUP_TRUE@	soup-proxy-resolver.h	\
++@BUILD_LIBSOUP_TRUE@	soup-proxy-resolver-default.h	\
++@BUILD_LIBSOUP_TRUE@	soup-proxy-uri-resolver.h \
++@BUILD_LIBSOUP_TRUE@	soup-request.h		\
++@BUILD_LIBSOUP_TRUE@	soup-request-data.h	\
++@BUILD_LIBSOUP_TRUE@	soup-request-file.h	\
++@BUILD_LIBSOUP_TRUE@	soup-request-http.h	\
++@BUILD_LIBSOUP_TRUE@	soup-requester.h	\
++@BUILD_LIBSOUP_TRUE@	soup-server.h		\
++@BUILD_LIBSOUP_TRUE@	soup-session.h		\
++@BUILD_LIBSOUP_TRUE@	soup-session-async.h	\
++@BUILD_LIBSOUP_TRUE@	soup-session-feature.h	\
++@BUILD_LIBSOUP_TRUE@	soup-session-sync.h	\
++@BUILD_LIBSOUP_TRUE@	soup-socket.h		\
++@BUILD_LIBSOUP_TRUE@	soup-status.h		\
++@BUILD_LIBSOUP_TRUE@	soup-tld.h		\
++@BUILD_LIBSOUP_TRUE@	soup-types.h		\
++@BUILD_LIBSOUP_TRUE@	soup-uri.h		\
++@BUILD_LIBSOUP_TRUE@	soup-value-utils.h	\
++@BUILD_LIBSOUP_TRUE@	soup-websocket.h	\
++@BUILD_LIBSOUP_TRUE@	soup-websocket-connection.h	\
++@BUILD_LIBSOUP_TRUE@	soup-xmlrpc.h		\
++@BUILD_LIBSOUP_TRUE@	soup-xmlrpc-old.h
++
++@BUILD_LIBSOUP_TRUE@libsoupinclude_HEADERS = \
++@BUILD_LIBSOUP_TRUE@	$(soup_headers)		\
++@BUILD_LIBSOUP_TRUE@	soup-enum-types.h
++
++@BUILD_LIBSOUP_TRUE@nodist_libsoupinclude_HEADERS = \
++@BUILD_LIBSOUP_TRUE@	soup-version.h
++
++@BUILD_LIBSOUP_TRUE@libsoup_2_4_la_LDFLAGS = \
++@BUILD_LIBSOUP_TRUE@	-version-info $(SOUP_CURRENT):$(SOUP_REVISION):$(SOUP_AGE) \
++@BUILD_LIBSOUP_TRUE@	-no-undefined \
++@BUILD_LIBSOUP_TRUE@	-export-symbols $(srcdir)/libsoup-2.4.sym \
++@BUILD_LIBSOUP_TRUE@	$(CODE_COVERAGE_LDFLAGS)
++
++@BUILD_LIBSOUP_TRUE@libsoup_2_4_la_LIBADD = \
++@BUILD_LIBSOUP_TRUE@	$(GLIB_LIBS)			\
++@BUILD_LIBSOUP_TRUE@	$(LIBWS2_32)			\
++@BUILD_LIBSOUP_TRUE@	$(XML_LIBS)			\
++@BUILD_LIBSOUP_TRUE@	$(SQLITE_LIBS)
++
++@BUILD_LIBSOUP_TRUE@libsoup_2_4_la_SOURCES = \
++@BUILD_LIBSOUP_TRUE@	soup-address.c			\
++@BUILD_LIBSOUP_TRUE@	soup-auth.c			\
++@BUILD_LIBSOUP_TRUE@	soup-auth-basic.h		\
++@BUILD_LIBSOUP_TRUE@	soup-auth-basic.c		\
++@BUILD_LIBSOUP_TRUE@	soup-auth-digest.h		\
++@BUILD_LIBSOUP_TRUE@	soup-auth-digest.c		\
++@BUILD_LIBSOUP_TRUE@	soup-auth-ntlm.h		\
++@BUILD_LIBSOUP_TRUE@	soup-auth-ntlm.c		\
++@BUILD_LIBSOUP_TRUE@	soup-auth-domain.c		\
++@BUILD_LIBSOUP_TRUE@	soup-auth-domain-basic.c	\
++@BUILD_LIBSOUP_TRUE@	soup-auth-domain-digest.c	\
++@BUILD_LIBSOUP_TRUE@	soup-auth-manager.c		\
++@BUILD_LIBSOUP_TRUE@	soup-body-input-stream.h	\
++@BUILD_LIBSOUP_TRUE@	soup-body-input-stream.c	\
++@BUILD_LIBSOUP_TRUE@	soup-body-output-stream.h	\
++@BUILD_LIBSOUP_TRUE@	soup-body-output-stream.c	\
++@BUILD_LIBSOUP_TRUE@	soup-cache.c			\
++@BUILD_LIBSOUP_TRUE@	soup-cache-client-input-stream.h\
++@BUILD_LIBSOUP_TRUE@	soup-cache-client-input-stream.c\
++@BUILD_LIBSOUP_TRUE@	soup-cache-input-stream.h	\
++@BUILD_LIBSOUP_TRUE@	soup-cache-input-stream.c	\
++@BUILD_LIBSOUP_TRUE@	soup-cache-private.h		\
++@BUILD_LIBSOUP_TRUE@	soup-client-input-stream.h	\
++@BUILD_LIBSOUP_TRUE@	soup-client-input-stream.c	\
++@BUILD_LIBSOUP_TRUE@	soup-connection.h		\
++@BUILD_LIBSOUP_TRUE@	soup-connection.c		\
++@BUILD_LIBSOUP_TRUE@	soup-connection-auth.h		\
++@BUILD_LIBSOUP_TRUE@	soup-connection-auth.c		\
++@BUILD_LIBSOUP_TRUE@	soup-content-decoder.c		\
++@BUILD_LIBSOUP_TRUE@	soup-content-processor.h	\
++@BUILD_LIBSOUP_TRUE@	soup-content-processor.c	\
++@BUILD_LIBSOUP_TRUE@	soup-content-sniffer.c		\
++@BUILD_LIBSOUP_TRUE@	soup-content-sniffer-stream.h	\
++@BUILD_LIBSOUP_TRUE@	soup-content-sniffer-stream.c	\
++@BUILD_LIBSOUP_TRUE@	soup-converter-wrapper.h	\
++@BUILD_LIBSOUP_TRUE@	soup-converter-wrapper.c	\
++@BUILD_LIBSOUP_TRUE@	soup-cookie.c			\
++@BUILD_LIBSOUP_TRUE@	soup-cookie-jar.c		\
++@BUILD_LIBSOUP_TRUE@	soup-cookie-jar-db.c		\
++@BUILD_LIBSOUP_TRUE@	soup-cookie-jar-text.c		\
++@BUILD_LIBSOUP_TRUE@	soup-date.c			\
++@BUILD_LIBSOUP_TRUE@	soup-directory-input-stream.h	\
++@BUILD_LIBSOUP_TRUE@	soup-directory-input-stream.c	\
++@BUILD_LIBSOUP_TRUE@	soup-enum-types.h		\
++@BUILD_LIBSOUP_TRUE@	soup-enum-types.c		\
++@BUILD_LIBSOUP_TRUE@	soup-filter-input-stream.c	\
++@BUILD_LIBSOUP_TRUE@	soup-filter-input-stream.h	\
++@BUILD_LIBSOUP_TRUE@	soup-form.c			\
++@BUILD_LIBSOUP_TRUE@	soup-headers.c			\
++@BUILD_LIBSOUP_TRUE@	soup-io-stream.h		\
++@BUILD_LIBSOUP_TRUE@	soup-io-stream.c		\
++@BUILD_LIBSOUP_TRUE@	soup-logger.c			\
++@BUILD_LIBSOUP_TRUE@	soup-message.c			\
++@BUILD_LIBSOUP_TRUE@	soup-message-body.c		\
++@BUILD_LIBSOUP_TRUE@	soup-message-client-io.c	\
++@BUILD_LIBSOUP_TRUE@	soup-message-headers.c		\
++@BUILD_LIBSOUP_TRUE@	soup-message-io.c		\
++@BUILD_LIBSOUP_TRUE@	soup-message-private.h		\
++@BUILD_LIBSOUP_TRUE@	soup-message-queue.h		\
++@BUILD_LIBSOUP_TRUE@	soup-message-queue.c		\
++@BUILD_LIBSOUP_TRUE@	soup-message-server-io.c	\
++@BUILD_LIBSOUP_TRUE@	soup-method.c     		\
++@BUILD_LIBSOUP_TRUE@	soup-misc.c     		\
++@BUILD_LIBSOUP_TRUE@	soup-misc-private.h		\
++@BUILD_LIBSOUP_TRUE@	soup-multipart.c	     	\
++@BUILD_LIBSOUP_TRUE@	soup-multipart-input-stream.c	\
++@BUILD_LIBSOUP_TRUE@	soup-password-manager.c		\
++@BUILD_LIBSOUP_TRUE@	soup-path-map.h     		\
++@BUILD_LIBSOUP_TRUE@	soup-path-map.c     		\
++@BUILD_LIBSOUP_TRUE@	soup-proxy-resolver.c		\
++@BUILD_LIBSOUP_TRUE@	soup-proxy-resolver-default.c	\
++@BUILD_LIBSOUP_TRUE@	soup-proxy-resolver-wrapper.h	\
++@BUILD_LIBSOUP_TRUE@	soup-proxy-resolver-wrapper.c	\
++@BUILD_LIBSOUP_TRUE@	soup-proxy-uri-resolver.c	\
++@BUILD_LIBSOUP_TRUE@	soup-request.c			\
++@BUILD_LIBSOUP_TRUE@	soup-request-data.c		\
++@BUILD_LIBSOUP_TRUE@	soup-request-file.c		\
++@BUILD_LIBSOUP_TRUE@	soup-request-http.c		\
++@BUILD_LIBSOUP_TRUE@	soup-requester.c		\
++@BUILD_LIBSOUP_TRUE@	soup-server.c			\
++@BUILD_LIBSOUP_TRUE@	soup-session.c			\
++@BUILD_LIBSOUP_TRUE@	soup-session-async.c		\
++@BUILD_LIBSOUP_TRUE@	soup-session-feature.c		\
++@BUILD_LIBSOUP_TRUE@	soup-session-private.h		\
++@BUILD_LIBSOUP_TRUE@	soup-session-sync.c		\
++@BUILD_LIBSOUP_TRUE@	soup-socket.c			\
++@BUILD_LIBSOUP_TRUE@	soup-socket-private.h		\
++@BUILD_LIBSOUP_TRUE@	soup-socket-properties.c	\
++@BUILD_LIBSOUP_TRUE@	soup-status.c			\
++@BUILD_LIBSOUP_TRUE@	soup-tld.c			\
++@BUILD_LIBSOUP_TRUE@	soup-tld-private.h		\
++@BUILD_LIBSOUP_TRUE@	soup-uri.c			\
++@BUILD_LIBSOUP_TRUE@	soup-value-utils.c		\
++@BUILD_LIBSOUP_TRUE@	soup-version.c			\
++@BUILD_LIBSOUP_TRUE@	soup-websocket.c		\
++@BUILD_LIBSOUP_TRUE@	soup-websocket-connection.c	\
++@BUILD_LIBSOUP_TRUE@	soup-xmlrpc.c			\
++@BUILD_LIBSOUP_TRUE@	soup-xmlrpc-old.c
+ 
+-libsoupinclude_HEADERS = \
+-	$(soup_headers)		\
+-	soup-enum-types.h
+-
+-nodist_libsoupinclude_HEADERS = \
+-	soup-version.h
+-
+-lib_LTLIBRARIES = libsoup-2.4.la $(am__append_1)
+-libsoup_2_4_la_LDFLAGS = \
+-	-version-info $(SOUP_CURRENT):$(SOUP_REVISION):$(SOUP_AGE) \
+-	-no-undefined \
+-	-export-symbols $(srcdir)/libsoup-2.4.sym \
+-	$(CODE_COVERAGE_LDFLAGS)
+-
+-libsoup_2_4_la_LIBADD = \
+-	$(GLIB_LIBS)			\
+-	$(LIBWS2_32)			\
+-	$(XML_LIBS)			\
+-	$(SQLITE_LIBS)
+-
+-libsoup_2_4_la_SOURCES = \
+-	soup-address.c			\
+-	soup-auth.c			\
+-	soup-auth-basic.h		\
+-	soup-auth-basic.c		\
+-	soup-auth-digest.h		\
+-	soup-auth-digest.c		\
+-	soup-auth-ntlm.h		\
+-	soup-auth-ntlm.c		\
+-	soup-auth-domain.c		\
+-	soup-auth-domain-basic.c	\
+-	soup-auth-domain-digest.c	\
+-	soup-auth-manager.c		\
+-	soup-body-input-stream.h	\
+-	soup-body-input-stream.c	\
+-	soup-body-output-stream.h	\
+-	soup-body-output-stream.c	\
+-	soup-cache.c			\
+-	soup-cache-client-input-stream.h\
+-	soup-cache-client-input-stream.c\
+-	soup-cache-input-stream.h	\
+-	soup-cache-input-stream.c	\
+-	soup-cache-private.h		\
+-	soup-client-input-stream.h	\
+-	soup-client-input-stream.c	\
+-	soup-connection.h		\
+-	soup-connection.c		\
+-	soup-connection-auth.h		\
+-	soup-connection-auth.c		\
+-	soup-content-decoder.c		\
+-	soup-content-processor.h	\
+-	soup-content-processor.c	\
+-	soup-content-sniffer.c		\
+-	soup-content-sniffer-stream.h	\
+-	soup-content-sniffer-stream.c	\
+-	soup-converter-wrapper.h	\
+-	soup-converter-wrapper.c	\
+-	soup-cookie.c			\
+-	soup-cookie-jar.c		\
+-	soup-cookie-jar-db.c		\
+-	soup-cookie-jar-text.c		\
+-	soup-date.c			\
+-	soup-directory-input-stream.h	\
+-	soup-directory-input-stream.c	\
+-	soup-enum-types.h		\
+-	soup-enum-types.c		\
+-	soup-filter-input-stream.c	\
+-	soup-filter-input-stream.h	\
+-	soup-form.c			\
+-	soup-headers.c			\
+-	soup-io-stream.h		\
+-	soup-io-stream.c		\
+-	soup-logger.c			\
+-	soup-message.c			\
+-	soup-message-body.c		\
+-	soup-message-client-io.c	\
+-	soup-message-headers.c		\
+-	soup-message-io.c		\
+-	soup-message-private.h		\
+-	soup-message-queue.h		\
+-	soup-message-queue.c		\
+-	soup-message-server-io.c	\
+-	soup-method.c     		\
+-	soup-misc.c     		\
+-	soup-misc-private.h		\
+-	soup-multipart.c	     	\
+-	soup-multipart-input-stream.c	\
+-	soup-password-manager.c		\
+-	soup-path-map.h     		\
+-	soup-path-map.c     		\
+-	soup-proxy-resolver.c		\
+-	soup-proxy-resolver-default.c	\
+-	soup-proxy-resolver-wrapper.h	\
+-	soup-proxy-resolver-wrapper.c	\
+-	soup-proxy-uri-resolver.c	\
+-	soup-request.c			\
+-	soup-request-data.c		\
+-	soup-request-file.c		\
+-	soup-request-http.c		\
+-	soup-requester.c		\
+-	soup-server.c			\
+-	soup-session.c			\
+-	soup-session-async.c		\
+-	soup-session-feature.c		\
+-	soup-session-private.h		\
+-	soup-session-sync.c		\
+-	soup-socket.c			\
+-	soup-socket-private.h		\
+-	soup-socket-properties.c	\
+-	soup-status.c			\
+-	soup-tld.c			\
+-	soup-tld-private.h		\
+-	soup-uri.c			\
+-	soup-value-utils.c		\
+-	soup-version.c			\
+-	soup-websocket.c		\
+-	soup-websocket-connection.c	\
+-	soup-xmlrpc.c			\
+-	soup-xmlrpc-old.c
+-
+-TLD_DATA_FILE = $(top_srcdir)/data/effective_tld_names.dat
++@BUILD_LIBSOUP_TRUE@TLD_DATA_FILE = $(top_srcdir)/data/effective_tld_names.dat
+ @BUILD_LIBSOUP_GNOME_TRUE@libsoupgnomeincludedir = $(includedir)/libsoup-gnome-2.4/libsoup
+ @BUILD_LIBSOUP_GNOME_TRUE@libsoupgnomeinclude_HEADERS = \
+ @BUILD_LIBSOUP_GNOME_TRUE@	soup-cookie-jar-sqlite.h\
+ @BUILD_LIBSOUP_GNOME_TRUE@	soup-gnome.h		\
+ @BUILD_LIBSOUP_GNOME_TRUE@	soup-gnome-features.h
+ 
+-@BUILD_LIBSOUP_GNOME_TRUE@libsoup_gnome_2_4_la_LDFLAGS = \
+-@BUILD_LIBSOUP_GNOME_TRUE@	-version-info $(SOUP_CURRENT):$(SOUP_REVISION):$(SOUP_AGE) \
+-@BUILD_LIBSOUP_GNOME_TRUE@	-no-undefined \
+-@BUILD_LIBSOUP_GNOME_TRUE@	-export-symbols $(srcdir)/libsoup-gnome-2.4.sym
+-
+-@BUILD_LIBSOUP_GNOME_TRUE@libsoup_gnome_2_4_la_LIBADD = \
+-@BUILD_LIBSOUP_GNOME_TRUE@	libsoup-2.4.la			\
+-@BUILD_LIBSOUP_GNOME_TRUE@	$(GLIB_LIBS)
+-
++@BUILD_LIBSOUP_FALSE@@BUILD_LIBSOUP_GNOME_TRUE@libsoup_gnome_2_4_la_LDFLAGS = \
++@BUILD_LIBSOUP_FALSE@@BUILD_LIBSOUP_GNOME_TRUE@	-version-info $(SOUP_CURRENT):$(SOUP_REVISION):$(SOUP_AGE) \
++@BUILD_LIBSOUP_FALSE@@BUILD_LIBSOUP_GNOME_TRUE@	-no-undefined \
++@BUILD_LIBSOUP_FALSE@@BUILD_LIBSOUP_GNOME_TRUE@	-export-symbols $(srcdir)/libsoup-gnome-2.4.sym
++
++@BUILD_LIBSOUP_GNOME_TRUE@@BUILD_LIBSOUP_TRUE@libsoup_gnome_2_4_la_LDFLAGS = $(libsoup_2_4_la_LDFLAGS)
++@BUILD_LIBSOUP_GNOME_TRUE@libsoup_gnome_2_4_la_LIBADD = $(GLIB_LIBS) \
++@BUILD_LIBSOUP_GNOME_TRUE@	$(am__append_8) $(am__append_9)
+ @BUILD_LIBSOUP_GNOME_TRUE@libsoup_gnome_2_4_la_SOURCES = \
+ @BUILD_LIBSOUP_GNOME_TRUE@	soup-cookie-jar-sqlite.c	\
+ @BUILD_LIBSOUP_GNOME_TRUE@	soup-gnome-features.c		\
+@@ -675,36 +767,34 @@
+ @BUILD_LIBSOUP_GNOME_TRUE@	soup-password-manager-gnome.c
+ 
+ GLIB_GENERATED = soup-enum-types.c soup-enum-types.h
+-BUILT_SOURCES = \
+-	$(GLIB_GENERATED)   \
+-	tld_data.inc
+-
+ soup_enum_types_sources = $(libsoupinclude_HEADERS) $(libsoupgnomeinclude_HEADERS)
+ soup_enum_types_MKENUMS_C_FLAGS = --fhead "\#define LIBSOUP_USE_UNSTABLE_REQUEST_API"
+-INTROSPECTION_GIRS = $(am__append_3) $(am__append_6)
++INTROSPECTION_GIRS = $(am__append_10) $(am__append_13)
+ INTROSPECTION_SCANNER_ARGS = --add-include-path=.
+ INTROSPECTION_COMPILER_ARGS = --includedir=.
+ 
+ # Core library
+-@HAVE_INTROSPECTION_TRUE@gi_soup_files = \
+-@HAVE_INTROSPECTION_TRUE@	$(filter-out soup.h soup-enum-types.% soup-proxy-resolver.h,\
+-@HAVE_INTROSPECTION_TRUE@	   $(soup_headers) $(filter-out %.h, $(libsoup_2_4_la_SOURCES)))
+-
+-@HAVE_INTROSPECTION_TRUE@gi_built_soup_files = soup-enum-types.h
+-@HAVE_INTROSPECTION_TRUE@Soup_2_4_gir_INCLUDES = Gio-2.0
+-@HAVE_INTROSPECTION_TRUE@Soup_2_4_gir_CFLAGS = $(AM_CPPFLAGS) -DLIBSOUP_USE_UNSTABLE_REQUEST_API
+-@HAVE_INTROSPECTION_TRUE@Soup_2_4_gir_LIBS = libsoup-2.4.la
+-@HAVE_INTROSPECTION_TRUE@Soup_2_4_gir_EXPORT_PACKAGES = libsoup-2.4
+-@HAVE_INTROSPECTION_TRUE@Soup_2_4_gir_SCANNERFLAGS = --c-include "libsoup/soup.h"
+-@HAVE_INTROSPECTION_TRUE@Soup_2_4_gir_FILES = \
+-@HAVE_INTROSPECTION_TRUE@	$(addprefix $(srcdir)/, $(gi_soup_files)) \
+-@HAVE_INTROSPECTION_TRUE@        $(foreach f,$(gi_built_soup_files), \
+-@HAVE_INTROSPECTION_TRUE@	   $(if $(shell test -f $(addprefix $(srcdir)/,$(f)) && echo yes), \
+-@HAVE_INTROSPECTION_TRUE@	      $(addprefix $(srcdir)/,$(f)), \
+-@HAVE_INTROSPECTION_TRUE@	      $(f)))
+-
+-@ENABLE_VAPIGEN_TRUE@@HAVE_INTROSPECTION_TRUE@vapidir = $(VAPIDIR)
+-@ENABLE_VAPIGEN_TRUE@@HAVE_INTROSPECTION_TRUE@vapi_DATA = libsoup-2.4.vapi
++@BUILD_LIBSOUP_TRUE@@HAVE_INTROSPECTION_TRUE@gi_soup_files = \
++@BUILD_LIBSOUP_TRUE@@HAVE_INTROSPECTION_TRUE@	$(filter-out soup.h soup-enum-types.% soup-proxy-resolver.h,\
++@BUILD_LIBSOUP_TRUE@@HAVE_INTROSPECTION_TRUE@	   $(soup_headers) $(filter-out %.h, $(libsoup_2_4_la_SOURCES)))
++
++@BUILD_LIBSOUP_TRUE@@HAVE_INTROSPECTION_TRUE@gi_built_soup_files = soup-enum-types.h
++@BUILD_LIBSOUP_TRUE@@HAVE_INTROSPECTION_TRUE@Soup_2_4_gir_INCLUDES = Gio-2.0
++@BUILD_LIBSOUP_TRUE@@HAVE_INTROSPECTION_TRUE@Soup_2_4_gir_CFLAGS = $(AM_CPPFLAGS) -DLIBSOUP_USE_UNSTABLE_REQUEST_API
++@BUILD_LIBSOUP_TRUE@@HAVE_INTROSPECTION_TRUE@Soup_2_4_gir_LIBS = libsoup-2.4.la
++@BUILD_LIBSOUP_TRUE@@HAVE_INTROSPECTION_TRUE@Soup_2_4_gir_EXPORT_PACKAGES = libsoup-2.4
++@BUILD_LIBSOUP_TRUE@@HAVE_INTROSPECTION_TRUE@Soup_2_4_gir_SCANNERFLAGS = --c-include "libsoup/soup.h"
++@BUILD_LIBSOUP_TRUE@@HAVE_INTROSPECTION_TRUE@Soup_2_4_gir_FILES = \
++@BUILD_LIBSOUP_TRUE@@HAVE_INTROSPECTION_TRUE@	$(addprefix $(srcdir)/, $(gi_soup_files)) \
++@BUILD_LIBSOUP_TRUE@@HAVE_INTROSPECTION_TRUE@        $(foreach f,$(gi_built_soup_files), \
++@BUILD_LIBSOUP_TRUE@@HAVE_INTROSPECTION_TRUE@	   $(if $(shell test -f $(addprefix $(srcdir)/,$(f)) && echo yes), \
++@BUILD_LIBSOUP_TRUE@@HAVE_INTROSPECTION_TRUE@	      $(addprefix $(srcdir)/,$(f)), \
++@BUILD_LIBSOUP_TRUE@@HAVE_INTROSPECTION_TRUE@	      $(f)))
++
++@BUILD_LIBSOUP_TRUE@@ENABLE_VAPIGEN_TRUE@@HAVE_INTROSPECTION_TRUE@vapidir = $(VAPIDIR)
++@BUILD_LIBSOUP_TRUE@@ENABLE_VAPIGEN_TRUE@@HAVE_INTROSPECTION_TRUE@vapi_DATA = libsoup-2.4.vapi
++@BUILD_LIBSOUP_FALSE@@BUILD_LIBSOUP_GNOME_TRUE@@HAVE_INTROSPECTION_TRUE@SOUP_GIR = 
++@BUILD_LIBSOUP_GNOME_TRUE@@BUILD_LIBSOUP_TRUE@@HAVE_INTROSPECTION_TRUE@SOUP_GIR = Soup-2.4.gir
+ 
+ # GNOME extensions
+ @BUILD_LIBSOUP_GNOME_TRUE@@HAVE_INTROSPECTION_TRUE@gi_soup_gnome_files = $(filter-out soup-gnome.h,\
+@@ -714,11 +804,10 @@
+ @BUILD_LIBSOUP_GNOME_TRUE@@HAVE_INTROSPECTION_TRUE@SoupGNOME_2_4_gir_SCANNERFLAGS = \
+ @BUILD_LIBSOUP_GNOME_TRUE@@HAVE_INTROSPECTION_TRUE@	--identifier-prefix=Soup			\
+ @BUILD_LIBSOUP_GNOME_TRUE@@HAVE_INTROSPECTION_TRUE@	--symbol-prefix=soup				\
+-@BUILD_LIBSOUP_GNOME_TRUE@@HAVE_INTROSPECTION_TRUE@	--c-include "libsoup/soup-gnome.h"		\
+-@BUILD_LIBSOUP_GNOME_TRUE@@HAVE_INTROSPECTION_TRUE@	--include-uninstalled=$(builddir)/Soup-2.4.gir
++@BUILD_LIBSOUP_GNOME_TRUE@@HAVE_INTROSPECTION_TRUE@	--c-include "libsoup/soup-gnome.h"
+ 
+ @BUILD_LIBSOUP_GNOME_TRUE@@HAVE_INTROSPECTION_TRUE@SoupGNOME_2_4_gir_CFLAGS = $(AM_CPPFLAGS)
+-@BUILD_LIBSOUP_GNOME_TRUE@@HAVE_INTROSPECTION_TRUE@SoupGNOME_2_4_gir_LIBS = libsoup-gnome-2.4.la libsoup-2.4.la
++@BUILD_LIBSOUP_GNOME_TRUE@@HAVE_INTROSPECTION_TRUE@SoupGNOME_2_4_gir_LIBS = libsoup-gnome-2.4.la
+ @BUILD_LIBSOUP_GNOME_TRUE@@HAVE_INTROSPECTION_TRUE@SoupGNOME_2_4_gir_FILES = $(addprefix $(srcdir)/,$(gi_soup_gnome_files))
+ @BUILD_LIBSOUP_GNOME_TRUE@@HAVE_INTROSPECTION_TRUE@SoupGNOME_2_4_gir_EXPORT_PACKAGES = libsoup-gnome-2.4
+ @HAVE_INTROSPECTION_TRUE@girdir = $(datadir)/gir-1.0
+@@ -799,7 +888,7 @@
+ 	}
+ 
+ libsoup-2.4.la: $(libsoup_2_4_la_OBJECTS) $(libsoup_2_4_la_DEPENDENCIES) $(EXTRA_libsoup_2_4_la_DEPENDENCIES) 
+-	$(AM_V_CCLD)$(libsoup_2_4_la_LINK) -rpath $(libdir) $(libsoup_2_4_la_OBJECTS) $(libsoup_2_4_la_LIBADD) $(LIBS)
++	$(AM_V_CCLD)$(libsoup_2_4_la_LINK) $(am_libsoup_2_4_la_rpath) $(libsoup_2_4_la_OBJECTS) $(libsoup_2_4_la_LIBADD) $(LIBS)
+ 
+ libsoup-gnome-2.4.la: $(libsoup_gnome_2_4_la_OBJECTS) $(libsoup_gnome_2_4_la_DEPENDENCIES) $(EXTRA_libsoup_gnome_2_4_la_DEPENDENCIES) 
+ 	$(AM_V_CCLD)$(libsoup_gnome_2_4_la_LINK) $(am_libsoup_gnome_2_4_la_rpath) $(libsoup_gnome_2_4_la_OBJECTS) $(libsoup_gnome_2_4_la_LIBADD) $(LIBS)
+@@ -1122,6 +1211,7 @@
+ 	    || exit 1; \
+ 	  fi; \
+ 	done
++@BUILD_LIBSOUP_FALSE@@BUILD_LIBSOUP_GNOME_FALSE@check-local:
+ @OS_LINUX_FALSE@check-local:
+ check-am: all-am
+ 	$(MAKE) $(AM_MAKEFLAGS) check-local
+@@ -1270,29 +1360,37 @@
+ 
+ include $(GLIB_MAKEFILE)
+ 
+-tld_data.inc: tld-parser.py $(TLD_DATA_FILE)
+-	$(srcdir)/tld-parser.py $(TLD_DATA_FILE) tld_data.inc
++@BUILD_LIBSOUP_TRUE@tld_data.inc: tld-parser.py $(TLD_DATA_FILE)
++@BUILD_LIBSOUP_TRUE@	$(AM_V_GEN) python $(srcdir)/tld-parser.py $(TLD_DATA_FILE) tld_data.inc
+ 
+ #
+ # Introspection support
+ #
+ include $(INTROSPECTION_MAKEFILE)
+ 
+-@HAVE_INTROSPECTION_TRUE@Soup-2.4.gir: libsoup-2.4.la
++@BUILD_LIBSOUP_TRUE@@HAVE_INTROSPECTION_TRUE@Soup-2.4.gir: libsoup-2.4.la
+ 
+-@ENABLE_VAPIGEN_TRUE@@HAVE_INTROSPECTION_TRUE@libsoup-2.4.vapi: Soup-2.4.gir Soup-2.4.metadata Soup-2.4-custom.vala
+-@ENABLE_VAPIGEN_TRUE@@HAVE_INTROSPECTION_TRUE@	$(VAPIGEN) --metadatadir=$(top_srcdir)/libsoup --pkg gio-2.0 --library=libsoup-2.4 $^
+-@BUILD_LIBSOUP_GNOME_TRUE@@HAVE_INTROSPECTION_TRUE@SoupGNOME-2.4.gir: libsoup-gnome-2.4.la Soup-2.4.gir
++@BUILD_LIBSOUP_TRUE@@ENABLE_VAPIGEN_TRUE@@HAVE_INTROSPECTION_TRUE@libsoup-2.4.vapi: Soup-2.4.gir Soup-2.4.metadata Soup-2.4-custom.vala
++@BUILD_LIBSOUP_TRUE@@ENABLE_VAPIGEN_TRUE@@HAVE_INTROSPECTION_TRUE@	$(VAPIGEN) --metadatadir=$(top_srcdir)/libsoup --pkg gio-2.0 --library=libsoup-2.4 $^
++@BUILD_LIBSOUP_GNOME_TRUE@@HAVE_INTROSPECTION_TRUE@SoupGNOME-2.4.gir: libsoup-gnome-2.4.la $(SOUP_GIR)
+ 
+ # We only do this check on Linux, so we don't have to worry about
+ # different "nm" output on other platforms
+-@OS_LINUX_TRUE@check-local:
+-@OS_LINUX_TRUE@	@echo Checking libsoup-2.4.so symbols
+-@OS_LINUX_TRUE@	@nm $(builddir)/.libs/libsoup-2.4.so | \
+-@OS_LINUX_TRUE@		grep "^[[:xdigit:]]\+ [BGTRS] " | \
+-@OS_LINUX_TRUE@		sed "s/^[[:xdigit:]]\+ [BGTRS] //" | \
+-@OS_LINUX_TRUE@		env LC_ALL=C sort -u | \
+-@OS_LINUX_TRUE@		diff -U0 $(srcdir)/libsoup-2.4.sym - >&2
++@BUILD_LIBSOUP_TRUE@@OS_LINUX_TRUE@check-local:
++@BUILD_LIBSOUP_TRUE@@OS_LINUX_TRUE@	@echo Checking libsoup-2.4.so symbols
++@BUILD_LIBSOUP_TRUE@@OS_LINUX_TRUE@	@nm $(builddir)/.libs/libsoup-2.4.so | \
++@BUILD_LIBSOUP_TRUE@@OS_LINUX_TRUE@		grep "^[[:xdigit:]]\+ [BGTRS] " | \
++@BUILD_LIBSOUP_TRUE@@OS_LINUX_TRUE@		sed "s/^[[:xdigit:]]\+ [BGTRS] //" | \
++@BUILD_LIBSOUP_TRUE@@OS_LINUX_TRUE@		env LC_ALL=C sort -u | \
++@BUILD_LIBSOUP_TRUE@@OS_LINUX_TRUE@		diff -U0 $(srcdir)/libsoup-2.4.sym - >&2
++
++@BUILD_LIBSOUP_GNOME_TRUE@@OS_LINUX_TRUE@check-local:
++@BUILD_LIBSOUP_GNOME_TRUE@@OS_LINUX_TRUE@	@echo Checking libsoup-gnome-2.4.so symbols
++@BUILD_LIBSOUP_GNOME_TRUE@@OS_LINUX_TRUE@	@nm $(builddir)/.libs/libsoup-gnome-2.4.so | \
++@BUILD_LIBSOUP_GNOME_TRUE@@OS_LINUX_TRUE@		grep "^[[:xdigit:]]\+ [BTR] " | \
++@BUILD_LIBSOUP_GNOME_TRUE@@OS_LINUX_TRUE@		sed "s/^[[:xdigit:]]\+ [BTR] //" | \
++@BUILD_LIBSOUP_GNOME_TRUE@@OS_LINUX_TRUE@		env LANG=C sort -u | \
++@BUILD_LIBSOUP_GNOME_TRUE@@OS_LINUX_TRUE@		diff -U0 $(srcdir)/libsoup-gnome-2.4.sym - >&2
+ 
+ # Tell versions [3.59,3.63) of GNU make to not export all variables.
+ # Otherwise a system limit (for SysV at least) may be exceeded.
+diff -ru libsoup-2.52.0.old/Makefile.am libsoup-2.52.0/Makefile.am
+--- libsoup-2.52.0.old/Makefile.am	2015-07-27 20:51:03.000000000 +0300
++++ libsoup-2.52.0/Makefile.am	2015-09-22 22:32:12.723952812 +0300
+@@ -1,7 +1,11 @@
+ ## Process this file with automake to produce Makefile.in
+ ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
+ 
+-SUBDIRS = libsoup po tests examples docs
++SUBDIRS = libsoup
++
++if BUILD_LIBSOUP
++SUBDIRS += po tests docs
++endif
+ 
+ EXTRA_DIST =				\
+ 	data/effective_tld_names.dat	\
+@@ -18,7 +22,11 @@
+ 
+ pkgconfigdir = $(libdir)/pkgconfig
+ 
+-pkgconfig_DATA = libsoup-2.4.pc
++pkgconfig_DATA =
++
++if BUILD_LIBSOUP
++pkgconfig_DATA += libsoup-2.4.pc
++endif
+ 
+ if BUILD_LIBSOUP_GNOME
+ pkgconfig_DATA += libsoup-gnome-2.4.pc
+diff -ru libsoup-2.52.0.old/Makefile.in libsoup-2.52.0/Makefile.in
+--- libsoup-2.52.0.old/Makefile.in	2015-09-21 18:36:16.000000000 +0300
++++ libsoup-2.52.0/Makefile.in	2015-09-22 22:34:37.330990880 +0300
+@@ -78,7 +78,9 @@
+ POST_UNINSTALL = :
+ build_triplet = @build@
+ host_triplet = @host@
+-@BUILD_LIBSOUP_GNOME_TRUE@am__append_1 = libsoup-gnome-2.4.pc
++@BUILD_LIBSOUP_TRUE@am__append_1 = po tests docs
++@BUILD_LIBSOUP_TRUE@am__append_2 = libsoup-2.4.pc
++@BUILD_LIBSOUP_GNOME_TRUE@am__append_3 = libsoup-gnome-2.4.pc
+ subdir = .
+ DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
+ 	$(top_srcdir)/configure $(am__configure_deps) \
+@@ -194,7 +196,7 @@
+ ETAGS = etags
+ CTAGS = ctags
+ CSCOPE = cscope
+-DIST_SUBDIRS = $(SUBDIRS)
++DIST_SUBDIRS = libsoup po tests docs
+ DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+ distdir = $(PACKAGE)-$(VERSION)
+ top_distdir = $(distdir)
+@@ -320,6 +322,8 @@
+ LDFLAGS = @LDFLAGS@
+ LIBOBJS = @LIBOBJS@
+ LIBS = @LIBS@
++LIBSOUP_CFLAGS = @LIBSOUP_CFLAGS@
++LIBSOUP_LIBS = @LIBSOUP_LIBS@
+ LIBTOOL = @LIBTOOL@
+ LIPO = @LIPO@
+ LN_S = @LN_S@
+@@ -430,7 +434,7 @@
+ top_builddir = @top_builddir@
+ top_srcdir = @top_srcdir@
+ ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
+-SUBDIRS = libsoup po tests examples docs
++SUBDIRS = libsoup $(am__append_1)
+ EXTRA_DIST = \
+ 	data/effective_tld_names.dat	\
+ 	libsoup-2.4.pc.in		\
+@@ -444,7 +448,7 @@
+ 
+ DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc --enable-introspection
+ pkgconfigdir = $(libdir)/pkgconfig
+-pkgconfig_DATA = libsoup-2.4.pc $(am__append_1)
++pkgconfig_DATA = $(am__append_2) $(am__append_3)
+ all: config.h
+ 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
+ 
+diff -ru libsoup-2.52.0.old/tests/Makefile.in libsoup-2.52.0/tests/Makefile.in
+--- libsoup-2.52.0.old/tests/Makefile.in	2015-09-21 18:36:16.000000000 +0300
++++ libsoup-2.52.0/tests/Makefile.in	2015-09-22 22:34:37.742996692 +0300
+@@ -699,6 +699,8 @@
+ 	$(top_builddir)/libsoup/libsoup-2.4.la \
+ 	$(GLIB_LIBS)
+ 
++LIBSOUP_CFLAGS = @LIBSOUP_CFLAGS@
++LIBSOUP_LIBS = @LIBSOUP_LIBS@
+ LIBTOOL = @LIBTOOL@
+ LIPO = @LIPO@
+ LN_S = @LN_S@

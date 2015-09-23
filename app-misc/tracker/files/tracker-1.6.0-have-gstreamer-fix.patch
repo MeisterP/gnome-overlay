@@ -1,0 +1,24 @@
+diff -ru tracker-1.6.0.old/configure.ac tracker-1.6.0/configure.ac
+--- tracker-1.6.0.old/configure.ac	2015-09-22 14:54:56.000000000 +0300
++++ tracker-1.6.0/configure.ac	2015-09-23 00:53:55.928771758 +0300
+@@ -1882,17 +1882,16 @@
+ 
+ if test "$have_generic_media_handler_app" = "GStreamer"; then
+    AC_DEFINE(HAVE_GSTREAMER, [], [Define if we have GStreamer])
+-   AM_CONDITIONAL(HAVE_GSTREAMER, true)
+-   AM_CONDITIONAL(HAVE_LIBAV, false)
+ elif test "$have_generic_media_handler_app" = "libav"; then
+    AC_DEFINE(HAVE_LIBAV, [], [Define if we have libav])
+-   AM_CONDITIONAL(HAVE_LIBAV, true)
+-   AM_CONDITIONAL(HAVE_GSTREAMER, false)
+ else
+    AM_CONDITIONAL(HAVE_LIBAV, false)
+    AM_CONDITIONAL(HAVE_GSTREAMER, false)
+ fi
+ 
++AM_CONDITIONAL(HAVE_GSTREAMER, [test "$have_generic_media_handler_app" = "GStreamer"])
++AM_CONDITIONAL(HAVE_LIBAV,     [test "$have_generic_media_handler_app" = "libav"])
++
+ ###########################################################################
+ # Check for gstreamer backend: tagreadbin/decodebin2/discoverer/gupnp-dlna
+ ###########################################################################
