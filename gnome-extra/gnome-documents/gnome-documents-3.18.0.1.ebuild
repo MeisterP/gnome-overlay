@@ -48,11 +48,3 @@ DEPEND="${COMMON_DEPEND}
 
 	app-text/yelp-tools
 "
-# eautoreconf requires yelp-tools
-
-src_prepare() {
-	# https://bugzilla.gnome.org/show_bug.cgi?id=750334
-	epatch "${FILESDIR}"/${PN}-3.16.2-parallel-make.patch
-	eautoreconf
-	gnome2_src_prepare
-}
