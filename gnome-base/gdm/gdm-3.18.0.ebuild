@@ -22,15 +22,13 @@ LICENSE="
 
 SLOT="0"
 
-IUSE="accessibility audit branding fprint +introspection ipv6 plymouth selinux smartcard +systemd tcpd test wayland xinerama"
-REQUIRED_USE="wayland? ( systemd )"
+IUSE="accessibility audit branding fprint +introspection ipv6 plymouth selinux smartcard tcpd test wayland xinerama"
 
 KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sh ~sparc ~x86"
 
 # NOTE: x11-base/xorg-server dep is for X_SERVER_PATH etc, bug #295686
 # nspr used by smartcard extension
 # dconf, dbus and g-s-d are needed at install time for dconf update
-# We need either systemd or >=openrc-0.12 to restart gdm properly, bug #463784
 COMMON_DEPEND="
 	app-text/iso-codes
 	>=dev-libs/glib-2.36:2[dbus]
@@ -43,6 +41,7 @@ COMMON_DEPEND="
 	sys-apps/dbus
 	>=sys-apps/accountsservice-0.6.12
 
+	dev-libs/libgcrypt
 	x11-apps/sessreg
 	x11-base/xorg-server
 	x11-libs/libXi
@@ -52,15 +51,10 @@ COMMON_DEPEND="
 	x11-libs/libXext
 	x11-libs/libXft
 	>=x11-misc/xdg-utils-1.0.2-r3
+	>=sys-apps/systemd-186:0=[pam]
 
 	virtual/pam
-	systemd? ( >=sys-apps/systemd-186:0=[pam] )
-	!systemd? (
-		>=x11-base/xorg-server-1.14.3-r1
-		>=sys-auth/consolekit-0.4.5_p20120320-r2
-		!<sys-apps/openrc-0.12
-	)
-	sys-auth/pambase[systemd?]
+	sys-auth/pambase[systemd]
 
 	audit? ( sys-process/audit )
 	introspection? ( >=dev-libs/gobject-introspection-0.9.12:= )
@@ -166,15 +160,12 @@ src_configure() {
 		--enable-authentication-scheme=pam \
 		--with-default-pam-config=exherbo \
 		--with-at-spi-registryd-directory="${EPREFIX}"/usr/libexec \
-		--with-consolekit-directory="${EPREFIX}"/usr/lib/ConsoleKit \
 		--without-xevie \
+		--enable-gcrypt \
 		$(use_with audit libaudit) \
 		$(use_enable ipv6) \
 		$(use_with plymouth) \
 		$(use_with selinux) \
-		$(use_with systemd) \
-		$(use_with !systemd console-kit) \
-		$(use_enable systemd systemd-journal) \
 		$(systemd_with_unitdir) \
 		$(use_with tcpd tcp-wrappers) \
 		$(use_enable wayland wayland-support) \
