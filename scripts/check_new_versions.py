@@ -16,11 +16,23 @@ def main(config):
         pkg_name = atom.split("/")[1]
         last_local_version = sorted(get_last_local_version(atom))[-1]
         print("local version: %s" % last_local_version.base_version)
-        last_ftp_version = get_last_ftp_version(pkg_name)
-        print("ftp version: %s" % last_ftp_version.base_version)
-        if last_ftp_version > last_local_version:
-            create_ebuild(atom, last_ftp_version)
+
+        custom_handler = False
+        only_local_check = False
         if pkg_name.replace("-", "_") in custom_modules:
+            custom_handler = True
+            mod = getattr(custom, pkg_name.replace("-", "_"))
+            only_local_check = getattr(mod, 'ONLY_LOCAL_CHECK', False)
+
+        if only_local_check:
+            last_ftp_version = last_local_version
+        else:
+            last_ftp_version = get_last_ftp_version(pkg_name)
+            print("ftp version: %s" % last_ftp_version.base_version)
+            if last_ftp_version > last_local_version:
+                create_ebuild(atom, last_ftp_version)
+
+        if custom_handler:
             getattr(custom, pkg_name.replace("-", "_")).run(last_ftp_version)
 
 
