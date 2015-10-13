@@ -1,12 +1,10 @@
-Только в libsoup-2.52.0: autom4te.cache
-diff -ru libsoup-2.52.0.old/configure.ac libsoup-2.52.0/configure.ac
---- libsoup-2.52.0.old/configure.ac	2015-09-21 18:35:26.000000000 +0300
-+++ libsoup-2.52.0/configure.ac	2015-09-22 22:32:12.712952657 +0300
-@@ -77,23 +77,33 @@
- dnl ***********************
+diff -ru libsoup-2.52.1.old/configure.ac libsoup-2.52.1/configure.ac
+--- libsoup-2.52.1.old/configure.ac	2015-10-13 00:25:40.000000000 +0300
++++ libsoup-2.52.1/configure.ac	2015-10-13 14:02:35.890963018 +0300
+@@ -78,22 +78,32 @@
  dnl *** Checks for glib ***
  dnl ***********************
--
+ 
 -GLIB_REQUIRED=2.38.0
 -AM_PATH_GLIB_2_0($GLIB_REQUIRED,,,gobject gio)
 -if test "$GLIB_LIBS" = ""; then
@@ -32,7 +30,6 @@ diff -ru libsoup-2.52.0.old/configure.ac libsoup-2.52.0/configure.ac
  fi
 -GLIB_CFLAGS="$GLIB_CFLAGS -DGLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_2_38"
 +AM_CONDITIONAL(BUILD_LIBSOUP, test $with_libsoup_system = no)
-+
  
  GLIB_MAKEFILE='$(top_srcdir)/Makefile.glib'
  AC_SUBST(GLIB_MAKEFILE)
@@ -56,9 +53,9 @@ diff -ru libsoup-2.52.0.old/configure.ac libsoup-2.52.0/configure.ac
  fi
  AC_SUBST(HAVE_GNOME)
  
-diff -ru libsoup-2.52.0.old/docs/Makefile.in libsoup-2.52.0/docs/Makefile.in
---- libsoup-2.52.0.old/docs/Makefile.in	2015-09-21 18:36:16.000000000 +0300
-+++ libsoup-2.52.0/docs/Makefile.in	2015-09-22 22:34:37.373991487 +0300
+diff -ru libsoup-2.52.1.old/docs/Makefile.in libsoup-2.52.1/docs/Makefile.in
+--- libsoup-2.52.1.old/docs/Makefile.in	2015-10-13 00:26:16.000000000 +0300
++++ libsoup-2.52.1/docs/Makefile.in	2015-10-13 14:03:43.151952487 +0300
 @@ -257,6 +257,8 @@
  LDFLAGS = @LDFLAGS@
  LIBOBJS = @LIBOBJS@
@@ -68,9 +65,9 @@ diff -ru libsoup-2.52.0.old/docs/Makefile.in libsoup-2.52.0/docs/Makefile.in
  LIBTOOL = @LIBTOOL@
  LIPO = @LIPO@
  LN_S = @LN_S@
-diff -ru libsoup-2.52.0.old/docs/reference/Makefile.in libsoup-2.52.0/docs/reference/Makefile.in
---- libsoup-2.52.0.old/docs/reference/Makefile.in	2015-09-21 18:36:16.000000000 +0300
-+++ libsoup-2.52.0/docs/reference/Makefile.in	2015-09-22 22:34:37.432992319 +0300
+diff -ru libsoup-2.52.1.old/docs/reference/Makefile.in libsoup-2.52.1/docs/reference/Makefile.in
+--- libsoup-2.52.1.old/docs/reference/Makefile.in	2015-10-13 00:26:16.000000000 +0300
++++ libsoup-2.52.1/docs/reference/Makefile.in	2015-10-13 14:04:39.168776488 +0300
 @@ -204,6 +204,8 @@
  LDFLAGS = @LDFLAGS@
  LIBOBJS = @LIBOBJS@
@@ -80,9 +77,9 @@ diff -ru libsoup-2.52.0.old/docs/reference/Makefile.in libsoup-2.52.0/docs/refer
  LIBTOOL = @LIBTOOL@
  LIPO = @LIPO@
  LN_S = @LN_S@
-diff -ru libsoup-2.52.0.old/examples/Makefile.in libsoup-2.52.0/examples/Makefile.in
---- libsoup-2.52.0.old/examples/Makefile.in	2015-09-21 18:36:16.000000000 +0300
-+++ libsoup-2.52.0/examples/Makefile.in	2015-09-22 22:34:37.487993095 +0300
+diff -ru libsoup-2.52.1.old/examples/Makefile.in libsoup-2.52.1/examples/Makefile.in
+--- libsoup-2.52.1.old/examples/Makefile.in	2015-10-13 00:26:16.000000000 +0300
++++ libsoup-2.52.1/examples/Makefile.in	2015-10-13 14:05:05.830168655 +0300
 @@ -258,6 +258,8 @@
  	$(top_builddir)/libsoup/libsoup-2.4.la \
  	$(GLIB_LIBS)
@@ -92,28 +89,26 @@ diff -ru libsoup-2.52.0.old/examples/Makefile.in libsoup-2.52.0/examples/Makefil
  LIBTOOL = @LIBTOOL@
  LIPO = @LIPO@
  LN_S = @LN_S@
-diff -ru libsoup-2.52.0.old/libsoup/Makefile.am libsoup-2.52.0/libsoup/Makefile.am
---- libsoup-2.52.0.old/libsoup/Makefile.am	2015-09-15 17:08:46.000000000 +0300
-+++ libsoup-2.52.0/libsoup/Makefile.am	2015-09-22 22:34:23.517796018 +0300
-@@ -2,7 +2,7 @@
+diff -ru libsoup-2.52.1.old/libsoup/Makefile.am libsoup-2.52.1/libsoup/Makefile.am
+--- libsoup-2.52.1.old/libsoup/Makefile.am	2015-10-13 00:20:07.000000000 +0300
++++ libsoup-2.52.1/libsoup/Makefile.am	2015-10-13 14:13:19.279424866 +0300
+@@ -2,6 +2,7 @@
  
  EXTRA_DIST =
  CLEANFILES =
--
 +BUILT_SOURCES =
  
- include $(GLIB_MAKEFILE)
  
-@@ -10,7 +10,11 @@
+ include $(GLIB_MAKEFILE)
+@@ -10,7 +11,10 @@
  LIBWS2_32 = -lws2_32
  endif
  
 -AM_CPPFLAGS = 				\
 +lib_LTLIBRARIES =
 +AM_CPPFLAGS =
-+
 +if BUILD_LIBSOUP
-+AM_CPPFLAGS +=	\
++AM_CPPFLAGS +=
  	-DG_LOG_DOMAIN=\"libsoup\" 	\
  	-DLIBSOUP_COMPILATION		\
  	-DLOCALEDIR=\"$(localedir)\"	\
@@ -126,7 +121,7 @@ diff -ru libsoup-2.52.0.old/libsoup/Makefile.am libsoup-2.52.0/libsoup/Makefile.
  
  libsoup_2_4_la_LDFLAGS =	\
  	-version-info $(SOUP_CURRENT):$(SOUP_REVISION):$(SOUP_AGE) \
-@@ -200,18 +204,23 @@
+@@ -202,18 +206,23 @@
  	soup-xmlrpc.c			\
  	soup-xmlrpc-old.c
  
@@ -154,7 +149,7 @@ diff -ru libsoup-2.52.0.old/libsoup/Makefile.am libsoup-2.52.0/libsoup/Makefile.
  libsoupgnomeinclude_HEADERS =	\
  	soup-cookie-jar-sqlite.h\
  	soup-gnome.h		\
-@@ -219,17 +228,26 @@
+@@ -221,17 +230,26 @@
  
  lib_LTLIBRARIES += libsoup-gnome-2.4.la
  
@@ -182,7 +177,7 @@ diff -ru libsoup-2.52.0.old/libsoup/Makefile.am libsoup-2.52.0/libsoup/Makefile.
  libsoup_gnome_2_4_la_SOURCES =		\
  	soup-cookie-jar-sqlite.c	\
  	soup-gnome-features.c		\
-@@ -241,9 +259,8 @@
+@@ -243,9 +261,8 @@
  endif
  
  GLIB_GENERATED = soup-enum-types.c soup-enum-types.h
@@ -194,7 +189,7 @@ diff -ru libsoup-2.52.0.old/libsoup/Makefile.am libsoup-2.52.0/libsoup/Makefile.
  
  soup_enum_types_sources = $(libsoupinclude_HEADERS) $(libsoupgnomeinclude_HEADERS)
  soup_enum_types_MKENUMS_C_FLAGS = --fhead "\#define LIBSOUP_USE_UNSTABLE_REQUEST_API"
-@@ -258,6 +275,8 @@
+@@ -260,6 +277,8 @@
  
  if HAVE_INTROSPECTION
  
@@ -203,7 +198,7 @@ diff -ru libsoup-2.52.0.old/libsoup/Makefile.am libsoup-2.52.0/libsoup/Makefile.
  # Core library
  gi_soup_files = \
  	$(filter-out soup.h soup-enum-types.% soup-proxy-resolver.h,\
-@@ -290,20 +309,27 @@
+@@ -292,20 +311,27 @@
  
  EXTRA_DIST += Soup-2.4.metadata Soup-2.4-custom.vala
  
@@ -235,7 +230,7 @@ diff -ru libsoup-2.52.0.old/libsoup/Makefile.am libsoup-2.52.0/libsoup/Makefile.
  SoupGNOME_2_4_gir_FILES = $(addprefix $(srcdir)/,$(gi_soup_gnome_files))
  SoupGNOME_2_4_gir_EXPORT_PACKAGES = libsoup-gnome-2.4
  
-@@ -323,6 +349,7 @@
+@@ -325,6 +351,7 @@
  
  # We only do this check on Linux, so we don't have to worry about
  # different "nm" output on other platforms
@@ -243,7 +238,7 @@ diff -ru libsoup-2.52.0.old/libsoup/Makefile.am libsoup-2.52.0/libsoup/Makefile.
  if OS_LINUX
  check-local:
  	@echo Checking libsoup-2.4.so symbols
-@@ -332,3 +359,16 @@
+@@ -334,3 +361,16 @@
  		env LC_ALL=C sort -u | \
  		diff -U0 $(srcdir)/libsoup-2.4.sym - >&2
  endif
@@ -260,9 +255,9 @@ diff -ru libsoup-2.52.0.old/libsoup/Makefile.am libsoup-2.52.0/libsoup/Makefile.
 +		diff -U0 $(srcdir)/libsoup-gnome-2.4.sym - >&2
 +endif
 +endif
-diff -ru libsoup-2.52.0.old/libsoup/Makefile.in libsoup-2.52.0/libsoup/Makefile.in
---- libsoup-2.52.0.old/libsoup/Makefile.in	2015-09-21 18:36:16.000000000 +0300
-+++ libsoup-2.52.0/libsoup/Makefile.in	2015-09-22 22:34:37.583994449 +0300
+diff -ru libsoup-2.52.1.old/libsoup/Makefile.in libsoup-2.52.1/libsoup/Makefile.in
+--- libsoup-2.52.1.old/libsoup/Makefile.in	2015-10-13 00:26:16.000000000 +0300
++++ libsoup-2.52.1/libsoup/Makefile.in	2015-10-13 14:27:57.225326627 +0300
 @@ -80,18 +80,38 @@
  POST_UNINSTALL = :
  build_triplet = @build@
@@ -331,7 +326,7 @@ diff -ru libsoup-2.52.0.old/libsoup/Makefile.in libsoup-2.52.0/libsoup/Makefile.
 -	soup-cookie-jar-db.lo soup-cookie-jar-text.lo soup-date.lo \
 -	soup-directory-input-stream.lo soup-enum-types.lo \
 -	soup-filter-input-stream.lo soup-form.lo soup-headers.lo \
--	soup-io-stream.lo soup-logger.lo soup-message.lo \
+-	soup-init.lo soup-io-stream.lo soup-logger.lo soup-message.lo \
 -	soup-message-body.lo soup-message-client-io.lo \
 -	soup-message-headers.lo soup-message-io.lo \
 -	soup-message-queue.lo soup-message-server-io.lo soup-method.lo \
@@ -500,12 +495,10 @@ diff -ru libsoup-2.52.0.old/libsoup/Makefile.in libsoup-2.52.0/libsoup/Makefile.
  LIBTOOL = @LIBTOOL@
  LIPO = @LIPO@
  LN_S = @LN_S@
-@@ -458,214 +564,200 @@
- top_build_prefix = @top_build_prefix@
- top_builddir = @top_builddir@
+@@ -460,213 +566,200 @@
  top_srcdir = @top_srcdir@
--
--# TLD rules
+ 
+ # TLD rules
 -EXTRA_DIST = libsoup-2.4.sym tld-parser.py $(am__append_2) \
 -	$(am__append_5)
 -CLEANFILES = $(am__append_4) $(am__append_7)
@@ -578,6 +571,128 @@ diff -ru libsoup-2.52.0.old/libsoup/Makefile.in libsoup-2.52.0/libsoup/Makefile.
 -	soup-websocket-connection.h	\
 -	soup-xmlrpc.h		\
 -	soup-xmlrpc-old.h
+-
+-libsoupinclude_HEADERS = \
+-	$(soup_headers)		\
+-	soup-enum-types.h
+-
+-nodist_libsoupinclude_HEADERS = \
+-	soup-version.h
+-
+-lib_LTLIBRARIES = libsoup-2.4.la $(am__append_1)
+-libsoup_2_4_la_LDFLAGS = \
+-	-version-info $(SOUP_CURRENT):$(SOUP_REVISION):$(SOUP_AGE) \
+-	-no-undefined \
+-	-export-symbols $(srcdir)/libsoup-2.4.sym \
+-	$(CODE_COVERAGE_LDFLAGS)
+-
+-libsoup_2_4_la_LIBADD = \
+-	$(GLIB_LIBS)			\
+-	$(LIBWS2_32)			\
+-	$(XML_LIBS)			\
+-	$(SQLITE_LIBS)
+-
+-libsoup_2_4_la_SOURCES = \
+-	gconstructor.h			\
+-	soup-address.c			\
+-	soup-auth.c			\
+-	soup-auth-basic.h		\
+-	soup-auth-basic.c		\
+-	soup-auth-digest.h		\
+-	soup-auth-digest.c		\
+-	soup-auth-ntlm.h		\
+-	soup-auth-ntlm.c		\
+-	soup-auth-domain.c		\
+-	soup-auth-domain-basic.c	\
+-	soup-auth-domain-digest.c	\
+-	soup-auth-manager.c		\
+-	soup-body-input-stream.h	\
+-	soup-body-input-stream.c	\
+-	soup-body-output-stream.h	\
+-	soup-body-output-stream.c	\
+-	soup-cache.c			\
+-	soup-cache-client-input-stream.h\
+-	soup-cache-client-input-stream.c\
+-	soup-cache-input-stream.h	\
+-	soup-cache-input-stream.c	\
+-	soup-cache-private.h		\
+-	soup-client-input-stream.h	\
+-	soup-client-input-stream.c	\
+-	soup-connection.h		\
+-	soup-connection.c		\
+-	soup-connection-auth.h		\
+-	soup-connection-auth.c		\
+-	soup-content-decoder.c		\
+-	soup-content-processor.h	\
+-	soup-content-processor.c	\
+-	soup-content-sniffer.c		\
+-	soup-content-sniffer-stream.h	\
+-	soup-content-sniffer-stream.c	\
+-	soup-converter-wrapper.h	\
+-	soup-converter-wrapper.c	\
+-	soup-cookie.c			\
+-	soup-cookie-jar.c		\
+-	soup-cookie-jar-db.c		\
+-	soup-cookie-jar-text.c		\
+-	soup-date.c			\
+-	soup-directory-input-stream.h	\
+-	soup-directory-input-stream.c	\
+-	soup-enum-types.h		\
+-	soup-enum-types.c		\
+-	soup-filter-input-stream.c	\
+-	soup-filter-input-stream.h	\
+-	soup-form.c			\
+-	soup-headers.c			\
+-	soup-init.c			\
+-	soup-io-stream.h		\
+-	soup-io-stream.c		\
+-	soup-logger.c			\
+-	soup-message.c			\
+-	soup-message-body.c		\
+-	soup-message-client-io.c	\
+-	soup-message-headers.c		\
+-	soup-message-io.c		\
+-	soup-message-private.h		\
+-	soup-message-queue.h		\
+-	soup-message-queue.c		\
+-	soup-message-server-io.c	\
+-	soup-method.c     		\
+-	soup-misc.c     		\
+-	soup-misc-private.h		\
+-	soup-multipart.c	     	\
+-	soup-multipart-input-stream.c	\
+-	soup-password-manager.c		\
+-	soup-path-map.h     		\
+-	soup-path-map.c     		\
+-	soup-proxy-resolver.c		\
+-	soup-proxy-resolver-default.c	\
+-	soup-proxy-resolver-wrapper.h	\
+-	soup-proxy-resolver-wrapper.c	\
+-	soup-proxy-uri-resolver.c	\
+-	soup-request.c			\
+-	soup-request-data.c		\
+-	soup-request-file.c		\
+-	soup-request-http.c		\
+-	soup-requester.c		\
+-	soup-server.c			\
+-	soup-session.c			\
+-	soup-session-async.c		\
+-	soup-session-feature.c		\
+-	soup-session-private.h		\
+-	soup-session-sync.c		\
+-	soup-socket.c			\
+-	soup-socket-private.h		\
+-	soup-socket-properties.c	\
+-	soup-status.c			\
+-	soup-tld.c			\
+-	soup-tld-private.h		\
+-	soup-uri.c			\
+-	soup-value-utils.c		\
+-	soup-version.c			\
+-	soup-websocket.c		\
+-	soup-websocket-connection.c	\
+-	soup-xmlrpc.c			\
+-	soup-xmlrpc-old.c
 +lib_LTLIBRARIES = $(am__append_2) $(am__append_6)
 +AM_CPPFLAGS = $(am__append_1) $(am__append_5)
 +@BUILD_LIBSOUP_TRUE@libsoupincludedir = $(includedir)/libsoup-2.4/libsoup
@@ -753,126 +868,6 @@ diff -ru libsoup-2.52.0.old/libsoup/Makefile.in libsoup-2.52.0/libsoup/Makefile.
 +@BUILD_LIBSOUP_TRUE@	soup-xmlrpc.c			\
 +@BUILD_LIBSOUP_TRUE@	soup-xmlrpc-old.c
  
--libsoupinclude_HEADERS = \
--	$(soup_headers)		\
--	soup-enum-types.h
--
--nodist_libsoupinclude_HEADERS = \
--	soup-version.h
--
--lib_LTLIBRARIES = libsoup-2.4.la $(am__append_1)
--libsoup_2_4_la_LDFLAGS = \
--	-version-info $(SOUP_CURRENT):$(SOUP_REVISION):$(SOUP_AGE) \
--	-no-undefined \
--	-export-symbols $(srcdir)/libsoup-2.4.sym \
--	$(CODE_COVERAGE_LDFLAGS)
--
--libsoup_2_4_la_LIBADD = \
--	$(GLIB_LIBS)			\
--	$(LIBWS2_32)			\
--	$(XML_LIBS)			\
--	$(SQLITE_LIBS)
--
--libsoup_2_4_la_SOURCES = \
--	soup-address.c			\
--	soup-auth.c			\
--	soup-auth-basic.h		\
--	soup-auth-basic.c		\
--	soup-auth-digest.h		\
--	soup-auth-digest.c		\
--	soup-auth-ntlm.h		\
--	soup-auth-ntlm.c		\
--	soup-auth-domain.c		\
--	soup-auth-domain-basic.c	\
--	soup-auth-domain-digest.c	\
--	soup-auth-manager.c		\
--	soup-body-input-stream.h	\
--	soup-body-input-stream.c	\
--	soup-body-output-stream.h	\
--	soup-body-output-stream.c	\
--	soup-cache.c			\
--	soup-cache-client-input-stream.h\
--	soup-cache-client-input-stream.c\
--	soup-cache-input-stream.h	\
--	soup-cache-input-stream.c	\
--	soup-cache-private.h		\
--	soup-client-input-stream.h	\
--	soup-client-input-stream.c	\
--	soup-connection.h		\
--	soup-connection.c		\
--	soup-connection-auth.h		\
--	soup-connection-auth.c		\
--	soup-content-decoder.c		\
--	soup-content-processor.h	\
--	soup-content-processor.c	\
--	soup-content-sniffer.c		\
--	soup-content-sniffer-stream.h	\
--	soup-content-sniffer-stream.c	\
--	soup-converter-wrapper.h	\
--	soup-converter-wrapper.c	\
--	soup-cookie.c			\
--	soup-cookie-jar.c		\
--	soup-cookie-jar-db.c		\
--	soup-cookie-jar-text.c		\
--	soup-date.c			\
--	soup-directory-input-stream.h	\
--	soup-directory-input-stream.c	\
--	soup-enum-types.h		\
--	soup-enum-types.c		\
--	soup-filter-input-stream.c	\
--	soup-filter-input-stream.h	\
--	soup-form.c			\
--	soup-headers.c			\
--	soup-io-stream.h		\
--	soup-io-stream.c		\
--	soup-logger.c			\
--	soup-message.c			\
--	soup-message-body.c		\
--	soup-message-client-io.c	\
--	soup-message-headers.c		\
--	soup-message-io.c		\
--	soup-message-private.h		\
--	soup-message-queue.h		\
--	soup-message-queue.c		\
--	soup-message-server-io.c	\
--	soup-method.c     		\
--	soup-misc.c     		\
--	soup-misc-private.h		\
--	soup-multipart.c	     	\
--	soup-multipart-input-stream.c	\
--	soup-password-manager.c		\
--	soup-path-map.h     		\
--	soup-path-map.c     		\
--	soup-proxy-resolver.c		\
--	soup-proxy-resolver-default.c	\
--	soup-proxy-resolver-wrapper.h	\
--	soup-proxy-resolver-wrapper.c	\
--	soup-proxy-uri-resolver.c	\
--	soup-request.c			\
--	soup-request-data.c		\
--	soup-request-file.c		\
--	soup-request-http.c		\
--	soup-requester.c		\
--	soup-server.c			\
--	soup-session.c			\
--	soup-session-async.c		\
--	soup-session-feature.c		\
--	soup-session-private.h		\
--	soup-session-sync.c		\
--	soup-socket.c			\
--	soup-socket-private.h		\
--	soup-socket-properties.c	\
--	soup-status.c			\
--	soup-tld.c			\
--	soup-tld-private.h		\
--	soup-uri.c			\
--	soup-value-utils.c		\
--	soup-version.c			\
--	soup-websocket.c		\
--	soup-websocket-connection.c	\
--	soup-xmlrpc.c			\
--	soup-xmlrpc-old.c
--
 -TLD_DATA_FILE = $(top_srcdir)/data/effective_tld_names.dat
 +@BUILD_LIBSOUP_TRUE@TLD_DATA_FILE = $(top_srcdir)/data/effective_tld_names.dat
  @BUILD_LIBSOUP_GNOME_TRUE@libsoupgnomeincludedir = $(includedir)/libsoup-gnome-2.4/libsoup
@@ -889,7 +884,6 @@ diff -ru libsoup-2.52.0.old/libsoup/Makefile.in libsoup-2.52.0/libsoup/Makefile.
 -@BUILD_LIBSOUP_GNOME_TRUE@libsoup_gnome_2_4_la_LIBADD = \
 -@BUILD_LIBSOUP_GNOME_TRUE@	libsoup-2.4.la			\
 -@BUILD_LIBSOUP_GNOME_TRUE@	$(GLIB_LIBS)
--
 +@BUILD_LIBSOUP_FALSE@@BUILD_LIBSOUP_GNOME_TRUE@libsoup_gnome_2_4_la_LDFLAGS = \
 +@BUILD_LIBSOUP_FALSE@@BUILD_LIBSOUP_GNOME_TRUE@	-version-info $(SOUP_CURRENT):$(SOUP_REVISION):$(SOUP_AGE) \
 +@BUILD_LIBSOUP_FALSE@@BUILD_LIBSOUP_GNOME_TRUE@	-no-undefined \
@@ -898,17 +892,17 @@ diff -ru libsoup-2.52.0.old/libsoup/Makefile.in libsoup-2.52.0/libsoup/Makefile.
 +@BUILD_LIBSOUP_GNOME_TRUE@@BUILD_LIBSOUP_TRUE@libsoup_gnome_2_4_la_LDFLAGS = $(libsoup_2_4_la_LDFLAGS)
 +@BUILD_LIBSOUP_GNOME_TRUE@libsoup_gnome_2_4_la_LIBADD = $(GLIB_LIBS) \
 +@BUILD_LIBSOUP_GNOME_TRUE@	$(am__append_8) $(am__append_9)
+ 
  @BUILD_LIBSOUP_GNOME_TRUE@libsoup_gnome_2_4_la_SOURCES = \
  @BUILD_LIBSOUP_GNOME_TRUE@	soup-cookie-jar-sqlite.c	\
- @BUILD_LIBSOUP_GNOME_TRUE@	soup-gnome-features.c		\
-@@ -675,36 +767,34 @@
+@@ -677,36 +770,35 @@
  @BUILD_LIBSOUP_GNOME_TRUE@	soup-password-manager-gnome.c
  
  GLIB_GENERATED = soup-enum-types.c soup-enum-types.h
 -BUILT_SOURCES = \
 -	$(GLIB_GENERATED)   \
 -	tld_data.inc
--
+ 
  soup_enum_types_sources = $(libsoupinclude_HEADERS) $(libsoupgnomeinclude_HEADERS)
  soup_enum_types_MKENUMS_C_FLAGS = --fhead "\#define LIBSOUP_USE_UNSTABLE_REQUEST_API"
 -INTROSPECTION_GIRS = $(am__append_3) $(am__append_6)
@@ -960,7 +954,7 @@ diff -ru libsoup-2.52.0.old/libsoup/Makefile.in libsoup-2.52.0/libsoup/Makefile.
  
  # GNOME extensions
  @BUILD_LIBSOUP_GNOME_TRUE@@HAVE_INTROSPECTION_TRUE@gi_soup_gnome_files = $(filter-out soup-gnome.h,\
-@@ -714,11 +804,10 @@
+@@ -716,11 +808,10 @@
  @BUILD_LIBSOUP_GNOME_TRUE@@HAVE_INTROSPECTION_TRUE@SoupGNOME_2_4_gir_SCANNERFLAGS = \
  @BUILD_LIBSOUP_GNOME_TRUE@@HAVE_INTROSPECTION_TRUE@	--identifier-prefix=Soup			\
  @BUILD_LIBSOUP_GNOME_TRUE@@HAVE_INTROSPECTION_TRUE@	--symbol-prefix=soup				\
@@ -974,7 +968,7 @@ diff -ru libsoup-2.52.0.old/libsoup/Makefile.in libsoup-2.52.0/libsoup/Makefile.
  @BUILD_LIBSOUP_GNOME_TRUE@@HAVE_INTROSPECTION_TRUE@SoupGNOME_2_4_gir_FILES = $(addprefix $(srcdir)/,$(gi_soup_gnome_files))
  @BUILD_LIBSOUP_GNOME_TRUE@@HAVE_INTROSPECTION_TRUE@SoupGNOME_2_4_gir_EXPORT_PACKAGES = libsoup-gnome-2.4
  @HAVE_INTROSPECTION_TRUE@girdir = $(datadir)/gir-1.0
-@@ -799,7 +888,7 @@
+@@ -801,7 +892,7 @@
  	}
  
  libsoup-2.4.la: $(libsoup_2_4_la_OBJECTS) $(libsoup_2_4_la_DEPENDENCIES) $(EXTRA_libsoup_2_4_la_DEPENDENCIES) 
@@ -983,15 +977,16 @@ diff -ru libsoup-2.52.0.old/libsoup/Makefile.in libsoup-2.52.0/libsoup/Makefile.
  
  libsoup-gnome-2.4.la: $(libsoup_gnome_2_4_la_OBJECTS) $(libsoup_gnome_2_4_la_DEPENDENCIES) $(EXTRA_libsoup_gnome_2_4_la_DEPENDENCIES) 
  	$(AM_V_CCLD)$(libsoup_gnome_2_4_la_LINK) $(am_libsoup_gnome_2_4_la_rpath) $(libsoup_gnome_2_4_la_OBJECTS) $(libsoup_gnome_2_4_la_LIBADD) $(LIBS)
-@@ -1122,6 +1211,7 @@
+@@ -1125,6 +1216,8 @@
  	    || exit 1; \
  	  fi; \
  	done
++
 +@BUILD_LIBSOUP_FALSE@@BUILD_LIBSOUP_GNOME_FALSE@check-local:
  @OS_LINUX_FALSE@check-local:
  check-am: all-am
  	$(MAKE) $(AM_MAKEFLAGS) check-local
-@@ -1270,29 +1360,37 @@
+@@ -1273,29 +1366,37 @@
  
  include $(GLIB_MAKEFILE)
  
@@ -1042,9 +1037,9 @@ diff -ru libsoup-2.52.0.old/libsoup/Makefile.in libsoup-2.52.0/libsoup/Makefile.
  
  # Tell versions [3.59,3.63) of GNU make to not export all variables.
  # Otherwise a system limit (for SysV at least) may be exceeded.
-diff -ru libsoup-2.52.0.old/Makefile.am libsoup-2.52.0/Makefile.am
---- libsoup-2.52.0.old/Makefile.am	2015-07-27 20:51:03.000000000 +0300
-+++ libsoup-2.52.0/Makefile.am	2015-09-22 22:32:12.723952812 +0300
+diff -ru libsoup-2.52.1.old/Makefile.am libsoup-2.52.1/Makefile.am
+--- libsoup-2.52.1.old/Makefile.am	2015-07-27 20:51:03.000000000 +0300
++++ libsoup-2.52.1/Makefile.am	2015-10-13 14:28:55.795186990 +0300
 @@ -1,7 +1,11 @@
  ## Process this file with automake to produce Makefile.in
  ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
@@ -1071,9 +1066,9 @@ diff -ru libsoup-2.52.0.old/Makefile.am libsoup-2.52.0/Makefile.am
  
  if BUILD_LIBSOUP_GNOME
  pkgconfig_DATA += libsoup-gnome-2.4.pc
-diff -ru libsoup-2.52.0.old/Makefile.in libsoup-2.52.0/Makefile.in
---- libsoup-2.52.0.old/Makefile.in	2015-09-21 18:36:16.000000000 +0300
-+++ libsoup-2.52.0/Makefile.in	2015-09-22 22:34:37.330990880 +0300
+diff -ru libsoup-2.52.1.old/Makefile.in libsoup-2.52.1/Makefile.in
+--- libsoup-2.52.1.old/Makefile.in	2015-10-13 00:26:16.000000000 +0300
++++ libsoup-2.52.1/Makefile.in	2015-10-13 14:30:53.038909124 +0300
 @@ -78,7 +78,9 @@
  POST_UNINSTALL = :
  build_triplet = @build@
@@ -1121,9 +1116,9 @@ diff -ru libsoup-2.52.0.old/Makefile.in libsoup-2.52.0/Makefile.in
  all: config.h
  	$(MAKE) $(AM_MAKEFLAGS) all-recursive
  
-diff -ru libsoup-2.52.0.old/tests/Makefile.in libsoup-2.52.0/tests/Makefile.in
---- libsoup-2.52.0.old/tests/Makefile.in	2015-09-21 18:36:16.000000000 +0300
-+++ libsoup-2.52.0/tests/Makefile.in	2015-09-22 22:34:37.742996692 +0300
+diff -ru libsoup-2.52.1.old/tests/Makefile.in libsoup-2.52.1/tests/Makefile.in
+--- libsoup-2.52.1.old/tests/Makefile.in	2015-10-13 00:26:16.000000000 +0300
++++ libsoup-2.52.1/tests/Makefile.in	2015-10-13 14:31:21.090321134 +0300
 @@ -699,6 +699,8 @@
  	$(top_builddir)/libsoup/libsoup-2.4.la \
  	$(GLIB_LIBS)
