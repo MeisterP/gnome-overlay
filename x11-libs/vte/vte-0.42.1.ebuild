@@ -6,7 +6,7 @@ EAPI="5"
 GCONF_DEBUG="no"
 VALA_USE_DEPEND="vapigen"
 
-inherit eutils gnome2 vala
+inherit eutils gnome2 vala autotools
 
 DESCRIPTION="Library providing a virtual terminal emulator widget"
 HOMEPAGE="https://wiki.gnome.org/action/show/Apps/Terminal/VTE"
@@ -43,6 +43,7 @@ RDEPEND="${RDEPEND}
 "
 
 src_prepare() {
+	eautoreconf
 	vala_src_prepare
 	gnome2_src_prepare
 }
@@ -72,7 +73,7 @@ src_configure() {
 }
 
 src_install() {
-	DOCS="AUTHORS ChangeLog HACKING NEWS README"
+	DOCS="AUTHORS HACKING NEWS README"
 	gnome2_src_install
 	mv "${D}"/etc/profile.d/vte{,-${SLOT}}.sh || die
 }
