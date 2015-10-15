@@ -43,7 +43,7 @@ RDEPEND="${RDEPEND}
 "
 
 src_prepare() {
-	eautoreconf
+	#eautoreconf
 	vala_src_prepare
 	gnome2_src_prepare
 }
