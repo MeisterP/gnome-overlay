@@ -48,3 +48,8 @@ DEPEND="${COMMON_DEPEND}
 
 	app-text/yelp-tools
 "
+
+src_prepare() {
+	epatch ${FILESDIR}/sandbox.patch
+	gnome2_src_prepare
+}
