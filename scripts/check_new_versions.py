@@ -11,7 +11,13 @@ custom_modules = [m for m in dir(custom) if not m.startswith('__')]
 
 def main(config):
     for atom in config:
-        atom = atom.strip()
+        e = atom.strip().split(":")
+        atom = e[0]
+        if len(e) == 2:
+            slot = e[1]
+        else:
+            slot = None
+
         print("check %s" % atom)
         pkg_name = atom.split("/")[1]
         last_local_version = sorted(get_last_local_version(atom))[-1]
@@ -27,7 +33,7 @@ def main(config):
         if only_local_check:
             last_ftp_version = last_local_version
         else:
-            last_ftp_version = get_last_ftp_version(pkg_name)
+            last_ftp_version = get_last_ftp_version(pkg_name, slot)
             print("ftp version: %s" % last_ftp_version.base_version)
             if last_ftp_version > last_local_version:
                 create_ebuild(atom, last_ftp_version)
