@@ -21,7 +21,7 @@ def main(config):
         print("check %s" % atom)
         pkg_name = atom.split("/")[1]
         last_local_version = sorted(get_last_local_version(atom))[-1]
-        print("local version: %s" % last_local_version.base_version)
+        print("local version: %s" % last_local_version.vstring)
 
         custom_handler = False
         only_local_check = False
@@ -34,7 +34,7 @@ def main(config):
             last_ftp_version = last_local_version
         else:
             last_ftp_version = get_last_ftp_version(pkg_name, slot)
-            print("ftp version: %s" % last_ftp_version.base_version)
+            print("ftp version: %s" % last_ftp_version.vstring)
             if last_ftp_version > last_local_version:
                 create_ebuild(atom, last_ftp_version)
 
