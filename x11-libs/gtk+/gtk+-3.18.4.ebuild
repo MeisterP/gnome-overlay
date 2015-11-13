@@ -13,7 +13,7 @@ HOMEPAGE="http://www.gtk.org/"
 
 LICENSE="LGPL-2+"
 SLOT="3"
-IUSE="aqua broadway cloudprint colord cups examples +introspection test vim-syntax wayland X xinerama"
+IUSE="aqua broadway cloudprint colord cups examples +introspection test vim-syntax wayland X xinerama typeahead"
 REQUIRED_USE="
 	|| ( aqua wayland X )
 	xinerama? ( X )
@@ -114,11 +114,14 @@ strip_builddir() {
 }
 
 src_prepare() {
+	if use typeahead; then
+		epatch "${FILESDIR}"/gtk-typeahead.patch
+	fi
 	# -O3 and company cause random crashes in applications. Bug #133469
 	replace-flags -O3 -O2
 	strip-flags
 
-	if ! use test ; then
+	if ! use test; then
 		# don't waste time building tests
 		strip_builddir SRC_SUBDIRS testsuite Makefile.{am,in}
 
