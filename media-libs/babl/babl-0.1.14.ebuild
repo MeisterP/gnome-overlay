@@ -7,7 +7,7 @@ EAPI=4
 VALA_MIN_API_VERSION=0.14
 VALA_USE_DEPEND=vapigen
 EGIT_REPO_URI="git://git.gnome.org/babl"
-EGIT_COMMIT="96ca84efcfb41af79992660e989b32079053bb12"
+EGIT_COMMIT="746b5b64a6daa660dfc65f531f0cd46628c13660"
 
 inherit vala autotools eutils git-r3
 
