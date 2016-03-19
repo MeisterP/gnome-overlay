@@ -8,7 +8,7 @@ PYTHON_COMPAT=( python2_7 )
 inherit cmake-utils python-single-r1
 
 DESCRIPTION="Provides integration with GNOME Shell extensions repository for Chrome browser"
-HOMEPAGE="https://github.com/nE0sIghT/chrome-gnome-shell"
+HOMEPAGE="https://wiki.gnome.org/Projects/GnomeShellIntegrationForChrome"
 SRC_URI="https://github.com/nE0sIghT/chrome-gnome-shell/archive/v${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
@@ -21,10 +21,6 @@ RDEPEND="
 	gnome-base/gnome-shell
 "
 DEPEND=""
-
-PATCHES=(
-	"${FILESDIR}"/${P}-depend.patch
-)
 
 src_configure() {
 	local mycmakeargs=( -DBUILD_EXTENSION=OFF )
