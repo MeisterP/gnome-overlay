@@ -20,7 +20,6 @@ ATOMS = (
     'media-plugins/gst-plugins-dash',
     'media-plugins/gst-plugins-smoothstreaming',
     'media-plugins/gst-plugins-modplug',
-    'media-plugins/gst-plugins-mimic',
     'media-plugins/gst-plugins-voaacenc',
     'media-plugins/gst-plugins-assrender',
     'media-plugins/gst-plugins-schroedinger',
