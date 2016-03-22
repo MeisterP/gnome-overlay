@@ -79,7 +79,7 @@ DEPEND="${RDEPEND}
 RESTRICT="test"
 
 src_prepare() {
-	DOCS="AUTHORS ChangeLog NEWS MAINTAINERS README TODO" # ChangeLog.pre-1.2 README.commits
+	DOCS="AUTHORS ChangeLog NEWS MAINTAINERS README" # ChangeLog.pre-1.2 README.commits
 
 	if ! use udev; then
 		sed -e 's/gvfsd-burn/ /' \

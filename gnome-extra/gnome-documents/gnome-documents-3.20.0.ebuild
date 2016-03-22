@@ -13,7 +13,7 @@ HOMEPAGE="https://wiki.gnome.org/Apps/Documents"
 LICENSE="GPL-2+"
 SLOT="0"
 IUSE=""
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="amd64 x86"
 
 # Need gdk-pixbuf-2.25 for gdk_pixbuf_get_pixels_with_length
 COMMON_DEPEND="
@@ -22,7 +22,7 @@ COMMON_DEPEND="
 	dev-libs/gjs
 	>=dev-libs/glib-2.39.3:2
 	>=dev-libs/gobject-introspection-1.31.6:=
-	>=dev-libs/libgdata-0.13.3:=[gnome,introspection]
+	>=dev-libs/libgdata-0.13.3:=[crypt,gnome-online-accounts,introspection]
 	gnome-base/gnome-desktop:3=
 	>=media-libs/clutter-1.10:1.0
 	>=media-libs/clutter-gtk-1.3.2:1.0[introspection]
@@ -31,7 +31,7 @@ COMMON_DEPEND="
 	>=net-libs/libzapojit-0.0.2
 	>=net-libs/webkit-gtk-2.6:4
 	>=x11-libs/gdk-pixbuf-2.25:2[introspection]
-	>=x11-libs/gtk+-3.15.5:3[introspection]
+	>=x11-libs/gtk+-3.19.1:3[introspection]
 	x11-libs/pango[introspection]
 "
 RDEPEND="${COMMON_DEPEND}
