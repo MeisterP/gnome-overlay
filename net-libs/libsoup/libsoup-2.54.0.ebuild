@@ -69,7 +69,7 @@ multilib_src_configure() {
 	gnome2_src_configure \
 		--disable-static \
 		--disable-tls-check \
-		--without-gnome \
+		--with-gnome \
 		--without-apache-httpd \
 		$(multilib_native_use_enable introspection) \
 		$(multilib_native_use_enable vala) \
