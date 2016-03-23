@@ -24,8 +24,8 @@ RDEPEND="
 	>=dev-libs/libgdata-0.15.2:0=
 	media-libs/babl
 	>=media-libs/gegl-0.3.5:0.3
-	>=media-libs/grilo-0.2.6:0.2
-	>=media-plugins/grilo-plugins-0.2.6:0.2[upnp-av]
+	>=media-libs/grilo-0.3:0.3
+	>=media-plugins/grilo-plugins-0.3:0.3[upnp-av]
 	>=media-libs/exempi-1.99.5
 	media-libs/lcms:2
 	>=media-libs/libexif-0.6.14

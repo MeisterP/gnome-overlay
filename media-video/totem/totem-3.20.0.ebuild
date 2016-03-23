@@ -38,8 +38,8 @@ RDEPEND="
 	>=x11-libs/gdk-pixbuf-2.23.0:2
 	>=x11-libs/gtk+-3.16:3[introspection?]
 
-	>=media-libs/grilo-0.2.12:0.2[playlist]
-	media-plugins/grilo-plugins:0.2
+	>=media-libs/grilo-0.3:0.3[playlist]
+	media-plugins/grilo-plugins:0.3
 	>=media-libs/gstreamer-1.3.1:1.0
 	>=media-libs/gst-plugins-base-1.4.2:1.0[X,introspection?,pango]
 	media-libs/gst-plugins-good:1.0
