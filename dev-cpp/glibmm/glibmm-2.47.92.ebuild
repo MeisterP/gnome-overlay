@@ -16,7 +16,7 @@ KEYWORDS="~alpha amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc x86 ~x86-fb
 IUSE="doc debug examples test"
 
 RDEPEND="
-	>=dev-libs/libsigc++-2.6.0:2[${MULTILIB_USEDEP}]
+	>=dev-libs/libsigc++-2.8.0:2[${MULTILIB_USEDEP}]
 	>=dev-libs/glib-2.46.0:2[${MULTILIB_USEDEP}]
 "
 DEPEND="${RDEPEND}
