@@ -19,7 +19,7 @@ IUSE="test"
 RDEPEND="
 	>=app-admin/packagekit-base-1.0.9
 	dev-db/sqlite:3
-	>=dev-libs/appstream-glib-0.5.1:0
+	>=dev-libs/appstream-glib-0.5.11:0
 	>=dev-libs/glib-2.45.8:2
 	>=gnome-base/gnome-desktop-3.17.92:3=
 	>=gnome-base/gsettings-desktop-schemas-3.11.5
@@ -33,6 +33,7 @@ DEPEND="${RDEPEND}
 	dev-libs/libxslt
 	>=dev-util/intltool-0.35
 	virtual/pkgconfig
+	app-text/gtkspell:3
 	test? ( dev-util/dogtail )
 "
 # test? ( dev-util/valgrind )

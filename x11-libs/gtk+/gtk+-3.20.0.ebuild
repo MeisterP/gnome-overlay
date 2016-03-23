@@ -43,6 +43,7 @@ COMMON_DEPEND="
 		>=dev-libs/wayland-1.5.91[${MULTILIB_USEDEP}]
 		media-libs/mesa[wayland,${MULTILIB_USEDEP}]
 		>=x11-libs/libxkbcommon-0.2[${MULTILIB_USEDEP}]
+		>=dev-libs/wayland-protocols-1.0[${MULTILIB_USEDEP}]
 	)
 	X? (
 		>=app-accessibility/at-spi2-atk-2.5.3[${MULTILIB_USEDEP}]

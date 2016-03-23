@@ -37,9 +37,6 @@ DEPEND="${RDEPEND}
 # eautoreconf needs mm-common
 
 src_prepare() {
-	# Fix building with gcc-4.7, fixed in next version, bug #567882
-	epatch "${FILESDIR}"/${P}-gcc47.patch
-
 	if ! use test; then
 		# don't waste time building tests
 		sed 's/^\(SUBDIRS =.*\)tests\(.*\)$/\1\2/' -i Makefile.am Makefile.in \
