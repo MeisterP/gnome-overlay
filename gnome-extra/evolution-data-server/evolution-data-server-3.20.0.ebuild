@@ -17,7 +17,7 @@ HOMEPAGE="https://wiki.gnome.org/Apps/Evolution"
 LICENSE="|| ( LGPL-2 LGPL-3 ) BSD Sleepycat"
 SLOT="0/54" # subslot = libcamel-1.2 soname version
 
-IUSE="api-doc-extras +berkdb +gnome-online-accounts +gtk +introspection ipv6 ldap kerberos vala +weather"
+IUSE="api-doc-extras +berkdb +gnome-online-accounts +gtk +introspection ipv6 ldap kerberos vala +weather google-auth"
 REQUIRED_USE="vala? ( introspection )"
 
 KEYWORDS="~alpha amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~ia64-linux ~x86-linux ~x86-solaris"
@@ -51,6 +51,7 @@ RDEPEND="
 	kerberos? ( virtual/krb5:= )
 	ldap? ( >=net-nds/openldap-2:= )
 	weather? ( >=dev-libs/libgweather-3.10:2= )
+	google-auth? ( >=net-libs/webkit-gtk-2.4.9:3 )
 "
 DEPEND="${RDEPEND}
 	${PYTHON_DEPS}
@@ -103,6 +104,7 @@ src_configure() {
 		$(use_with ldap openldap) \
 		$(use_enable vala vala-bindings) \
 		$(use_enable weather) \
+		$(use_enable google-auth) \
 		--enable-google \
 		--enable-largefile \
 		--enable-smime \
