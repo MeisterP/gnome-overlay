@@ -92,9 +92,6 @@ pkg_setup() {
 }
 
 src_prepare() {
-	# GDBusProxy: Fix a memory leak during initialization (from 2.46 branch)
-	epatch "${FILESDIR}"/${P}-memleak.patch
-
 	# Prevent build failure in stage3 where pkgconfig is not available, bug #481056
 	mv -f "${WORKDIR}"/pkg-config-*/pkg.m4 "${S}"/m4macros/ || die
 
