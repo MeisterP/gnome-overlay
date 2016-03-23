@@ -21,6 +21,7 @@ KEYWORDS="~alpha amd64 ~arm ~arm64 ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc x86 
 REQUIRED_IUSE="vala? ( introspection )"
 
 RDEPEND="
+	!<net-libs/libsoup-2.54
 	>=dev-libs/glib-2.34.3:2[${MULTILIB_USEDEP}]
 	>=dev-libs/libxml2-2.9.1-r4:2[${MULTILIB_USEDEP}]
 	>=dev-db/sqlite-3.8.2:3[${MULTILIB_USEDEP}]
