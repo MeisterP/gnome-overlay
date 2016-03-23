@@ -12,7 +12,7 @@ DESCRIPTION="A framework for easy media discovery and browsing"
 HOMEPAGE="https://wiki.gnome.org/Projects/Grilo"
 
 LICENSE="LGPL-2.1+"
-SLOT="0.2"
+SLOT="0.3"
 KEYWORDS="~alpha amd64 ~ppc ~ppc64 ~sparc x86"
 IUSE="daap +dvd flickr freebox gnome-online-accounts lua subtitles thetvdb tracker upnp-av +vimeo +youtube"
 

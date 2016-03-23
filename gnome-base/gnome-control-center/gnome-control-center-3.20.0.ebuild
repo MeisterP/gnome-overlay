@@ -28,7 +28,7 @@ COMMON_DEPEND="
 	>=dev-libs/glib-2.39.91:2[dbus]
 	>=x11-libs/gdk-pixbuf-2.23.0:2
 	>=x11-libs/gtk+-3.15:3[X,wayland?]
-	>=gnome-base/gsettings-desktop-schemas-3.15.4
+	>=gnome-base/gsettings-desktop-schemas-3.19.3
 	>=gnome-base/gnome-desktop-3.17.4:3=
 	>=gnome-base/gnome-settings-daemon-3.8.3[colord?,policykit]
 
@@ -60,7 +60,7 @@ COMMON_DEPEND="
 		>=net-print/cups-1.4[dbus]
 		|| ( >=net-fs/samba-3.6.14-r1[smbclient] >=net-fs/samba-4.0.0[client] ) )
 	gnome-online-accounts? (
-		>=media-libs/grilo-0.2.12:0.2
+		>=media-libs/grilo-0.3:0.3
 		>=net-libs/gnome-online-accounts-3.15.1 )
 	i18n? ( >=app-i18n/ibus-1.5.2 )
 	kerberos? ( app-crypt/mit-krb5 )
@@ -119,7 +119,7 @@ DEPEND="${COMMON_DEPEND}
 src_prepare() {
 	# Make some panels and dependencies optional; requires eautoreconf
 	# https://bugzilla.gnome.org/686840, 697478, 700145
-	epatch "${FILESDIR}"/${PN}-3.18.0-optional.patch
+	epatch "${FILESDIR}"/${P}-optional.patch
 	epatch "${FILESDIR}"/${PN}-3.16.0-make-wayland-optional.patch
 	epatch "${FILESDIR}"/${PN}-3.18.0-keep-panels-optional.patch
 	epatch "${FILESDIR}"/${PN}-3.16.0-networkmanager.patch
