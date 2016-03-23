@@ -127,7 +127,7 @@ pkg_setup() {
 
 src_prepare() {
 	# make custom session work, bug #216984, upstream bug #737578
-	epatch "${FILESDIR}/${PN}-3.2.1.1-custom-session.patch"
+	epatch "${FILESDIR}/${PN}-3.20-custom-session.patch"
 
 	# ssh-agent handling must be done at xinitrc.d, bug #220603
 	epatch "${FILESDIR}/${PN}-2.32.0-xinitrc-ssh-agent.patch"
