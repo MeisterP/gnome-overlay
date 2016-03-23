@@ -32,8 +32,8 @@ RDEPEND="
 	>=sys-libs/libosinfo-0.2.12
 	>=app-emulation/qemu-1.3.1[spice,smartcard?,usbredir?]
 	>=app-emulation/libvirt-0.9.3[libvirtd,qemu]
-	>=app-emulation/libvirt-glib-0.2.2
-	>=x11-libs/gtk+-3.13.2:3
+	>=app-emulation/libvirt-glib-0.2.3
+	>=x11-libs/gtk+-3.19.4:3
 	>=net-libs/gtk-vnc-0.4.4[gtk3]
 	>=net-misc/spice-gtk-0.27[gtk3,smartcard?,usbredir?]
 	virtual/libusb:1
