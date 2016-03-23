@@ -49,9 +49,8 @@ DOC_CONTENTS="To get previous working directory inherited in new opened
 src_prepare() {
 	if ! use vanilla; then
 		# OpenSuSE patches, https://bugzilla.gnome.org/show_bug.cgi?id=695371
-		epatch "${FILESDIR}"/${PN}-3.18.2-transparency.patch
+		epatch "${FILESDIR}"/${PN}-3.20-transparency.patch
 		epatch "${FILESDIR}"/${PN}-3.18.2-transparency-fix-for-broken-themes.patch
-		epatch "${FILESDIR}"/${PN}-3.18.2-dark-theme.patch
 		eautoreconf
 	fi
 	gnome2_src_prepare
