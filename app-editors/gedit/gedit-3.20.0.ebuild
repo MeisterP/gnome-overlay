@@ -50,6 +50,7 @@ COMMON_DEPEND="
 		dev-libs/libpeas[${PYTHON_USEDEP}] )
 	spell? (
 		>=app-text/enchant-1.2:=
+		app-text/gspell
 		>=app-text/iso-codes-0.35 )
 "
 RDEPEND="${COMMON_DEPEND}
