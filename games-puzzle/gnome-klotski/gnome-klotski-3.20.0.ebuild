@@ -28,6 +28,7 @@ DEPEND="${RDEPEND}
 	>=dev-util/intltool-0.50
 	sys-devel/gettext
 	virtual/pkgconfig
+	>=dev-libs/libgames-support-1.0
 "
 
 src_prepare() {
