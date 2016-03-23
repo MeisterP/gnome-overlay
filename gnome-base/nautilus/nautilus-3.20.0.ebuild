@@ -15,7 +15,7 @@ LICENSE="GPL-2+ LGPL-2+ FDL-1.1"
 SLOT="0"
 
 # profiling?
-IUSE="exif gnome +introspection packagekit +previewer sendto tracker xmp typeahead"
+IUSE="exif gnome +introspection packagekit +previewer sendto tracker selinux xmp typeahead"
 KEYWORDS="~alpha amd64 ~arm ~ia64 ~ppc ~ppc64 ~sh ~sparc x86 ~x86-fbsd ~x86-interix ~amd64-linux ~arm-linux ~x86-linux"
 
 # FIXME: tests fails under Xvfb, but pass when building manually
@@ -42,6 +42,7 @@ COMMON_DEPEND="
 	introspection? ( >=dev-libs/gobject-introspection-0.6.4 )
 	tracker? ( >=app-misc/tracker-0.16:= )
 	xmp? ( >=media-libs/exempi-2.1.0 )
+	selinux? ( >=sys-libs/libselinux-2.0 )
 "
 DEPEND="${COMMON_DEPEND}
 	>=dev-lang/perl-5
@@ -73,9 +74,9 @@ PDEPEND="
 # Need gvfs[gtk] for recent:/// support
 
 src_prepare() {
-	if use typeahead; then
-		epatch ${FILESDIR}/nautilus-typeahead.patch
-	fi
+	#if use typeahead; then
+	#		epatch ${FILESDIR}/nautilus-typeahead.patch
+	#fi
 	if use previewer; then
 		DOC_CONTENTS="nautilus uses gnome-extra/sushi to preview media files.
 			To activate the previewer, select a file and press space; to
@@ -99,6 +100,7 @@ src_configure() {
 		$(use_enable packagekit) \
 		$(use_enable sendto nst-extension) \
 		$(use_enable tracker) \
+		$(use_enable selinux) \
 		$(use_enable xmp)
 }
 
