@@ -22,6 +22,7 @@ IUSE="gtk examples +introspection +network playlist test vala"
 REQUIRED_USE="test? ( introspection )"
 
 RDEPEND="
+	!media-libs/grilo:0.2
 	>=dev-libs/glib-2.44:2
 	dev-libs/libxml2:2
 	net-libs/liboauth
