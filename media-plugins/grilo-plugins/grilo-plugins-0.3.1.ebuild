@@ -18,8 +18,9 @@ IUSE="daap +dvd flickr freebox gnome-online-accounts lua subtitles thetvdb track
 
 # Bump gom requirement to avoid segfaults
 RDEPEND="
+	!media-plugins/grilo-plugins:0.2
 	>=dev-libs/glib-2.44:2
-	>=media-libs/grilo-0.2.12:${SLOT}[network,playlist]
+	>=media-libs/grilo-0.3:${SLOT}[network,playlist]
 	media-libs/libmediaart:2.0
 	>=dev-libs/gom-0.3.1
 
