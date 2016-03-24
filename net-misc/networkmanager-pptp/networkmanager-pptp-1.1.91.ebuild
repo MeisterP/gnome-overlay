@@ -24,7 +24,7 @@ RDEPEND="
 	net-dialup/pptpclient
 	gtk? (
 		app-crypt/libsecret
-		>=gnome-extra/nm-applet-1.0.5
+		>=gnome-extra/nm-applet-1.1.0
 		>=x11-libs/gtk+-3.4:3
 	)
 "
