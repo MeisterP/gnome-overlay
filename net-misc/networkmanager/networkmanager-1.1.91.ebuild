@@ -124,10 +124,6 @@ src_prepare() {
 	# Don't build examples, they are not needed and can cause build failure
 	sed -e '/^\s*examples\s*\\/d' -i Makefile.{am,in} || die
 
-	# core: fix failure to configure routes due to wrong device-route for IPv4 peer-addresses
-	# (from 1.0 branch)
-	epatch "${FILESDIR}"/${P}-vpn-routes.patch
-
 	use vala && vala_src_prepare
 	epatch_user # don't remove, users often want custom patches for NM
 	eautoreconf
