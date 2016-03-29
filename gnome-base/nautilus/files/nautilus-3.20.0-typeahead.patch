@@ -1,7 +1,22 @@
-diff -ru nautilus-3.18.1.old/libnautilus-private/nautilus-global-preferences.h nautilus-3.18.1/libnautilus-private/nautilus-global-preferences.h
---- nautilus-3.18.1.old/libnautilus-private/nautilus-global-preferences.h	2015-10-06 19:14:05.000000000 +0300
-+++ nautilus-3.18.1/libnautilus-private/nautilus-global-preferences.h	2015-11-13 15:21:32.424657813 +0300
-@@ -156,6 +156,9 @@
+diff -ru nautilus-3.20.0.old/data/org.gnome.nautilus.gschema.xml nautilus-3.20.0/data/org.gnome.nautilus.gschema.xml
+--- nautilus-3.20.0.old/data/org.gnome.nautilus.gschema.xml	2016-03-03 12:31:41.000000000 +0300
++++ nautilus-3.20.0/data/org.gnome.nautilus.gschema.xml	2016-03-29 14:00:50.760219480 +0300
+@@ -199,6 +199,11 @@
+       <summary>Bulk rename utility</summary>
+       <description>If set, Nautilus will append URIs of selected files and treat the result as a command line for bulk renaming. Bulk rename applications can register themselves in this key by setting the key to a space-separated string of their executable name and any command line options. If the executable name is not set to a full path, it will be searched for in the search path.</description>
+     </key>
++    <key name="enable-interactive-search" type="b">
++      <default>true</default>
++      <_summary>Enable interactive (type-ahead) search</_summary>
++      <_description>If set to true, enables interactive search, similar to Nautilus 3.4.</_description>
++    </key>
+     <key type="b" name="open-folder-on-dnd-hover">
+       <default>true</default>
+       <summary>Whether to open the hovered folder after a timeout when drag and drop operation</summary>
+diff -ru nautilus-3.20.0.old/libnautilus-private/nautilus-global-preferences.h nautilus-3.20.0/libnautilus-private/nautilus-global-preferences.h
+--- nautilus-3.20.0.old/libnautilus-private/nautilus-global-preferences.h	2016-02-16 12:27:37.000000000 +0300
++++ nautilus-3.20.0/libnautilus-private/nautilus-global-preferences.h	2016-03-29 13:59:12.391743958 +0300
+@@ -149,6 +149,9 @@
  /* Recent files */
  #define NAUTILUS_PREFERENCES_RECENT_FILES_ENABLED          "remember-recent-files"
  
@@ -11,25 +26,10 @@ diff -ru nautilus-3.18.1.old/libnautilus-private/nautilus-global-preferences.h n
  /* Move to trash shorcut changed dialog */
  #define NAUTILUS_PREFERENCES_SHOW_MOVE_TO_TRASH_SHORTCUT_CHANGED_DIALOG "show-move-to-trash-shortcut-changed-dialog"
  
-diff -ru nautilus-3.18.1.old/libnautilus-private/org.gnome.nautilus.gschema.xml.in nautilus-3.18.1/libnautilus-private/org.gnome.nautilus.gschema.xml.in
---- nautilus-3.18.1.old/libnautilus-private/org.gnome.nautilus.gschema.xml.in	2015-10-13 19:01:33.000000000 +0300
-+++ nautilus-3.18.1/libnautilus-private/org.gnome.nautilus.gschema.xml.in	2015-11-13 15:22:03.395444729 +0300
-@@ -176,6 +176,11 @@
-       <_summary>Bulk rename utility</_summary>
-       <_description>If set, Nautilus will append URIs of selected files and treat the result as a command line for bulk renaming. Bulk rename applications can register themselves in this key by setting the key to a space-separated string of their executable name and any command line options. If the executable name is not set to a full path, it will be searched for in the search path.</_description>
-     </key>
-+    <key name="enable-interactive-search" type="b">
-+      <default>true</default>
-+      <_summary>Enable interactive (type-ahead) search</_summary>
-+      <_description>If set to true, enables interactive search, similar to Nautilus 3.4.</_description>
-+    </key>
-     <key name="open-folder-on-dnd-hover" type="b">
-       <default>true</default>
-       <_summary>Whether to open the hovered folder after a timeout when drag and drop operation</_summary>
-diff -ru nautilus-3.18.1.old/src/nautilus-list-view.c nautilus-3.18.1/src/nautilus-list-view.c
---- nautilus-3.18.1.old/src/nautilus-list-view.c	2015-10-13 19:01:33.000000000 +0300
-+++ nautilus-3.18.1/src/nautilus-list-view.c	2015-11-13 15:31:44.156439991 +0300
-@@ -2389,6 +2389,7 @@
+diff -ru nautilus-3.20.0.old/src/nautilus-list-view.c nautilus-3.20.0/src/nautilus-list-view.c
+--- nautilus-3.20.0.old/src/nautilus-list-view.c	2016-03-23 11:32:17.000000000 +0300
++++ nautilus-3.20.0/src/nautilus-list-view.c	2016-03-29 14:02:53.575061008 +0300
+@@ -2391,6 +2391,7 @@
  	GList *node;
  	GList *iters, *l;
  	NautilusFile *file;
@@ -37,7 +37,7 @@ diff -ru nautilus-3.18.1.old/src/nautilus-list-view.c nautilus-3.18.1/src/nautil
  	
  	list_view = NAUTILUS_LIST_VIEW (view);
  	tree_selection = gtk_tree_view_get_selection (list_view->details->tree_view);
-@@ -2403,10 +2404,19 @@
+@@ -2405,10 +2406,21 @@
  		for (l = iters; l != NULL; l = l->next) {
  			gtk_tree_selection_select_iter (tree_selection,
  							(GtkTreeIter *)l->data);
@@ -46,7 +46,7 @@ diff -ru nautilus-3.18.1.old/src/nautilus-list-view.c nautilus-3.18.1/src/nautil
  		}
  		g_list_free_full (iters, g_free);
  	}
--
+ 
 +    if (path) {
 +        gtk_tree_view_set_cursor_on_cell (list_view->details->tree_view,
 +              path,
@@ -55,10 +55,11 @@ diff -ru nautilus-3.18.1.old/src/nautilus-list-view.c nautilus-3.18.1/src/nautil
 +            TRUE);
 +        gtk_tree_path_free (path);
 +    }
++
  	g_signal_handlers_unblock_by_func (tree_selection, list_selection_changed_callback, view);
  	nautilus_files_view_notify_selection_changed (view);
  }
-@@ -3213,3 +3223,9 @@
+@@ -3219,3 +3231,9 @@
  			     "window-slot", slot,
  			     NULL);
  }
@@ -68,9 +69,9 @@ diff -ru nautilus-3.18.1.old/src/nautilus-list-view.c nautilus-3.18.1/src/nautil
 +{
 +       return list_view->details->tree_view;
 +}
-diff -ru nautilus-3.18.1.old/src/nautilus-list-view.h nautilus-3.18.1/src/nautilus-list-view.h
---- nautilus-3.18.1.old/src/nautilus-list-view.h	2015-10-06 19:14:05.000000000 +0300
-+++ nautilus-3.18.1/src/nautilus-list-view.h	2015-11-13 15:32:22.847172616 +0300
+diff -ru nautilus-3.20.0.old/src/nautilus-list-view.h nautilus-3.20.0/src/nautilus-list-view.h
+--- nautilus-3.20.0.old/src/nautilus-list-view.h	2015-12-02 18:47:40.000000000 +0300
++++ nautilus-3.20.0/src/nautilus-list-view.h	2016-03-29 14:03:22.529495051 +0300
 @@ -54,4 +54,6 @@
  GType nautilus_list_view_get_type (void);
  NautilusFilesView * nautilus_list_view_new (NautilusWindowSlot *slot);
@@ -78,14 +79,14 @@ diff -ru nautilus-3.18.1.old/src/nautilus-list-view.h nautilus-3.18.1/src/nautil
 +GtkTreeView* nautilus_list_view_get_tree_view (NautilusListView *list_view);
 +
  #endif /* NAUTILUS_LIST_VIEW_H */
-diff -ru nautilus-3.18.1.old/src/nautilus-window-slot.c nautilus-3.18.1/src/nautilus-window-slot.c
---- nautilus-3.18.1.old/src/nautilus-window-slot.c	2015-10-15 20:12:25.000000000 +0300
-+++ nautilus-3.18.1/src/nautilus-window-slot.c	2015-11-13 15:40:18.380940448 +0300
-@@ -125,6 +125,17 @@
+diff -ru nautilus-3.20.0.old/src/nautilus-window-slot.c nautilus-3.20.0/src/nautilus-window-slot.c
+--- nautilus-3.20.0.old/src/nautilus-window-slot.c	2016-03-23 11:30:29.000000000 +0300
++++ nautilus-3.20.0/src/nautilus-window-slot.c	2016-03-29 14:12:02.025275896 +0300
+@@ -124,6 +124,17 @@
  	gboolean tried_mount;
-         gchar *view_mode_before_search;
-         gchar *view_mode_before_places;
-+    
+         gint view_mode_before_search;
+         gint view_mode_before_places;
++
 +    /* Interactive search */
 +    gboolean isearch_enable;
 +    gboolean isearch_imcontext_changed;
@@ -99,10 +100,10 @@ diff -ru nautilus-3.18.1.old/src/nautilus-window-slot.c nautilus-3.18.1/src/naut
  };
  
  static guint signals[LAST_SIGNAL] = { 0 };
-@@ -147,6 +158,16 @@
- static void nautilus_window_slot_set_location (NautilusWindowSlot *slot,
-                                                GFile              *location);
- 
+@@ -136,6 +147,16 @@
+ static void nautilus_window_slot_connect_new_content_view (NautilusWindowSlot *slot);
+ static void nautilus_window_slot_disconnect_content_view (NautilusWindowSlot *slot);
+ static gboolean nautilus_window_slot_content_view_matches (NautilusWindowSlot *slot, guint id);
 +/* Interactive search */
 +static void isearch_ensure (NautilusWindowSlot *slot);
 +static gboolean isearch_start (NautilusWindowSlot *slot, GdkDevice *device);
@@ -113,15 +114,16 @@ diff -ru nautilus-3.18.1.old/src/nautilus-window-slot.c nautilus-3.18.1/src/naut
 +
 +#define ISEARCH_TIMEOUT    5000
 +
- static NautilusView*
- nautilus_window_slot_get_view_for_location (NautilusWindowSlot *slot,
-                                             GFile              *location)
-@@ -484,17 +505,85 @@
+ static NautilusView* nautilus_window_slot_get_view_for_location (NautilusWindowSlot *slot, GFile *location);
+ static void nautilus_window_slot_set_content_view (NautilusWindowSlot *slot, guint id);
+ static void nautilus_window_slot_set_loading (NautilusWindowSlot *slot, gboolean loading);
+@@ -492,18 +513,85 @@
  
  	retval = FALSE;
  	window = nautilus_window_slot_get_window (slot);
 -	if (!NAUTILUS_IS_DESKTOP_WINDOW (window)) {
--		retval = nautilus_query_editor_handle_event (slot->details->query_editor, event);
+-                retval = gtk_search_bar_handle_event (GTK_SEARCH_BAR (slot->details->query_editor),
+-                                                      (GdkEvent*) event);
 -	}
 -
 -	if (retval) {
@@ -210,12 +212,11 @@ diff -ru nautilus-3.18.1.old/src/nautilus-window-slot.c nautilus-3.18.1/src/naut
  static void
  real_active (NautilusWindowSlot *slot)
  {
-@@ -524,8 +613,13 @@
+@@ -523,7 +611,13 @@
+ 	nautilus_window_sync_location_widgets (window);
+ 	nautilus_window_slot_sync_actions (slot);
  
- 	window = nautilus_window_slot_get_window (slot);
- 	g_assert (slot == nautilus_window_get_active_slot (window));
--
--        gtk_widget_insert_action_group (GTK_WIDGET (window), "slot", NULL);
+-        gtk_widget_insert_action_group (GTK_WIDGET (window), "slot", slot->details->slot_action_group);
 +    isearch_hide (slot, NULL);
 +    if (slot->details->isearch_configure_event_id != 0) {
 +        g_signal_handler_disconnect (GTK_WIDGET (slot->details->window),
@@ -226,10 +227,10 @@ diff -ru nautilus-3.18.1.old/src/nautilus-window-slot.c nautilus-3.18.1/src/naut
  }
  
  static void
-@@ -735,6 +829,26 @@
-         nautilus_application_add_accelerator (app, "slot.files-view-mode('list')", "<control>1");
-         nautilus_application_add_accelerator (app, "slot.files-view-mode('grid')", "<control>2");
+@@ -734,6 +828,26 @@
          nautilus_application_add_accelerator (app, "slot.search-visible", "<control>f");
+ 
+         slot->details->view_mode_before_search = NAUTILUS_VIEW_INVALID_ID;
 +        
 +        slot->details->isearch_enable =
 +        g_settings_get_boolean (nautilus_preferences, NAUTILUS_PREFERENCES_ENABLE_INTERACTIVE_SEARCH);
@@ -253,23 +254,23 @@ diff -ru nautilus-3.18.1.old/src/nautilus-window-slot.c nautilus-3.18.1/src/naut
  }
  
  #define DEBUG_FLAG NAUTILUS_DEBUG_WINDOW
-@@ -2265,6 +2379,7 @@
+@@ -2230,6 +2344,7 @@
  	GtkWidget *widget;
  
  	slot = NAUTILUS_WINDOW_SLOT (object);
-+    isearch_dispose (slot);
++	isearch_dispose (slot);
  
  	nautilus_window_slot_clear_forward_list (slot);
  	nautilus_window_slot_clear_back_list (slot);
-@@ -2353,6 +2468,7 @@
+@@ -2306,6 +2421,7 @@
  	oclass->constructed = nautilus_window_slot_constructed;
  	oclass->set_property = nautilus_window_slot_set_property;
  	oclass->get_property = nautilus_window_slot_get_property;
-+    oclass->finalize = nautilus_window_slot_finalize;
++	oclass->finalize = nautilus_window_slot_finalize;
  
          widget_class->grab_focus = nautilus_window_slot_grab_focus;
  
-@@ -2635,3 +2751,761 @@
+@@ -2625,3 +2741,761 @@
  
          return slot->details->loading;
  }
