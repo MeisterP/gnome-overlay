@@ -132,8 +132,6 @@ src_prepare() {
 		strip_builddir SRC_SUBDIRS demos Makefile.{am,in}
 		strip_builddir SRC_SUBDIRS examples Makefile.{am,in}
 	fi
-	# https://bugzilla.gnome.org/show_bug.cgi?id=764174
-	epatch "${FILESDIR}"/${P}-gtkwindow.patch
 	# gtk-update-icon-cache is installed by dev-util/gtk-update-icon-cache
 	epatch "${FILESDIR}"/${PN}-3.16.2-remove_update-icon-cache.patch
 
