@@ -34,7 +34,7 @@ COMMON_DEPEND="
 	>=dev-libs/json-glib-0.13.2
 	>=dev-libs/libcroco-0.6.8:0.6
 	>=gnome-base/gnome-desktop-3.7.90:3=[introspection]
-	>=gnome-base/gsettings-desktop-schemas-3.14
+	>=gnome-base/gsettings-desktop-schemas-3.19.2
 	>=gnome-base/gnome-keyring-3.3.90
 	gnome-base/libgnome-keyring
 	>=gnome-extra/evolution-data-server-3.17.2:=
@@ -44,7 +44,7 @@ COMMON_DEPEND="
 	>=sys-auth/polkit-0.100[introspection]
 	>=x11-libs/libXfixes-5.0
 	x11-libs/libXtst
-	>=x11-wm/mutter-3.18.1[introspection]
+	>=x11-wm/mutter-3.20.0[introspection]
 	>=x11-libs/startup-notification-0.11
 
 	${PYTHON_DEPS}
@@ -130,6 +130,10 @@ src_prepare() {
 	# Fix silent bluetooth linking failure with ld.gold, bug #503952
 	# https://bugzilla.gnome.org/show_bug.cgi?id=726435
 	epatch "${FILESDIR}"/${PN}-3.14.0-bluetooth-gold.patch
+
+	# Fix crash with nvidia-drivers, bug #578216
+	# https://bugzilla.gnome.org/show_bug.cgi?id=764898
+	epatch "${FILESDIR}"/${PN}-3.20-fix-nvidia-crash.patch
 
 	epatch_user
 
