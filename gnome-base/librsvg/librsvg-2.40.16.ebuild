@@ -45,9 +45,6 @@ src_prepare() {
 	# https://bugzilla.gnome.org/show_bug.cgi?id=731826
 	epatch "${FILESDIR}/${PN}-2.40.2-vala-out-of-source.patch"
 
-	# https://bugzilla.gnome.org/show_bug.cgi?id=760262
-	epatch "${FILESDIR}/${PN}-2.40.15-resize.patch"
-
 	eautoreconf
 
 	use vala && vala_src_prepare
