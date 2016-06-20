@@ -14,7 +14,7 @@ HOMEPAGE="https://git.gnome.org/browse/gnome-settings-daemon"
 
 LICENSE="GPL-2+"
 SLOT="0"
-IUSE="+colord +cups debug input_devices_wacom -openrc-force networkmanager policykit +short-touchpad-timeout smartcard test +udev wayland"
+IUSE="+colord +cups debug input_devices_wacom -openrc-force networkmanager policykit smartcard test +udev wayland"
 REQUIRED_USE="
 	input_devices_wacom? ( udev )
 	smartcard? ( udev )
@@ -93,13 +93,6 @@ DEPEND="${COMMON_DEPEND}
 "
 
 src_prepare() {
-	# https://bugzilla.gnome.org/show_bug.cgi?id=621836
-	# Apparently this change severely affects touchpad usability for some
-	# people, so revert it if USE=short-touchpad-timeout.
-	# Revisit if/when upstream adds a setting for customizing the timeout.
-	use short-touchpad-timeout &&
-		epatch "${FILESDIR}"/${PN}-3.7.90-short-touchpad-timeout.patch
-
 	# Make colord and wacom optional; requires eautoreconf
 	epatch "${FILESDIR}"/${PN}-3.16.0-optional.patch
 
