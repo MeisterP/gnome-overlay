@@ -77,6 +77,7 @@ src_prepare() {
 	if use typeahead; then
 			epatch ${FILESDIR}/${P}-typeahead.patch
 	fi
+	epatch ${FILESDIR}/${P}-fix-toolbar.patch
 	if use previewer; then
 		DOC_CONTENTS="nautilus uses gnome-extra/sushi to preview media files.
 			To activate the previewer, select a file and press space; to

@@ -134,6 +134,7 @@ src_prepare() {
 	fi
 	# gtk-update-icon-cache is installed by dev-util/gtk-update-icon-cache
 	epatch "${FILESDIR}"/${PN}-3.16.2-remove_update-icon-cache.patch
+	epatch "${FILESDIR}"/${P}-fix-parent-window.patch
 
 	epatch_user
 

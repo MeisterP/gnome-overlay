@@ -1,0 +1,30 @@
+From 46cdb44fdd7466f0d524eeb4eec6c504fd64208b Mon Sep 17 00:00:00 2001
+From: Carlos Garnacho <carlosg@gnome.org>
+Date: Thu, 14 Apr 2016 11:05:00 +0200
+Subject: [PATCH] GtkWindow: Ensure the toplevel is realized before realizing
+ popovers
+
+Otherwise those get a NULL parent window, which is toplevel-y enough
+to disembody the popover.
+
+https://bugzilla.gnome.org/show_bug.cgi?id=764060
+---
+ gtk/gtkwindow.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/gtk/gtkwindow.c b/gtk/gtkwindow.c
+index b19a643..7a3d13c 100644
+--- a/gtk/gtkwindow.c
++++ b/gtk/gtkwindow.c
+@@ -12291,7 +12291,8 @@ _gtk_window_set_popover_position (GtkWindow                   *window,
+   data->rect = *rect;
+   data->pos = pos;
+ 
+-  if (gtk_widget_is_visible (popover) && !data->window)
++  if (gtk_widget_is_visible (popover) && !data->window &&
++      gtk_widget_get_realized (GTK_WIDGET (window)))
+     {
+       popover_realize (popover, data, window);
+       popover_map (popover, data);
+-- 
+2.7.3
