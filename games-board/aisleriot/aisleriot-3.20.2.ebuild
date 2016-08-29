@@ -20,7 +20,7 @@ IUSE="gnome"
 # FIXME: quartz support?
 # Does not build with guile-2.0.0 or 2.0.1
 COMMON_DEPEND=">=dev-libs/glib-2.31.13:2
-	>=dev-scheme/guile-2.0.5:2[deprecated,regex]
+	>=dev-scheme/guile-2.0.5[deprecated,regex]
 	>=gnome-base/librsvg-2.32.0:2
 	>=dev-qt/qtsvg-4.4:4
 	>=x11-libs/cairo-1.10.0
