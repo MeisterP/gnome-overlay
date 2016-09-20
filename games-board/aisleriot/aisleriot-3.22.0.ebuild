@@ -22,7 +22,7 @@ IUSE="gnome"
 COMMON_DEPEND=">=dev-libs/glib-2.31.13:2
 	>=dev-scheme/guile-2.0.5[deprecated,regex]
 	>=gnome-base/librsvg-2.32.0:2
-	>=dev-qt/qtsvg-4.4:4
+	>=dev-qt/qtsvg-5.0:5
 	>=x11-libs/cairo-1.10.0
 	x11-libs/gdk-pixbuf:2
 	>=x11-libs/gtk+-3.0.0:3
