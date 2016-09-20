@@ -12,7 +12,7 @@ HOMEPAGE="https://git.gnome.org/browse/gnome-control-center/"
 
 LICENSE="GPL-2+"
 SLOT="2"
-IUSE="+bluetooth +colord +cups debug +gnome-online-accounts +i18n input_devices_wacom kerberos networkmanager v4l wayland"
+IUSE="+bluetooth +colord +cups debug +gnome-online-accounts +i18n input_devices_wacom kerberos v4l wayland"
 KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~x86-linux ~x86-solaris"
 
 # False positives caused by nested configure scripts
@@ -27,8 +27,8 @@ COMMON_DEPEND="
 	>=dev-libs/glib-2.44.0:2[dbus]
 	>=x11-libs/gdk-pixbuf-2.23.0:2
 	>=x11-libs/gtk+-3.20.3:3[X,wayland?]
-	>=gnome-base/gsettings-desktop-schemas-3.19.3
-	>=gnome-base/gnome-desktop-3.19.93:3=
+	>=gnome-base/gsettings-desktop-schemas-3.21.4
+	>=gnome-base/gnome-desktop-3.21.2:3=
 	>=gnome-base/gnome-settings-daemon-3.19.1[colord?,policykit]
 
 	>=dev-libs/libpwquality-1.2.2
@@ -63,10 +63,9 @@ COMMON_DEPEND="
 		>=net-libs/gnome-online-accounts-3.15.1:= )
 	i18n? ( >=app-i18n/ibus-1.5.2 )
 	kerberos? ( app-crypt/mit-krb5 )
-	networkmanager? (
-		>=gnome-extra/nm-applet-0.9.7.995
-		>=net-misc/networkmanager-0.9.8:=[modemmanager]
-		>=net-misc/modemmanager-0.7.990 )
+	>=gnome-extra/nm-applet-1.2
+	>=net-misc/networkmanager-1.2:=[modemmanager]
+	>=net-misc/modemmanager-0.7
 	v4l? (
 		media-libs/clutter-gtk:1.0
 		>=media-video/cheese-3.5.91 )
@@ -117,13 +116,9 @@ DEPEND="${COMMON_DEPEND}
 src_prepare() {
 	# Make some panels and dependencies optional; requires eautoreconf
 	# https://bugzilla.gnome.org/686840, 697478, 700145
-	eapply "${FILESDIR}"/${PN}-3.20.0-optional.patch
+	eapply "${FILESDIR}"/${PN}-3.22.0-optional.patch
 	eapply "${FILESDIR}"/${PN}-3.16.0-make-wayland-optional.patch
 	eapply "${FILESDIR}"/${PN}-3.18.0-keep-panels-optional.patch
-	eapply "${FILESDIR}"/${PN}-3.16.0-networkmanager.patch
-
-	# Fix some absolute paths to be appropriate for Gentoo
-	eapply "${FILESDIR}"/${PN}-3.10.2-gentoo-paths.patch
 
 	eautoreconf
 	gnome2_src_prepare
@@ -141,7 +136,6 @@ src_configure() {
 		$(use_enable gnome-online-accounts goa) \
 		$(use_enable i18n ibus) \
 		$(use_enable kerberos) \
-		$(use_enable networkmanager) \
 		$(use_with v4l cheese) \
 		$(use_enable input_devices_wacom wacom) \
 		$(use_enable wayland)
