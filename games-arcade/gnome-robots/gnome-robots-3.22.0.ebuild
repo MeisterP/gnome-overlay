@@ -21,6 +21,7 @@ RDEPEND="
 	>=x11-libs/gtk+-3.15:3
 "
 DEPEND="${RDEPEND}
+	gnome-extra/libgnome-games-support
 	app-text/yelp-tools
 	dev-libs/appstream-glib
 	>=dev-util/intltool-0.50

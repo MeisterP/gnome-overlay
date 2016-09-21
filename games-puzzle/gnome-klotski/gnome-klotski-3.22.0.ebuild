@@ -24,6 +24,7 @@ RDEPEND="
 "
 DEPEND="${RDEPEND}
 	$(vala_depend)
+	gnome-extra/libgnome-games-support
 	app-text/yelp-tools
 	dev-libs/appstream-glib
 	>=dev-util/intltool-0.50

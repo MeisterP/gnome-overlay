@@ -90,5 +90,6 @@ src_configure() {
 		--with-libcanberra \
 		$(use_enable introspection) \
 		$(use_enable kms native-backend) \
-		$(use_enable wayland)
+		$(use_enable wayland) \
+		$(use_enable wayland wayland-egl-server)
 }
