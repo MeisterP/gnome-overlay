@@ -121,6 +121,7 @@ DEPEND="${COMMON_DEPEND}
 # https://bugs.gentoo.org/show_bug.cgi?id=360413
 
 src_prepare() {
+	eapply "${FILESDIR}"/${P}-fix-mutter-libs.patch
 	eapply "${FILESDIR}"/${PN}-3.22.0-defaults.patch
 
 	# Fix automagic gnome-bluetooth dep, bug #398145
@@ -144,12 +145,6 @@ src_configure() {
 		$(use_with bluetooth) \
 		$(use_enable networkmanager) \
 		BROWSER_PLUGIN_DIR="${EPREFIX}"/usr/$(get_libdir)/nsbrowser/plugins
-}
-
-src_compile() {
-	# Wat I do?!!
-	export LD_LIBRARY_PATH=/usr/lib64/mutter
-	default
 }
 
 src_install() {
