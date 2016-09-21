@@ -68,6 +68,11 @@ DEPEND="${COMMON_DEPEND}
 # gnome-common needed for eautoreconf
 # gnome-base/gdm does not provide gnome.desktop anymore
 
+src_prepare() {
+	eapply ${FILESDIR}/${P}-mutter-libs.patch
+	default
+}
+
 src_configure() {
 	# 1. Avoid automagic on old upower releases
 	# 2. xsltproc is always checked due to man configure
