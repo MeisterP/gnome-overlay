@@ -15,6 +15,7 @@ KEYWORDS="~amd64 ~x86"
 
 # Need gdk-pixbuf-2.25 for gdk_pixbuf_get_pixels_with_length
 COMMON_DEPEND="
+	>=dev-libs/libgepub-0.4
 	>=app-misc/tracker-1:=[miner-fs]
 	>=app-text/evince-3.13.3[introspection]
 	dev-libs/gjs

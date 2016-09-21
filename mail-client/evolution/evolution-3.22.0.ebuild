@@ -30,14 +30,14 @@ PINENTRY_DEPEND="|| ( app-crypt/pinentry[gnome-keyring] app-crypt/pinentry[gtk] 
 COMMON_DEPEND="
 	>=app-crypt/gcr-3.4:=
 	>=app-text/enchant-1.1.7
-	>=dev-libs/glib-2.40:2[dbus]
+	>=dev-libs/glib-2.46:2[dbus]
 	>=dev-libs/libxml2-2.7.3:2
 	>=gnome-base/gnome-desktop-2.91.3:3=
 	>=gnome-base/gsettings-desktop-schemas-2.91.92
 	>=gnome-extra/evolution-data-server-3.20.3:=[gtk,weather?]
 	>=media-libs/libcanberra-0.25[gtk3]
 	>=net-libs/libsoup-2.42:2.4
-	>=net-libs/webkit-gtk-2.2:3
+	>=net-libs/webkit-gtk-2.13.90:4
 	>=x11-libs/cairo-1.9.15:=[glib]
 	>=x11-libs/gdk-pixbuf-2.24:2
 	>=x11-libs/gtk+-3.10:3
