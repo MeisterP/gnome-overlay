@@ -1,0 +1,65 @@
+diff -ru nautilus-3.20.1.old/src/nautilus-toolbar.c nautilus-3.20.1/src/nautilus-toolbar.c
+--- nautilus-3.20.1.old/src/nautilus-toolbar.c	2016-04-28 12:40:26.000000000 +0300
++++ nautilus-3.20.1/src/nautilus-toolbar.c	2016-06-28 01:31:56.365856788 +0300
+@@ -543,6 +543,12 @@
+         GList *l;
+         GtkWidget *progress;
+         gboolean should_show_progress_button = FALSE;
++        NautilusWindow *window = self->priv->window;
++        gboolean should_open_popover;
++
++        /* Popover should only be opened if the window is realized,
++         * otherwise the popover gets it's own window/title bar */
++        should_open_popover = window != NULL && gtk_widget_get_realized (GTK_WIDGET (window));
+ 
+         gtk_container_foreach (GTK_CONTAINER (self->priv->operations_container),
+                                (GtkCallback) gtk_widget_destroy,
+@@ -571,13 +577,16 @@
+ 
+         if (should_show_progress_button &&
+             !gtk_revealer_get_reveal_child (GTK_REVEALER (self->priv->operations_revealer))) {
+-                add_operations_button_attention_style (self);
++
++                if (should_open_popover)
++                        add_operations_button_attention_style (self);
++
+                 gtk_revealer_set_reveal_child (GTK_REVEALER (self->priv->operations_revealer),
+                                                TRUE);
+                 gtk_widget_queue_draw (self->priv->operations_icon);
+ 
+                 /* Show the popover at start to increase visibility */
+-                if (!NAUTILUS_IS_DESKTOP_WINDOW (self->priv->window)) {
++                if (should_open_popover && !NAUTILUS_IS_DESKTOP_WINDOW (window)) {
+                         gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self->priv->operations_button),
+                                                       TRUE);
+                 }
+@@ -751,6 +760,12 @@
+ }
+ 
+ static void
++on_toolbar_realized (NautilusToolbar *self)
++{
++	update_operations (self);
++}
++
++static void
+ nautilus_toolbar_init (NautilusToolbar *self)
+ {
+ 	GtkBuilder *builder;
+@@ -778,8 +793,6 @@
+         g_signal_connect (self->priv->progress_manager, "has-viewers-changed",
+                           G_CALLBACK (on_progress_has_viewers_changed), self);
+ 
+-        update_operations (self);
+-
+ 	g_object_set_data (G_OBJECT (self->priv->back_button), "nav-direction",
+ 			   GUINT_TO_POINTER (NAUTILUS_NAVIGATION_DIRECTION_BACK));
+ 	g_object_set_data (G_OBJECT (self->priv->forward_button), "nav-direction",
+@@ -797,6 +810,7 @@
+         g_signal_connect_swapped (self->priv->operations_popover, "closed",
+                                   (GCallback) gtk_widget_grab_focus, self);
+ 
++	g_signal_connect_swapped (self, "realize", G_CALLBACK (on_toolbar_realized), self);
+ 	gtk_widget_show_all (GTK_WIDGET (self));
+ 	toolbar_update_appearance (self);
+ }
