@@ -5,7 +5,7 @@
 EAPI=6
 GST_ORG_MODULE="gst-plugins-base"
 
-inherit gstreamer
+inherit gstreamer eutils autotools
 
 DESCRIPTION="Basepack of plugins for gstreamer"
 HOMEPAGE="https://gstreamer.freedesktop.org/"
@@ -47,6 +47,12 @@ DEPEND="${RDEPEND}
 		>=x11-proto/xextproto-7.2.1-r1[${MULTILIB_USEDEP}]
 		>=x11-proto/xproto-7.0.24[${MULTILIB_USEDEP}] )
 "
+
+src_prepare() {
+	eapply ${FILESDIR}/${P}-separate-cflags-for-sse.patch
+	eautoreconf
+	default
+}
 
 multilib_src_configure() {
 	gstreamer_multilib_src_configure \
