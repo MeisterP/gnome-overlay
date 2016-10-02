@@ -48,12 +48,6 @@ DEPEND="${RDEPEND}
 		>=x11-proto/xproto-7.0.24[${MULTILIB_USEDEP}] )
 "
 
-src_prepare() {
-	eapply ${FILESDIR}/${P}-separate-cflags-for-sse.patch
-	eautoreconf
-	default
-}
-
 multilib_src_configure() {
 	gstreamer_multilib_src_configure \
 		$(use_enable alsa) \
