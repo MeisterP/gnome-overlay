@@ -39,6 +39,7 @@ RDEPEND="${COMMON_DEPEND}
 src_prepare() {
 	# https://bugzilla.gnome.org/show_bug.cgi?id=746920
 	eapply "${FILESDIR}/${PN}-3.14.2.3-srcdir.patch"
+	"${FILESDIR}"/${PN}-3.20.2-exclude-engine.patch
 	eautoreconf
 
 	gnome2_src_prepare
