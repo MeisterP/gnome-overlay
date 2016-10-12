@@ -44,7 +44,7 @@ COMMON_DEPEND="
 	>=sys-auth/polkit-0.100[introspection]
 	>=x11-libs/libXfixes-5.0
 	x11-libs/libXtst
-	>=x11-wm/mutter-3.22.0[introspection]
+	>=x11-wm/mutter-3.22.1[introspection]
 	>=x11-libs/startup-notification-0.11
 
 	${PYTHON_DEPS}
@@ -121,7 +121,7 @@ DEPEND="${COMMON_DEPEND}
 # https://bugs.gentoo.org/show_bug.cgi?id=360413
 
 src_prepare() {
-	eapply "${FILESDIR}"/${P}-fix-mutter-libs.patch
+	eapply "${FILESDIR}"/${PN}-3.22.0-fix-mutter-libs.patch
 	eapply "${FILESDIR}"/${PN}-3.22.0-defaults.patch
 
 	# Fix automagic gnome-bluetooth dep, bug #398145
