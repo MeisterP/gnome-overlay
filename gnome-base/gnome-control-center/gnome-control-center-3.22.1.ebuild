@@ -117,7 +117,6 @@ src_prepare() {
 	# Make some panels and dependencies optional; requires eautoreconf
 	# https://bugzilla.gnome.org/686840, 697478, 700145
 	eapply "${FILESDIR}"/${PN}-3.22.0-optional.patch
-	eapply "${FILESDIR}"/${PN}-3.22.0-fix-ru.patch
 	eapply "${FILESDIR}"/${PN}-3.16.0-make-wayland-optional.patch
 	eapply "${FILESDIR}"/${PN}-3.18.0-keep-panels-optional.patch
 
