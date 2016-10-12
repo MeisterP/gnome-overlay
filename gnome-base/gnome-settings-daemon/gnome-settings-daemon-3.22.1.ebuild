@@ -91,7 +91,7 @@ DEPEND="${COMMON_DEPEND}
 
 src_prepare() {
 	# Make colord and wacom optional; requires eautoreconf
-	eapply "${FILESDIR}"/${PN}-3.16.0-optional.patch
+	eapply "${FILESDIR}"/${PN}-3.22.1-optional.patch
 
 	eautoreconf
 	gnome2_src_prepare
