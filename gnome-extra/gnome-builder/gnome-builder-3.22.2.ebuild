@@ -8,7 +8,7 @@ PYTHON_COMPAT=( python{3_3,3_4,3_5} )
 VALA_MIN_API_VERSION="0.30"
 VALA_USE_DEPEND="vapigen"
 
-inherit gnome2 python-single-r1 vala virtualx
+inherit gnome2 python-single-r1 vala virtualx autotools 
 
 DESCRIPTION="Builder attempts to be an IDE for writing software for GNOME"
 HOMEPAGE="https://wiki.gnome.org/Apps/Builder"
@@ -51,6 +51,7 @@ pkg_setup() {
 
 src_prepare() {
 	use vala && vala_src_prepare
+	eautoreconf
 	gnome2_src_prepare
 }
 
