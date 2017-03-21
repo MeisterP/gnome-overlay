@@ -1,10 +1,10 @@
-![](gnome-322.png?raw=true)
+![](gnome-324.png?raw=true)
 
 * This is the experimental gnome overlay, USE AT YOUR OWN RISK.
 * It will probably break your deptree, your system, and your backbone.
 
 ##############
-# GNOME 3.22 #
+# GNOME 3.24 #
 ##############
 * To try out GNOME 3, use the portage config files in status/portage-configs. It
   is recommended to symlink the package.keywords.gnome3 and package.mask.gnome3
