@@ -6,7 +6,7 @@ GNOME2_LA_PUNT="yes"
 PYTHON_COMPAT=( python2_7 python3_{4,5} pypy )
 VALA_USE_DEPEND="vapigen"
 
-inherit db-use flag-o-matic gnome2 python-any-r1 systemd vala virtualx
+inherit db-use flag-o-matic gnome2 cmake-utils python-any-r1 systemd vala virtualx
 
 DESCRIPTION="Evolution groupware backend"
 HOMEPAGE="https://wiki.gnome.org/Apps/Evolution"
@@ -15,7 +15,7 @@ HOMEPAGE="https://wiki.gnome.org/Apps/Evolution"
 LICENSE="|| ( LGPL-2 LGPL-3 ) BSD Sleepycat"
 SLOT="0/59" # subslot = libcamel-1.2 soname version
 
-IUSE="api-doc-extras berkdb +gnome-online-accounts +gtk google +introspection ipv6 ldap kerberos vala +weather"
+IUSE="api-doc-extras berkdb +gnome-online-accounts +gtk google +introspection ldap kerberos vala +weather"
 REQUIRED_USE="vala? ( introspection )"
 
 KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc ~x86 ~x86-fbsd ~amd64-linux ~x86-linux ~x86-solaris"
@@ -87,35 +87,37 @@ src_configure() {
 	# /usr/include/db.h is always db-1 on FreeBSD
 	# so include the right dir in CPPFLAGS
 	use berkdb && append-cppflags "-I$(db_includedir)"
-	local gdata_flag
-	if use google || use gnome-online-accounts; then
-		gdata_flag="--enable-google"
+	local krb5_enabled
+	if use kerberos; then
+		krb5_enabled=ON
 	else
-		gdata_flag="--disable-google"
+		krb5_enabled=OFF
+	fi
+	
+	local ldap_enabled
+	if use ldap; then
+		ldap_enabled=ON
+	else
+		ldap_enabled=OFF
 	fi
 
-	# phonenumber does not exist in tree
-	gnome2_src_configure \
-		$(use_enable api-doc-extras gtk-doc) \
-		$(use_with api-doc-extras private-docs) \
-		$(usex berkdb --with-libdb="${EPREFIX}"/usr --with-libdb=no) \
-		$(use_enable gnome-online-accounts goa) \
-		$(use_enable gtk) \
-		$(use_enable google google-auth) \
-		${gdata_flag} \
-		$(use_enable introspection) \
-		$(use_enable ipv6) \
-		$(use_with kerberos krb5 "${EPREFIX}"/usr) \
-		$(use_with kerberos krb5-libs "${EPREFIX}"/usr/$(get_libdir)) \
-		$(use_with ldap openldap) \
-		$(use_enable vala vala-bindings) \
-		$(use_enable weather) \
-		--enable-largefile \
-		--enable-smime \
-		--with-systemduserunitdir="$(systemd_get_userunitdir)" \
-		--without-phonenumber \
-		--disable-examples \
-		--disable-uoa
+	local mycmakeargs=(
+		-DENABLE_GTK_DOC=$(usex api-doc-extras) \
+		-DWITH_PRIVATE_DOCS=$(usex api-doc-extras) \
+		-DENABLE_GOA=$(usex gnome-online-accounts) \
+		-DENABLE_GTK=$(usex gtk) \
+		-DENABLE_GOOGLE_AUTH=$(usex google) \
+		-DENABLE_INTROSPECTION=$(usex introspection) \
+		-DWITH_KRB5=$(krb5_enabled) \
+		-DWITH_OPENLDAP=$(ldap_enabled) \
+		-DENABLE_SMIME=ON \
+		-DWITH_PHONENUMBER=OFF \
+		-DENABLE_EXAMPLES=OFF \
+		-DENABLE_UOA=OFF \
+		-DENABLE_VALA_BINDINGS=$(usex vala) \
+		-DENABLE_LARGEFILE=ON
+	)
+    cmake-utils_src_configure
 }
 
 src_test() {
@@ -125,7 +127,9 @@ src_test() {
 }
 
 src_install() {
-	gnome2_src_install
+	addwrite /usr/share/glib-2.0/schemas/
+
+	cmake-utils_src_install
 
 	if use ldap; then
 		insinto /etc/openldap/schema
