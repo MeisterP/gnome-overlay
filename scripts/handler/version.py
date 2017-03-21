@@ -14,13 +14,20 @@ LOCAL_PREFIX = path.dirname(path.dirname(__file__))
 
 
 def get_last_ftp_version(atom, slot=None):
+    if slot:
+        slot = Version(slot)
     ftp.cwd(FTP_PREFIX + atom)
     slots = []
     ftp.dir(lambda x: slots.append(Version(x.split()[-1])) if x.startswith('d') else None)
+    awailable_slots = sorted(slots)
     if slot:
-        ftp.cwd(slot)
+        if slot in awailable_slots:
+            ftp.cwd(slot.vstring)
+        else:
+            last_slot = [s for s in awailable_slots if s <= slot][-1]
+            ftp.cwd(last_slot.vstring)
     else:
-        last_slot = sorted(slots)[-1]
+        last_slot = awailable_slots[-1]
         ftp.cwd(last_slot.vstring)
     versions = []
     ftp.dir(lambda x: versions.append(Version(version_regexp.findall(x.split()[-1])[0][0])) if x.endswith(
