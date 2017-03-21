@@ -8,13 +8,13 @@ DESCRIPTION="C++ interface for pango"
 HOMEPAGE="http://www.gtkmm.org"
 
 LICENSE="LGPL-2.1+"
-SLOT="1.4"
+SLOT="2.42"
 KEYWORDS="alpha amd64 arm hppa ia64 ppc ppc64 ~sh sparc x86 ~x86-fbsd ~amd64-linux ~x86-linux ~sparc-solaris ~x86-solaris"
 IUSE="doc"
 
 COMMON_DEPEND="
 	>=x11-libs/pango-1.38.0[${MULTILIB_USEDEP}]
-	>=dev-cpp/glibmm-2.51.0:2[${MULTILIB_USEDEP}]
+	>=dev-cpp/glibmm-2.51.0:2.52[${MULTILIB_USEDEP}]
 	>=dev-cpp/cairomm-1.15.0[${MULTILIB_USEDEP}]
 	dev-libs/libsigc++:3[${MULTILIB_USEDEP}]
 "
