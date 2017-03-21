@@ -4,7 +4,7 @@
 EAPI=6
 GNOME2_LA_PUNT="yes"
 
-inherit gnome2 flag-o-matic readme.gentoo-r1
+inherit gnome2 flag-o-matic readme.gentoo-r1 cmake-utils
 
 DESCRIPTION="Integrated mail, addressbook and calendaring functionality"
 HOMEPAGE="https://wiki.gnome.org/Apps/Evolution"
@@ -68,6 +68,7 @@ COMMON_DEPEND="
 	weather? ( >=dev-libs/libgweather-3.10:2= )
 "
 DEPEND="${COMMON_DEPEND}
+	>=net-mail/libpst-0.6.54
 	app-text/docbook-xml-dtd:4.1.2
 	app-text/yelp-tools
 	>=dev-util/gtk-doc-am-1.14
@@ -95,28 +96,43 @@ x-scheme-handler/https=firefox.desktop
 file from /usr/share/applications if you use a different browser)."
 
 src_configure() {
-	# Use NSS/NSPR only if 'ssl' is enabled.
-	gnome2_src_configure \
-		--without-glade-catalog \
-		--disable-code-coverage \
-		--disable-installed-tests \
-		--disable-pst-import \
-		--enable-canberra \
-		$(use_enable archive autoar) \
-		$(use_enable crypt libcryptui) \
-		$(use_enable highlight text-highlight) \
-		$(use_enable geolocation contact-maps) \
-		$(use_enable spell gtkspell) \
-		$(use_enable ssl nss) \
-		$(use_enable ssl smime) \
-		$(use_with bogofilter) \
-		$(use_with ldap openldap) \
-		$(use_with spamassassin) \
-		$(usex ssl --enable-nss=yes "--without-nspr-libs
-			--without-nspr-includes
-			--without-nss-libs
-			--without-nss-includes") \
-		$(use_enable weather)
+	local spamassassin_enabled
+	if use spamassassin; then
+		spamassassin_enabled=ON
+	else
+		spamassassin_enabled=OFF
+	fi
+	
+	local ldap_enabled
+	if use ldap; then
+		ldap_enabled=ON
+	else
+		ldap_enabled=OFF
+	fi
+
+	local hl_enabled
+	if use highlight; then
+		hl_enabled=ON
+	else
+		hl_enabled=OFF
+	fi
+
+	local mycmakeargs=(
+		-DENABLE_CODE_COVERAGE=OFF
+		-DENABLE_INSTALLED_TESTS=OFF
+		-DENABLE_AUTOAR=$(usex archive)
+		-DENABLE_TEXT_HIGHLIGHT=${hl_enabled}
+		-DENABLE_CONTACT_MAP=$(usex geolocation)
+		-DENABLE_GTKSPELL=$(usex spell)
+		-DENABLE_NSS=$(usex ssl)
+		-DENABLE_SMIME=$(usex ssl)
+		-DWITH_BOGOFILTER=$(usex bogofilter)
+		-DWITH_OPENLDAP=${ldap_enabled}
+		-DWITH_SPAMASSASION=${spamassassin_enabled}
+		-DENABLE_WEATHER=$(usex weather)
+		-DENABLE_YTNEF=OFF
+	)
+    cmake-utils_src_configure
 }
 
 src_install() {

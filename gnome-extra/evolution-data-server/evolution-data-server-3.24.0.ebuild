@@ -102,19 +102,19 @@ src_configure() {
 	fi
 
 	local mycmakeargs=(
-		-DENABLE_GTK_DOC=$(usex api-doc-extras) \
-		-DWITH_PRIVATE_DOCS=$(usex api-doc-extras) \
-		-DENABLE_GOA=$(usex gnome-online-accounts) \
-		-DENABLE_GTK=$(usex gtk) \
-		-DENABLE_GOOGLE_AUTH=$(usex google) \
-		-DENABLE_INTROSPECTION=$(usex introspection) \
-		-DWITH_KRB5=$(krb5_enabled) \
-		-DWITH_OPENLDAP=$(ldap_enabled) \
-		-DENABLE_SMIME=ON \
-		-DWITH_PHONENUMBER=OFF \
-		-DENABLE_EXAMPLES=OFF \
-		-DENABLE_UOA=OFF \
-		-DENABLE_VALA_BINDINGS=$(usex vala) \
+		-DENABLE_GTK_DOC=$(usex api-doc-extras)
+		-DWITH_PRIVATE_DOCS=$(usex api-doc-extras)
+		-DENABLE_GOA=$(usex gnome-online-accounts)
+		-DENABLE_GTK=$(usex gtk)
+		-DENABLE_GOOGLE_AUTH=$(usex google)
+		-DENABLE_INTROSPECTION=$(usex introspection)
+		-DWITH_KRB5=${krb5_enabled}
+		-DWITH_OPENLDAP=${ldap_enabled}
+		-DENABLE_SMIME=ON
+		-DWITH_PHONENUMBER=OFF
+		-DENABLE_EXAMPLES=OFF
+		-DENABLE_UOA=OFF
+		-DENABLE_VALA_BINDINGS=$(usex vala)
 		-DENABLE_LARGEFILE=ON
 	)
     cmake-utils_src_configure
