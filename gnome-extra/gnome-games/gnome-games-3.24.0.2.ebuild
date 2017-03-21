@@ -17,8 +17,7 @@ DEPEND="
 	x11-libs/gtk+:3
 	net-libs/libsoup
 	app-misc/tracker
-	>=x11-libs/retro-gtk-0.8
-	>=x11-libs/retro-plugins-0.8
+	>=x11-libs/retro-gtk-0.10
 	media-libs/grilo:0.3[vala]
 	virtual/pkgconfig
 "
