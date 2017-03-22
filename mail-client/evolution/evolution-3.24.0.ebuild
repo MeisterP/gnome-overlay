@@ -136,7 +136,7 @@ src_configure() {
 }
 
 src_install() {
-	gnome2_src_install
+	cmake-utils_src_install
 
 	# Problems with prelink:
 	# https://bugzilla.gnome.org/show_bug.cgi?id=731680
