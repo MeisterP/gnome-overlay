@@ -44,8 +44,6 @@ RDEPEND="${RDEPEND}
 "
 
 src_prepare() {
-	eapply ${FILESDIR}/${P}-fix-build.patch
-
 	eautoreconf
 	use vala && vala_src_prepare
 
