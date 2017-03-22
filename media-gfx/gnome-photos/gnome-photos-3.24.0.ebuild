@@ -29,7 +29,7 @@ RDEPEND="
 	>=net-libs/libgfbgraph-0.2.1:0.2
 	>=x11-libs/cairo-1.14
 	x11-libs/gdk-pixbuf:2
-	>=x11-libs/gtk+-3.19.1:3
+	>=x11-libs/gtk+-3.22.10:3
 "
 DEPEND="${RDEPEND}
 	app-text/yelp-tools
