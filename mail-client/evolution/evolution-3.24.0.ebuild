@@ -136,6 +136,10 @@ src_configure() {
 }
 
 src_install() {
+	addwrite /usr/share/evolution
+	addwrite /usr/share/glib-2.0/schemas
+	addwrite /usr/share/icons/hicolor
+
 	cmake-utils_src_install
 
 	# Problems with prelink:
