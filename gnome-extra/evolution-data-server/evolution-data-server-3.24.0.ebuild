@@ -116,6 +116,7 @@ src_configure() {
 		-DENABLE_UOA=OFF
 		-DENABLE_VALA_BINDINGS=$(usex vala)
 		-DENABLE_LARGEFILE=ON
+		-DENABLE_SCHEMAS_COMPILE=OFF
 	)
     cmake-utils_src_configure
 }
@@ -123,12 +124,11 @@ src_configure() {
 src_test() {
 	unset ORBIT_SOCKETDIR
 	unset SESSION_MANAGER
-	virtx emake check
+	"${EROOT}${GLIB_COMPILE_SCHEMAS}" --allow-any-name "${S}/data" || die
+    GSETTINGS_SCHEMA_DIR="${S}/data" virtx emake check
 }
 
 src_install() {
-	addwrite /usr/share/glib-2.0/schemas/
-
 	cmake-utils_src_install
 
 	if use ldap; then

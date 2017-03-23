@@ -4,7 +4,7 @@
 EAPI=6
 GNOME2_LA_PUNT="yes"
 
-inherit gnome2 flag-o-matic readme.gentoo-r1 cmake-utils
+inherit gnome2 flag-o-matic readme.gentoo-r1 cmake-utils virtualx
 
 DESCRIPTION="Integrated mail, addressbook and calendaring functionality"
 HOMEPAGE="https://wiki.gnome.org/Apps/Evolution"
@@ -131,13 +131,20 @@ src_configure() {
 		-DWITH_SPAMASSASION=${spamassassin_enabled}
 		-DENABLE_WEATHER=$(usex weather)
 		-DENABLE_YTNEF=OFF
+		-DENABLE_SCHEMAS_COMPILE=OFF
 	)
     cmake-utils_src_configure
 }
 
+src_test() {
+	"${EROOT}${GLIB_COMPILE_SCHEMAS}" --allow-any-name "${S}/data" || die
+    GSETTINGS_SCHEMA_DIR="${S}/data" virtx emake check
+}
+
+
 src_install() {
 	addwrite /usr/share/evolution
-	addwrite /usr/share/glib-2.0/schemas
+	#addwrite /usr/share/glib-2.0/schemas
 	addwrite /usr/share/icons/hicolor
 
 	cmake-utils_src_install
