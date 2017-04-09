@@ -13,6 +13,7 @@ IUSE="+spell +archive +sound"
 KEYWORDS="~amd64 ~x86"
 
 DEPEND="
+	>=dev-util/meson-0.36
 	>=sys-devel/gettext-0.19.7
 	spell? ( app-text/gspell )
 	archive? ( app-arch/gnome-autoar )
@@ -21,10 +22,25 @@ DEPEND="
 	>=x11-libs/gtk+-3.22
 "
 
+src_prepare() {
+	cd ${S}/subprojects
+	rmdir libgd
+	git clone git://git.gnome.org/libgd
+	cd ${S}
+	rm -rf build
+	default
+}
+
 src_configure() {
-	gnome2_src_configure \
-		--disable-static \
-		$(use_enable spell gspell) \
-		$(use_enable archive autoar) \
-		$(use_enable sound canberra)
+	meson --prefix=/usr build
+}
+
+src_compile() {
+	ninja -v -C build
+}
+
+src_install() {
+	export DESTDIR=${D}
+	ninja -v -C build install
+	gnome2_src_install
 }
