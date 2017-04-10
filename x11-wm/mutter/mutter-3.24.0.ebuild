@@ -10,7 +10,7 @@ HOMEPAGE="https://git.gnome.org/browse/mutter/"
 LICENSE="GPL-2+"
 SLOT="0"
 
-IUSE="debug gles2 input_devices_wacom +introspection test udev wayland"
+IUSE="debug gles2 input_devices_wacom +introspection test udev wayland egl"
 
 KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc ~x86"
 
@@ -120,6 +120,7 @@ src_configure() {
 		--with-libcanberra \
 		$(usex debug --enable-debug=yes "") \
 		$(use_enable gles2)        \
+		$(use_enable egl egl-device)        \
 		$(use_enable gles2 cogl-gles2) \
 		$(use_enable introspection) \
 		$(use_enable wayland) \
