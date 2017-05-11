@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
-PYTHON_COMPAT=( python3_{3,4,5,6} )
+PYTHON_COMPAT=( python3_{4,5,6} )
 VALA_MIN_API_VERSION="0.30"
 VALA_USE_DEPEND="vapigen"
 DISABLE_AUTOFORMATTING=1
@@ -38,17 +38,19 @@ RDEPEND="
 	>=x11-libs/gtksourceview-3.22.0:3.0[introspection]
 	>=dev-libs/gobject-introspection-1.48.0:=
 	>=dev-python/pygobject-3.22.0:3
-	>=dev-libs/libxml2-2.9
+	>=dev-libs/libxml2-2.9.0
 	>=x11-libs/pango-1.38.0
-	>=dev-libs/libpeas-1.18.0
+	>=dev-libs/libpeas-1.18.0[python,${PYTHON_USEDEP}]
 	>=dev-libs/json-glib-1.2.0
+	>=app-text/gspell-1.2.0
+	>=app-text/enchant-1.6.0
 	webkit? ( >=net-libs/webkit-gtk-2.12.0:4=[introspection] )
-	clang? ( sys-devel/clang )
+	clang? ( sys-devel/clang:= )
 	git? (
 		dev-libs/libgit2[ssh,threads]
-		>=dev-libs/libgit2-glib-0.24.0[ssh] )
+		>=dev-libs/libgit2-glib-0.25.0[ssh] )
 	>=x11-libs/vte-0.46:2.91
-	sysprof? ( >=dev-util/sysprof-3.22.2[gtk] )
+	sysprof? ( >=dev-util/sysprof-3.23.91[gtk] )
 	dev-libs/libpcre:3
 	${PYTHON_DEPS}
 	vala? ( $(vala_depend) )
@@ -59,7 +61,6 @@ DEPEND="${RDEPEND}
 	dev-cpp/mm-common
 	dev-libs/appstream-glib
 	dev-util/desktop-file-utils
-	>=dev-util/gtk-doc-am-1.11
 	>=sys-devel/gettext-0.19.8
 	virtual/pkgconfig
 	!<sys-apps/sandbox-2.10-r3
@@ -77,13 +78,16 @@ that are currently available with packages include:
   highlighting and symbol resolving support.
 * dev-python/jedi and dev-python/lxml for more accurate Python
   autocompletion support.
+* dev-util/valgrind for integration with valgrind.
 * dev-util/meson for integration with the Meson build system.
 * dev-util/cargo for integration with the Rust Cargo build system.
 '
 # FIXME: Package gnome-code-assistance and mention here, or maybe USE flag and default enable because it's rather important
+# eslint for additional diagnostics in JavaScript files
 # jhbuild support
 # rust language server via rls
-# autotools stuff for autotools plugin
+# autotools stuff for autotools plugin; gtkmm/autoconf-archive for C++ template
+# mono/PHPize stuff
 
 pkg_setup() {
 	python-single-r1_pkg_setup
@@ -95,11 +99,8 @@ src_prepare() {
 }
 
 src_configure() {
-	export PYTHON3_CONFIG="$(python_get_PYTHON_CONFIG)"
-	# idemm is C++ wrapper for libide. Once that's needed by something, we might want to
-	# consider a split package instead of USE flag. Deps are in libidemm/configure.ac
 	gnome2_src_configure \
-		--disable-idemm \
+		--with-channel=distro \
 		--enable-editorconfig \
 		--enable-introspection \
 		$(use_enable vala vala-pack-plugin) \
@@ -107,10 +108,10 @@ src_configure() {
 		$(use_enable webkit html-preview-plugin) \
 		$(use_enable clang clang-plugin) \
 		$(use_enable git git-plugin) \
-		$(use_enable git contributing-plugin) \
 		$(use_enable sysprof sysprof-plugin) \
 		--disable-flatpak-plugin \
 		--enable-terminal-plugin \
+		--enable-gettext-plugin \
 		--disable-static
 }
 
