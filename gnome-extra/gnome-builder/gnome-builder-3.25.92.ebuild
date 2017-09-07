@@ -116,12 +116,14 @@ src_configure() {
 		-D with_flatpak=false
 		-D with_terminal=true
 		-D with_gettext=true
+		-D with_gettext=true
+		-D with_gdb=false
 	)
 	meson_src_configure
 }
 
 src_install() {
-	gnome2_src_install
+	meson_src_install
 	readme.gentoo_create_doc
 }
 
@@ -133,6 +135,4 @@ pkg_postinst() {
 src_test() {
 	# FIXME: this should be handled at eclass level
 	"${EROOT}${GLIB_COMPILE_SCHEMAS}" --allow-any-name "${S}/data/gsettings" || die
-
-	GSETTINGS_SCHEMA_DIR="${S}/data/gsettings" virtx emake check
 }
