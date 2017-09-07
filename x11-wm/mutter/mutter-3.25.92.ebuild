@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
-inherit gnome2 virtualx
+inherit autotools gnome2 virtualx
 
 DESCRIPTION="GNOME 3 compositing window manager based on Clutter"
 HOMEPAGE="https://git.gnome.org/browse/mutter/"
@@ -81,8 +81,6 @@ RDEPEND="${COMMON_DEPEND}
 "
 
 src_prepare() {
-	eapply ${FILESDIR}/${P}-fix-compile.patch
-
 	eautoreconf
 
 	# Disable building of noinst_PROGRAM for tests
