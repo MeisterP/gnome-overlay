@@ -125,9 +125,6 @@ DEPEND="${COMMON_DEPEND}
 	gnome-base/gnome-common
 	sys-devel/autoconf-archive
 "
-# Needed for autoreconf
-#	gnome-base/gnome-common
-#	sys-devel/autoconf-archive
 
 src_configure() {
 	gnome2_src_configure \
