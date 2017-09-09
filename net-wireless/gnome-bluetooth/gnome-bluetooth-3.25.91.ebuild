@@ -42,11 +42,15 @@ pkg_setup() {
 	enewgroup plugdev
 }
 
+PATCHES="
+	${FILESDIR}/${P}-fix-post-install.patch
+"
+
 src_configure() {
 	local emesonargs=(
-		-D enable-introspection=$(usex introspection true false)
-		-D enable-gtk-doc=true
-		-D enable-icon-update=false
+		-Denable-introspection=$(usex introspection true false)
+		-Denable-gtk-doc=true
+		-Denable-icon-update=false
 	)
 	meson_src_configure
 }
@@ -54,12 +58,4 @@ src_configure() {
 src_install() {
 	meson_src_install
 	udev_dorules "${FILESDIR}"/61-${PN}.rules
-}
-
-pkg_postinst() {
-	gnome2_pkg_postinst
-	if ! has_version sys-auth/consolekit[acl] && ! has_version sys-apps/systemd[acl] ; then
-		elog "Don't forget to add yourself to the plugdev group "
-		elog "if you want to be able to control bluetooth transmitter."
-	fi
 }
