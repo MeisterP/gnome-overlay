@@ -4,7 +4,7 @@
 EAPI=6
 GNOME2_LA_PUNT="yes"
 
-inherit flag-o-matic gnome2 virtualx
+inherit flag-o-matic gnome2 virtualx meson
 
 DESCRIPTION="GNOME webbrowser based on Webkit"
 HOMEPAGE="https://wiki.gnome.org/Apps/Web"
@@ -17,7 +17,7 @@ KEYWORDS="~amd64 ~arm ~ppc ~ppc64 ~sparc ~x86"
 COMMON_DEPEND="
 	>=dev-libs/glib-2.46.0:2[dbus]
 	>=x11-libs/gtk+-3.22.13:3
-	>=net-libs/webkit-gtk-2.15.90:4=
+	>=net-libs/webkit-gtk-2.17.4:4=
 	>=x11-libs/cairo-1.2
 	>=app-crypt/gcr-3.5.5:=
 	>=x11-libs/gdk-pixbuf-2.36.5:2
@@ -49,28 +49,33 @@ DEPEND="${COMMON_DEPEND}
 
 PATCHES=(
 	# https://bugzilla.gnome.org/show_bug.cgi?id=751591
-	"${FILESDIR}"/${PN}-3.16.0-unittest-1.patch
+	#"${FILESDIR}"/${P}-unittest-1.patch
 
 	# https://bugzilla.gnome.org/show_bug.cgi?id=751593
-	"${FILESDIR}"/${PN}-3.14.0-unittest-2.patch
+	#"${FILESDIR}"/${P}-unittest-2.patch
 )
 
 src_configure() {
 	# https://bugzilla.gnome.org/show_bug.cgi?id=778495
-	append-cflags -std=gnu11
+	#append-cflags -std=gnu11
 
 	# httpseverywhere is experimental in 3.24; gnome bug #775575
 	# firefox sync storage is not quite ready in 3.24; deps on hogweed/nettle
-	gnome2_src_configure \
-		--enable-shared \
-		--disable-static \
-		--with-distributor-name=Gentoo \
-		--without-libhttpseverywhere \
-		--disable-firefox-sync \
-		$(use_enable test tests)
+	local emesonargs=(
+		-Ddeveloper_mode=false
+		-Ddistributor_name=Gentoo
+		-Dhttps_everywhere=false
+		-Dunit_tests=$(usex test true false)
+	)
+	meson_src_configure
 }
 
-src_test() {
-	"${EROOT}${GLIB_COMPILE_SCHEMAS}" --allow-any-name "${S}/data" || die
-	GSETTINGS_SCHEMA_DIR="${S}/data" virtx emake check
+pkg_postinst() {
+	gnome2_icon_cache_update
+	gnome2_schemas_update
+}
+
+pkg_postrm() {
+	gnome2_icon_cache_update
+	gnome2_schemas_update
 }
