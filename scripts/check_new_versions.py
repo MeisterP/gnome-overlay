@@ -9,14 +9,11 @@ from handler import custom
 custom_modules = [m for m in dir(custom) if not m.startswith('__')]
 
 
-def main(config):
-    for atom in config:
+def main(conf):
+    for atom in conf:
         e = atom.strip().split(":")
         atom = e[0]
-        if len(e) == 2:
-            slot = e[1]
-        else:
-            slot = None
+        slot = e[1] if len(e) == 2 else None
 
         print("check %s" % atom)
         pkg_name = atom.split("/")[1]
