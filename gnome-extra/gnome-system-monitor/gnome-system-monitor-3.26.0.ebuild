@@ -30,11 +30,6 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig
 "
 
-src_prepare() {
-	eapply ${FILESDIR}/${P}-fix-compile.patch
-	gnome2_src_prepare
-}
-
 src_configure() {
 	# XXX: appdata is deprecated by appstream-glib, upstream must upgrade
 	gnome2_src_configure \
