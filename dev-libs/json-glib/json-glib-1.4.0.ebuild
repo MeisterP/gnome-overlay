@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
-inherit gnome2 multilib-minimal
+inherit gnome2 multilib-minimal meson
 
 DESCRIPTION="Library providing GLib serialization and deserialization for the JSON format"
 HOMEPAGE="https://wiki.gnome.org/Projects/JsonGlib"
@@ -32,14 +32,11 @@ src_prepare() {
 }
 
 multilib_src_configure() {
-	# Coverage support is useless, and causes runtime problems
-	ECONF_SOURCE=${S} \
-	gnome2_src_configure \
-		--enable-man \
-		--disable-gcov \
-		$(usex debug --enable-debug=yes --enable-debug=minimum) \
-		$(multilib_native_use_enable introspection) \
-		--with-xml-catalog="${EPREFIX}"/etc/xml/catalog
+	local emesonargs=(
+		-Dintrospection=$(usex introspection true false)
+		-Ddoc=true
+	)
+	meson_src_configure
 
 	if multilib_is_native_abi; then
 		ln -s "${S}"/doc/html doc/html || die
@@ -47,9 +44,9 @@ multilib_src_configure() {
 }
 
 multilib_src_compile() {
-	gnome2_src_compile
+	meson_src_compile
 }
 
 multilib_src_install() {
-	gnome2_src_install
+	meson_src_install
 }
