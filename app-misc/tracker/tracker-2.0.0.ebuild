@@ -120,7 +120,6 @@ pkg_setup() {
 }
 
 src_prepare() {
-	eapply ${FILESDIR}/${PV}/*.patch
 	# Don't run 'firefox --version' or 'thunderbird --version'; it results in
 	# access violations on some setups (bug #385347, #385495).
 	create_version_script "www-client/firefox" "Mozilla Firefox" firefox-version.sh
