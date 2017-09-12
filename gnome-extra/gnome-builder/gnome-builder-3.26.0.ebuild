@@ -7,6 +7,8 @@ VALA_MIN_API_VERSION="0.30"
 VALA_USE_DEPEND="vapigen"
 DISABLE_AUTOFORMATTING=1
 FORCE_PRINT_ELOG=1
+GNOME2_ECLASS_ICONS=1
+GNOME2_ECLASS_GLIB_SCHEMAS=1
 
 inherit gnome2 python-single-r1 vala virtualx readme.gentoo-r1 meson
 
@@ -129,7 +131,13 @@ src_install() {
 
 pkg_postinst() {
 	gnome2_pkg_postinst
+	gnome2_schemas_update
 	readme.gentoo_print_elog
+}
+
+pkg_postrm() {
+	gnome2_icon_cache_update
+	gnome2_schemas_update
 }
 
 src_test() {
