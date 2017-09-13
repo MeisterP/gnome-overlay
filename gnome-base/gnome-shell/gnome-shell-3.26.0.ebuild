@@ -149,8 +149,14 @@ src_install() {
 	fi
 }
 
+pkg_postrm() {
+	gnome2_icon_cache_update
+	gnome2_schemas_update
+}
+
 pkg_postinst() {
 	gnome2_pkg_postinst
+	gnome2_schemas_update
 
 	if ! has_version 'media-libs/gst-plugins-good:1.0' || \
 	   ! has_version 'media-plugins/gst-plugins-vpx:1.0'; then
