@@ -1,23 +1,25 @@
 #! env python3
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import
 
+import asyncio
+import time
 from datetime import datetime
 from time import sleep
 from os import path
-import asyncio
+from curses_log import CursesLog
 from handler.version import LOCAL_PREFIX, get_last_ftp_version, get_last_local_version
 from handler.ebuild import create_ebuild
 from handler import custom
 
 custom_modules = [m for m in dir(custom) if not m.startswith('__')]
 loop = asyncio.get_event_loop()
-
+log = CursesLog()
 
 async def check_atom_process(atom, slot):
     pkg_name = atom.split("/")[1]
     last_local_version = sorted(get_last_local_version(atom))[-1]
-    print("local version: %s" % last_local_version.vstring)
+    log.add_str(atom, "Check {}:{} -> ".format(atom, slot))
+    log.add_str(atom, "local: {} ".format(last_local_version.vstring), append=True)
 
     custom_handler = False
     only_local_check = False
@@ -30,11 +32,9 @@ async def check_atom_process(atom, slot):
         last_ftp_version = last_local_version
     else:
         last_ftp_version = await get_last_ftp_version(pkg_name, slot)
-        print("ftp version: %s" % last_ftp_version.vstring)
+        log.add_str(atom, "ftp : {} ".format(last_ftp_version.vstring), append=True)
         if last_ftp_version > last_local_version:
-            create_ebuild(atom, last_ftp_version)
-
-    print("check %s" % atom)
+            out = create_ebuild(atom, last_ftp_version)
 
     if custom_handler:
         getattr(custom, pkg_name.replace("-", "_")).run(last_ftp_version)
@@ -55,7 +55,7 @@ async def bound_check(sem, atom):
 
 
 async def main(conf):
-    sem = asyncio.Semaphore(4)
+    sem = asyncio.Semaphore(2)
     tasks = []
     for atom in conf:
         task = asyncio.ensure_future(bound_check(sem, atom))
@@ -70,4 +70,5 @@ if __name__ == '__main__':
     with open(path.join(LOCAL_PREFIX, 'apps_list.conf')) as config:
         loop.run_until_complete(main(config))
 
-    print("Finish at {} sec".format((datetime.now() - start)))
+    log.add_str("finish", "Finish at {} sec".format((datetime.now() - start)))
+    log.exit()
