@@ -20,7 +20,7 @@ log = CursesLog()
 async def check_atom_process(atom, slot):
     pkg_name = atom.split("/")[1]
     last_local_version = sorted(get_last_local_version(atom))[-1]
-    log.add_str(atom, "{}:{} -> ".format(atom, slot).ljust(45))
+    log.add_str(atom, "{}:{} -> ".format(atom, slot).ljust(50))
     log.add_str(atom, "local: {} ".format(last_local_version.vstring).ljust(18), append=True)
 
     custom_handler = False
@@ -35,9 +35,9 @@ async def check_atom_process(atom, slot):
     else:
         last_ftp_version = await get_last_ftp_version(pkg_name, slot)
         if last_ftp_version > last_local_version:
-            log.add_str(atom, "ftp : {} ".format(last_ftp_version.vstring).ljust(15), True, curses.color_pair(2))
+            log.add_str(atom, "ftp : {} ".format(last_ftp_version.vstring).ljust(20), True, curses.color_pair(2))
         else:
-            log.add_str(atom, "ftp : {} ".format(last_ftp_version.vstring).ljust(15), True, curses.color_pair(1))
+            log.add_str(atom, "ftp : {} ".format(last_ftp_version.vstring), True, curses.color_pair(1))
 
         if last_ftp_version > last_local_version:
             out = create_ebuild(atom, last_ftp_version)
@@ -76,5 +76,5 @@ if __name__ == '__main__':
     with open(path.join(LOCAL_PREFIX, 'apps_list.conf')) as config:
         loop.run_until_complete(main(config))
 
-    log.add_str("finish", "Finish at {} sec".format((datetime.now() - start)))
+    log.add_str("finish", "Finish at {} sec".format((datetime.now() - start)), False, curses.color_pair(1))
     log.exit()
