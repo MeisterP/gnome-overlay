@@ -7,6 +7,7 @@ class CursesLog:
     def __init__(self):
         self._rows = OrderedDict()
         self._screen = curses.initscr()
+        curses.def_shell_mode()
         curses.start_color()
         curses.use_default_colors()
         curses.init_pair(1, curses.COLOR_GREEN, -1)
@@ -42,7 +43,8 @@ class CursesLog:
     @staticmethod
     def exit():
         curses.echo()
-        #curses.endwin()
+        curses.endwin()
+        curses.reset_shell_mode()
 
 
 def signal_handler(signal, frame):
