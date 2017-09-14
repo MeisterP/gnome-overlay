@@ -3,6 +3,7 @@
 
 import asyncio
 import time
+import curses
 from datetime import datetime
 from time import sleep
 from os import path
@@ -15,11 +16,12 @@ custom_modules = [m for m in dir(custom) if not m.startswith('__')]
 loop = asyncio.get_event_loop()
 log = CursesLog()
 
+
 async def check_atom_process(atom, slot):
     pkg_name = atom.split("/")[1]
     last_local_version = sorted(get_last_local_version(atom))[-1]
-    log.add_str(atom, "Check {}:{} -> ".format(atom, slot))
-    log.add_str(atom, "local: {} ".format(last_local_version.vstring), append=True)
+    log.add_str(atom, "{}:{} -> ".format(atom, slot).ljust(45))
+    log.add_str(atom, "local: {} ".format(last_local_version.vstring).ljust(18), append=True)
 
     custom_handler = False
     only_local_check = False
@@ -32,7 +34,11 @@ async def check_atom_process(atom, slot):
         last_ftp_version = last_local_version
     else:
         last_ftp_version = await get_last_ftp_version(pkg_name, slot)
-        log.add_str(atom, "ftp : {} ".format(last_ftp_version.vstring), append=True)
+        if last_ftp_version > last_local_version:
+            log.add_str(atom, "ftp : {} ".format(last_ftp_version.vstring).ljust(15), True, curses.color_pair(2))
+        else:
+            log.add_str(atom, "ftp : {} ".format(last_ftp_version.vstring).ljust(15), True, curses.color_pair(1))
+
         if last_ftp_version > last_local_version:
             out = create_ebuild(atom, last_ftp_version)
 

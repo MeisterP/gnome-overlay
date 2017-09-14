@@ -1,14 +1,19 @@
 import curses
+import signal
+import sys
+from collections import OrderedDict
 
 class CursesLog:
-    def __init__(self, screen=None):
-        self._rows = {}
-        self._screen = screen if screen else curses.initscr()
-        curses.noecho()
-        curses.nocbreak()
-        self._screen.scrollok(True)
-        self._screen.idlok(True)
-        self._screen.immedok(True)
+    def __init__(self):
+        self._rows = OrderedDict()
+        self._screen = curses.initscr()
+        curses.start_color()
+        curses.use_default_colors()
+        curses.init_pair(1, curses.COLOR_GREEN, -1)
+        curses.init_pair(2, curses.COLOR_RED, -1)
+        #curses.nl()
+
+        #curses.cbreak()
 
     def add_str(self, marker, message, append=False, *args, **kwargs):
         if marker in self._rows:
@@ -18,7 +23,13 @@ class CursesLog:
             else:
                 self._screen.addstr(d["y"], d["end"], message, *args, **kwargs)
         else:
-            self._screen.addstr(len(self._rows) + 1, 0, message, *args, **kwargs)
+            if self._screen.getmaxyx()[0] <= len(self._rows):
+                self._screen.move(0, 0)
+                self._screen.deleteln()
+                self._screen.refresh()
+                self._rows.pop(list(self._rows)[0])
+
+            self._screen.addstr(len(self._rows), 0, message, *args, **kwargs)
 
         y, x = self._screen.getyx()
         self._rows[marker] = {
@@ -28,5 +39,14 @@ class CursesLog:
         }
         self._screen.refresh()
 
+    @staticmethod
     def exit():
-        curses.endwin()
+        curses.echo()
+        #curses.endwin()
+
+
+def signal_handler(signal, frame):
+    CursesLog.exit()
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, signal_handler)
