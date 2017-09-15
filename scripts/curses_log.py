@@ -16,6 +16,11 @@ class CursesLog:
 
         #curses.cbreak()
 
+    def _remove_first(self):
+        self._rows.pop(list(self._rows)[0])
+        for k, v in self._rows.items():
+            v["y"] -= 1
+
     def add_str(self, marker, message, append=False, *args, **kwargs):
         if marker in self._rows:
             d = self._rows[marker]
@@ -28,7 +33,7 @@ class CursesLog:
                 self._screen.move(0, 0)
                 self._screen.deleteln()
                 self._screen.refresh()
-                self._rows.pop(list(self._rows)[0])
+                self._remove_first()
 
             self._screen.addstr(len(self._rows), 0, message, *args, **kwargs)
 
@@ -43,7 +48,7 @@ class CursesLog:
     @staticmethod
     def exit():
         curses.echo()
-        curses.endwin()
+        #curses.endwin()
         curses.reset_shell_mode()
 
 
