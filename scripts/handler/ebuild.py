@@ -1,11 +1,12 @@
-from os import path, makedirs, system
+from os import path, makedirs
 import shutil
+from asyncio.subprocess import PIPE, STDOUT, create_subprocess_shell
 from glob import glob
 
 from .version import LOCAL_PREFIX, PORTAGE_PREFIX, get_last_local_version
 
 
-def create_ebuild(atom, version):
+async def create_ebuild(atom, version):
     pkg_name = atom.split("/")[1]
     local_path = path.join(path.dirname(LOCAL_PREFIX), atom)
     if not path.exists(local_path):
@@ -25,4 +26,5 @@ def create_ebuild(atom, version):
         shutil.move(filename, path.join(local_path, ebuild_name))
 
     #print(system("cd %s && sudo ebuild %s digest" % (local_path, ebuild_name)))
-    system("cd %s && sudo ebuild %s digest" % (local_path, ebuild_name))
+    out = await create_subprocess_shell("cd %s && sudo ebuild %s digest" % (local_path, ebuild_name), stdin = PIPE, stdout = PIPE, stderr = STDOUT)
+    return await out.wait()

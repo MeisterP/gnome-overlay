@@ -40,7 +40,11 @@ async def check_atom_process(atom, slot):
             log.add_str(atom, "ftp : {} ".format(last_ftp_version.vstring), True, curses.color_pair(1))
 
         if last_ftp_version > last_local_version:
-            out = create_ebuild(atom, last_ftp_version)
+            returncode = await create_ebuild(atom, last_ftp_version)
+            if returncode == 0:
+                log.add_str(atom, " [updated]", True, curses.color_pair(1))
+            else:
+                log.add_str(atom, " [fail]", True, curses.color_pair(2))
 
     if custom_handler:
         getattr(custom, pkg_name.replace("-", "_")).run(last_ftp_version)
@@ -61,7 +65,7 @@ async def bound_check(sem, atom):
 
 
 async def main(conf):
-    sem = asyncio.Semaphore(4)
+    sem = asyncio.Semaphore(2)
     tasks = []
     for atom in conf:
         task = asyncio.ensure_future(bound_check(sem, atom))
