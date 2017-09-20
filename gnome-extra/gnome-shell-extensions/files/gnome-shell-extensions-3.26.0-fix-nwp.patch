@@ -1,0 +1,14 @@
+diff -ru gnome-shell-extensions-3.26.0.old/extensions/native-window-placement/extension.js gnome-shell-extensions-3.26.0/extensions/native-window-placement/extension.js
+--- gnome-shell-extensions-3.26.0.old/extensions/native-window-placement/extension.js	2017-04-27 18:04:04.000000000 +0300
++++ gnome-shell-extensions-3.26.0/extensions/native-window-placement/extension.js	2017-09-20 08:52:03.418461104 +0300
+@@ -431,8 +431,8 @@
+             let titleX = cloneX + (cloneWidth - titleWidth) / 2;
+ 
+             /// this is the actual difference to original gnome-shell:
+-            //let titleY = cloneY + cloneHeight + title._spacing;
+-            let titleY = cloneY - title.height + title._spacing;
++            //let titleY = cloneY + cloneHeight - (title.height - this.borderSize) / 2;
++            let titleY = cloneY - (title.height - this.borderSize) / 2;
+ 
+             if (animate)
+                 this._animateOverlayActor(title, Math.floor(titleX), Math.floor(titleY), titleWidth);

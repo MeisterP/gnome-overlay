@@ -1,0 +1,11 @@
+diff --git a/src/st/st-theme-node.c b/src/st/st-theme-node.c
+index 3739b93b4..746e8e51a 100644
+--- a/src/st/st-theme-node.c
++++ b/src/st/st-theme-node.c
+@@ -122,6 +122,7 @@ st_theme_node_dispose (GObject *gobject)
+                                           on_custom_stylesheets_changed, node);
+ 
+   st_theme_node_paint_state_free (&node->cached_state);
++  node->cached_textures = FALSE;
+ 
+   g_clear_object (&node->theme);

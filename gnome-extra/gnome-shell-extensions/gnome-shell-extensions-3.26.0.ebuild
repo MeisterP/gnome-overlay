@@ -47,6 +47,11 @@ you can use the https://extensions.gnome.org/ web interface, the
 gnome-extra/gnome-tweak-tool GUI, or modify the org.gnome.shell
 enabled-extensions gsettings key from the command line or a script."
 
+src_prepare() {
+	eapply ${FILESDIR}/${P}-fix-nwp.patch || die
+	eapply_user
+}
+
 src_configure() {
 	gnome2_src_configure --enable-extensions=all
 }
