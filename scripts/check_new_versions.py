@@ -47,7 +47,7 @@ async def check_atom_process(atom, slot):
                 log.add_str(atom, " [fail]", True, curses.color_pair(2))
 
     if custom_handler:
-        getattr(custom, pkg_name.replace("-", "_")).run(last_ftp_version)
+        await getattr(custom, pkg_name.replace("-", "_")).run(last_ftp_version)
 
 
 async def check_atom(atom):
