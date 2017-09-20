@@ -126,6 +126,20 @@ DEPEND="${COMMON_DEPEND}
 	sys-devel/autoconf-archive
 "
 
+src_prepare() {
+	# Make some panels and dependencies optional; requires eautoreconf
+	# https://bugzilla.gnome.org/686840, 697478, 700145
+	eapply "${FILESDIR}"/${PN}-3.23.90-optional.patch
+	eapply "${FILESDIR}"/${PN}-3.22.0-make-wayland-optional.patch
+	eapply "${FILESDIR}"/${PN}-3.23.90-make-networkmanager-optional.patch
+
+	# Fix some absolute paths to be appropriate for Gentoo
+	eapply "${FILESDIR}"/${PN}-3.23.90-gentoo-paths.patch
+
+	eautoreconf
+	gnome2_src_prepare
+}
+
 src_configure() {
 	gnome2_src_configure \
 		--disable-update-mimedb \

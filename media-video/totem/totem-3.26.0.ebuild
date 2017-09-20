@@ -96,6 +96,7 @@ src_prepare() {
 }
 
 src_configure() {
+	addwrite /dev/dri/card0
 	# Disabled: sample-python, sample-vala
 	local plugins="apple-trailers,autoload-subtitles,brasero-disc-recorder"
 	plugins+=",im-status,gromit,media-player-keys,ontop"
