@@ -119,11 +119,6 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-3.22.0-defaults.patch
 )
 
-src_prepare() {
-	eapply ${FILESDIR}/${P}-fix-segfault.patch || die
-	eapply_user
-}
-
 src_configure() {
 	local emesonargs=(
 		-D enable-browser-plugin=$(usex nsplugin true false)
