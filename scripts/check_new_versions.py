@@ -65,7 +65,7 @@ async def bound_check(sem, atom):
 
 
 async def main(conf):
-    sem = asyncio.Semaphore(2)
+    sem = asyncio.Semaphore(3)
     tasks = []
     for atom in conf:
         task = asyncio.ensure_future(bound_check(sem, atom))

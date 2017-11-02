@@ -7,7 +7,7 @@ GNOME2_LA_PUNT="yes"
 inherit autotools flag-o-matic gnome2 multilib virtualx multilib-minimal
 
 DESCRIPTION="Gimp ToolKit +"
-HOMEPAGE="https://www.gtk.org/"
+HOMEPAGE="http://www.gtk.org/"
 
 LICENSE="LGPL-2+"
 SLOT="3"
@@ -27,7 +27,7 @@ RESTRICT="test"
 # bug #????
 COMMON_DEPEND="
 	>=dev-libs/atk-2.15[introspection?,${MULTILIB_USEDEP}]
-	>=dev-libs/glib-2.49.4:2[${MULTILIB_USEDEP}]
+	>=dev-libs/glib-2.53.4:2[${MULTILIB_USEDEP}]
 	media-libs/fontconfig[${MULTILIB_USEDEP}]
 	>=media-libs/libepoxy-1.0[X(+)?,${MULTILIB_USEDEP}]
 	>=x11-libs/cairo-1.14[aqua?,glib,svg,X?,${MULTILIB_USEDEP}]
@@ -43,7 +43,7 @@ COMMON_DEPEND="
 	introspection? ( >=dev-libs/gobject-introspection-1.39:= )
 	wayland? (
 		>=dev-libs/wayland-1.9.91[${MULTILIB_USEDEP}]
-		>=dev-libs/wayland-protocols-1.9
+		>=dev-libs/wayland-protocols-1.7
 		media-libs/mesa[wayland,${MULTILIB_USEDEP}]
 		>=x11-libs/libxkbcommon-0.2[${MULTILIB_USEDEP}]
 	)
@@ -65,7 +65,6 @@ DEPEND="${COMMON_DEPEND}
 	app-text/docbook-xml-dtd:4.1.2
 	dev-libs/libxslt
 	dev-libs/gobject-introspection-common
-	>=dev-util/gdbus-codegen-2.48
 	>=dev-util/gtk-doc-am-1.20
 	>=sys-devel/gettext-0.19.7[${MULTILIB_USEDEP}]
 	virtual/pkgconfig[${MULTILIB_USEDEP}]
@@ -82,15 +81,18 @@ DEPEND="${COMMON_DEPEND}
 "
 # gtk+-3.2.2 breaks Alt key handling in <=x11-libs/vte-0.30.1:2.90
 # gtk+-3.3.18 breaks scrolling in <=x11-libs/vte-0.31.0:2.90
+# >=xorg-server-1.11.4 needed for
+#  https://mail.gnome.org/archives/desktop-devel-list/2012-March/msg00024.html
 RDEPEND="${COMMON_DEPEND}
 	>=dev-util/gtk-update-icon-cache-3
 	!<gnome-base/gail-1000
 	!<x11-libs/vte-0.31.0:2.90
+	>=x11-themes/adwaita-icon-theme-3.14
+	X? ( !<x11-base/xorg-server-1.11.4 )
 "
 # librsvg for svg icons (PDEPEND to avoid circular dep), bug #547710
 PDEPEND="
 	gnome-base/librsvg[${MULTILIB_USEDEP}]
-	>=x11-themes/adwaita-icon-theme-3.14
 	vim-syntax? ( app-vim/gtk-syntax )
 "
 
@@ -122,6 +124,10 @@ src_prepare() {
 		strip_builddir SRC_SUBDIRS demos Makefile.{am,in}
 		strip_builddir SRC_SUBDIRS examples Makefile.{am,in}
 	fi
+
+	eapply "${FILESDIR}"/gdk-wayland-protocol-server-decoration.patch
+
+	eapply "${FILESDIR}"/${P}-build-fix.patch
 
 	# gtk-update-icon-cache is installed by dev-util/gtk-update-icon-cache
 	eapply "${FILESDIR}"/${PN}-3.22.2-update-icon-cache.patch
