@@ -81,8 +81,6 @@ RDEPEND="${COMMON_DEPEND}
 "
 
 src_prepare() {
-	#https://bugzilla.gnome.org/show_bug.cgi?id=788666
-	eapply "${FILESDIR}"/${P}-fix-gnome-shell-crash.patch
 	eautoreconf
 
 	# Disable building of noinst_PROGRAM for tests
