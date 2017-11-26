@@ -101,9 +101,11 @@ RESTRICT="test"
 
 PATCHES=(
 	# Make colord and wacom optional; requires eautoreconf
-	"${FILESDIR}"/${PN}-3.24.0-optional.patch
+	"${FILESDIR}"/3.24.3-optional.patch
 	# Allow specifying udevrulesdir via configure, bug 509484; requires eautoreconf
-	"${FILESDIR}"/${PV}-udevrulesdir-configure.patch
+	"${FILESDIR}"/3.24.2-udevrulesdir-configure.patch
+	# Fix build issue when gudev is present but not wayland, bug #627966
+	"${FILESDIR}"/3.24.3-fix-wayland-build.patch
 )
 
 python_check_deps() {
