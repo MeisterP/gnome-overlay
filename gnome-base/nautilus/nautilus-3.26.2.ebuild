@@ -11,7 +11,7 @@ HOMEPAGE="https://wiki.gnome.org/Apps/Nautilus"
 
 LICENSE="GPL-2+ LGPL-2+ FDL-1.1"
 SLOT="0"
-IUSE="exif gnome +introspection packagekit +previewer selinux sendto xmp"
+IUSE="exif gnome +introspection packagekit +previewer selinux sendto tracker xmp"
 
 KEYWORDS="~amd64 ~x86"
 
@@ -39,6 +39,7 @@ COMMON_DEPEND="
 	exif? ( >=media-libs/libexif-0.6.20 )
 	introspection? ( >=dev-libs/gobject-introspection-0.6.4:= )
 	selinux? ( >=sys-libs/libselinux-2 )
+	tracker? ( >=app-misc/tracker-1:= )
 	xmp? ( >=media-libs/exempi-2.1.0:2 )
 "
 DEPEND="${COMMON_DEPEND}
@@ -48,7 +49,6 @@ DEPEND="${COMMON_DEPEND}
 	>=sys-devel/gettext-0.19.7
 	virtual/pkgconfig
 	x11-proto/xproto
-	app-misc/tracker
 "
 RDEPEND="${COMMON_DEPEND}
 	packagekit? ( app-admin/packagekit-base )
@@ -61,6 +61,7 @@ RDEPEND="${COMMON_DEPEND}
 
 PDEPEND="
 	gnome? ( x11-themes/adwaita-icon-theme )
+	tracker? ( >=gnome-extra/nautilus-tracker-tags-0.12 )
 	previewer? ( >=gnome-extra/sushi-0.1.9 )
 	sendto? ( >=gnome-extra/nautilus-sendto-3.0.1 )
 	>=gnome-base/gvfs-1.14[gtk]
