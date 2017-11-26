@@ -73,8 +73,8 @@ COMMON_DEPEND="
 	v4l? (
 		media-libs/clutter-gtk:1.0
 		>=media-video/cheese-3.5.91 )
-	>=dev-libs/libwacom-0.7
 	input_devices_wacom? (
+		>=dev-libs/libwacom-0.7
 		>=media-libs/clutter-1.11.3:1.0
 		media-libs/clutter-gtk:1.0
 		>=x11-libs/libXi-1.2 )
@@ -125,20 +125,22 @@ DEPEND="${COMMON_DEPEND}
 	gnome-base/gnome-common
 	sys-devel/autoconf-archive
 "
+# Needed for autoreconf
+#	gnome-base/gnome-common
+#	sys-devel/autoconf-archive
 
-src_prepare() {
+PATCHES=(
 	# Make some panels and dependencies optional; requires eautoreconf
 	# https://bugzilla.gnome.org/686840, 697478, 700145
-	eapply "${FILESDIR}"/${PN}-3.23.90-optional.patch
-	eapply "${FILESDIR}"/${PN}-3.22.0-make-wayland-optional.patch
-	eapply "${FILESDIR}"/${PN}-3.23.90-make-networkmanager-optional.patch
-
+	"${FILESDIR}"/3.24.2-optional.patch
+	"${FILESDIR}"/3.24.2-optional-wayland.patch
+	"${FILESDIR}"/3.24.2-optional-networkmanager.patch
+	"${FILESDIR}"/3.24.2-optional-cups.patch
 	# Fix some absolute paths to be appropriate for Gentoo
-	eapply "${FILESDIR}"/${PN}-3.23.90-gentoo-paths.patch
-
-	eautoreconf
-	gnome2_src_prepare
-}
+	"${FILESDIR}"/3.24.2-gentoo-paths.patch
+	# https://bugzilla.gnome.org/show_bug.cgi?id=780544
+	"${FILESDIR}"/3.24.2-fix-without-gdkwayland.patch
+)
 
 src_configure() {
 	gnome2_src_configure \
