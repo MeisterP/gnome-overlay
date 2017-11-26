@@ -24,7 +24,7 @@ COMMON_DEPEND="
 	>=app-accessibility/at-spi2-atk-2.5.3
 	>=dev-libs/atk-2[introspection]
 	>=app-crypt/gcr-3.7.5[introspection]
-	>=dev-libs/glib-2.45.3:2[dbus]
+	>=dev-libs/glib-2.53.0:2[dbus]
 	>=dev-libs/gjs-1.47.0
 	>=dev-libs/gobject-introspection-1.49.1:=
 	dev-libs/libical:=
@@ -39,7 +39,7 @@ COMMON_DEPEND="
 	>=sys-auth/polkit-0.100[introspection]
 	>=x11-libs/libXfixes-5.0
 	x11-libs/libXtst
-	>=x11-wm/mutter-3.24.0:0/0[introspection]
+	>=x11-wm/mutter-3.26.0:0/0[introspection]
 	>=x11-libs/startup-notification-0.11
 
 	${PYTHON_DEPS}
