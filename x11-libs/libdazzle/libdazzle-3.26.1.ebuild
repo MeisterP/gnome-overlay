@@ -12,7 +12,7 @@ HOMEPAGE="https://github.com/chergert/libdazzle"
 
 LICENSE="LGPL-2+"
 SLOT="0"
-KEYWORDS="~alpha amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc x86 ~amd64-fbsd ~amd64-linux ~x86-linux"
+KEYWORDS="~amd64 ~x86"
 
 IUSE=""
 

@@ -17,7 +17,7 @@ iptc +iso +jpeg kernel_linux libav +miner-fs mp3 networkmanager pdf
 playlist rss stemmer test thunderbird +tiff upnp-av upower +vorbis +xml xmp
 xps"
 
-KEYWORDS="~amd64 ~arm ~ppc ~ppc64 ~x86"
+KEYWORDS="~amd64 ~x86"
 
 REQUIRED_USE="
 	?? ( gstreamer ffmpeg )

@@ -14,7 +14,7 @@ HOMEPAGE="http://live.gnome.org/Aisleriot"
 
 LICENSE="GPL-3 LGPL-3 FDL-1.1"
 SLOT="0"
-KEYWORDS="~amd64 ~mips ~x86"
+KEYWORDS="~amd64 ~x86"
 IUSE="gnome"
 
 # FIXME: quartz support?

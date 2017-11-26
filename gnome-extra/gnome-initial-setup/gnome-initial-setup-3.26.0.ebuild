@@ -14,7 +14,7 @@ HOMEPAGE="https://github.com/GNOME/gnome-initial-setup"
 LICENSE="GPL-2+"
 SLOT="0"
 IUSE=""
-KEYWORDS="~alpha amd64 ~arm ~ia64 ~mips ~ppc ~ppc64 ~sparc x86 ~x86-freebsd ~amd64-linux ~x86-linux ~x86-solaris"
+KEYWORDS="~amd64 ~x86"
 
 DEPEND="
 	>=dev-util/intltool-0.40.0
