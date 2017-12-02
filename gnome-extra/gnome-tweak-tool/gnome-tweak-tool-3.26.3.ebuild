@@ -3,7 +3,7 @@
 
 EAPI=6
 GNOME2_LA_PUNT="yes"
-PYTHON_COMPAT=( python3_4 python3_6 )
+PYTHON_COMPAT=( python3_5 python3_6 )
 
 inherit gnome2 python-r1 meson
 
