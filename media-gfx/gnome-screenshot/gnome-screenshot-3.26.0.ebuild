@@ -44,12 +44,5 @@ src_install() {
 
 pkg_postinst() {
 	gnome2_pkg_postinst
-	gnome2_icon_cache_update
-	gnome2_schemas_update
 	readme.gentoo_print_elog
-}
-
-pkg_postrm() {
-	gnome2_icon_cache_update
-	gnome2_schemas_update
 }
