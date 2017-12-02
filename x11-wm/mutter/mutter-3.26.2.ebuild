@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
-inherit autotools gnome2 virtualx
+inherit gnome2 virtualx
 
 DESCRIPTION="GNOME 3 compositing window manager based on Clutter"
 HOMEPAGE="https://git.gnome.org/browse/mutter/"
@@ -54,14 +54,14 @@ COMMON_DEPEND="
 	gles2? ( media-libs/mesa[gles2] )
 	input_devices_wacom? ( >=dev-libs/libwacom-0.13 )
 	introspection? ( >=dev-libs/gobject-introspection-1.42:= )
-	udev? ( virtual/libgudev:= )
+	udev? ( >=virtual/libgudev-232:= )
 	wayland? (
 		>=dev-libs/libinput-1.4
 		>=dev-libs/wayland-1.6.90
 		>=dev-libs/wayland-protocols-1.7
 		>=media-libs/mesa-10.3[egl,gbm,wayland]
 		sys-apps/systemd
-		virtual/libgudev:=
+		>=virtual/libgudev-232:=
 		>=virtual/libudev-136:=
 		x11-base/xorg-server[wayland]
 		x11-libs/libdrm:=
@@ -81,8 +81,6 @@ RDEPEND="${COMMON_DEPEND}
 "
 
 src_prepare() {
-	eautoreconf
-
 	# Disable building of noinst_PROGRAM for tests
 	if ! use test; then
 		sed -e '/^noinst_PROGRAMS/d' \
@@ -128,7 +126,6 @@ src_configure() {
 		$(use_enable wayland kms-egl-platform) \
 		$(use_enable wayland native-backend) \
 		$(use_enable wayland wayland-egl-server) \
-		$(use_enable wayland egl-device) \
 		$(use_with input_devices_wacom libwacom) \
 		$(use_with udev gudev)
 }
