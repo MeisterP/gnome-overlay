@@ -42,9 +42,7 @@ pkg_setup() {
 	enewgroup plugdev
 }
 
-PATCHES="
-	${FILESDIR}/${P}-fix-post-install.patch
-"
+PATCHES=( "${FILESDIR}/${P}-fix-post-install.patch" )
 
 src_configure() {
 	local emesonargs=(
