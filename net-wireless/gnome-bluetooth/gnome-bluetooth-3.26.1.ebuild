@@ -26,6 +26,7 @@ RDEPEND="${COMMON_DEPEND}
 DEPEND="${COMMON_DEPEND}
 	!net-wireless/bluez-gnome
 	app-text/docbook-xml-dtd:4.1.2
+	dev-util/gtk-doc
 	dev-libs/libxml2:2
 	dev-util/gdbus-codegen
 	>=dev-util/gtk-doc-am-1.9
