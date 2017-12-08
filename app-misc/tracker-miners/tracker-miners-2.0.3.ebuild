@@ -22,7 +22,8 @@ REQUIRED_USE="
 	!miner-fs? ( !cue !exif !flac !gif !gsf !iptc !iso !jpeg !mp3 !pdf !playlist !tiff !vorbis !xml !xmp !xps )
 "
 
-RDEPEND="app-misc/tracker
+RDEPEND=">=app-i18n/enca-1.9
+	app-misc/tracker
 	cue? ( media-libs/libcue )
 	exif? ( >=media-libs/libexif-0.6 )
 	ffmpeg? (
