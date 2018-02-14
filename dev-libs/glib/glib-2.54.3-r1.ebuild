@@ -1,4 +1,4 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # Until bug #537330 glib is a reverse dependency of pkgconfig and, then
@@ -6,12 +6,11 @@
 # then to be think very closely.
 
 EAPI=6
-PYTHON_COMPAT=( python2_7 python3_{4,5,6} )
-# Completely useless with or without USE static-libs, people need to use
-# pkg-config
+PYTHON_COMPAT=( python2_7 )
+# Completely useless with or without USE static-libs, people need to use pkg-config
 GNOME2_LA_PUNT="yes"
 
-inherit autotools bash-completion-r1 epunt-cxx flag-o-matic gnome2 libtool linux-info \
+inherit bash-completion-r1 epunt-cxx flag-o-matic gnome-meson libtool linux-info \
 	multilib multilib-minimal pax-utils python-r1 toolchain-funcs versionator virtualx
 
 DESCRIPTION="The GLib library of C routines"
@@ -23,7 +22,7 @@ LICENSE="LGPL-2.1+"
 SLOT="2"
 IUSE="dbus debug fam kernel_linux +mime selinux static-libs systemtap test utils xattr"
 REQUIRED_USE="
-	${PYTHON_REQUIRED_USE}
+	utils? ( ${PYTHON_REQUIRED_USE} )
 	test? ( ${PYTHON_REQUIRED_USE} )
 "
 
@@ -33,8 +32,8 @@ KEYWORDS="~amd64 ~x86"
 # is always turned on on linux systems, unless explicitly disabled, but
 # this ebuild does not do that anyway) (bug #599586)
 
-# gdbus-codegen-6.6.6 is ugly compatibility hack
 RDEPEND="
+	!<dev-util/gdbus-codegen-${PV}
 	>=dev-libs/libpcre-8.13:3[${MULTILIB_USEDEP},static-libs?]
 	>=virtual/libiconv-0-r1[${MULTILIB_USEDEP}]
 	>=virtual/libffi-3.0.13-r1[${MULTILIB_USEDEP}]
@@ -44,9 +43,11 @@ RDEPEND="
 	selinux? ( >=sys-libs/libselinux-2.2.2-r5[${MULTILIB_USEDEP}] )
 	xattr? ( >=sys-apps/attr-2.4.47-r1[${MULTILIB_USEDEP}] )
 	fam? ( >=virtual/fam-0-r1[${MULTILIB_USEDEP}] )
-	${PYTHON_DEPS}
-	virtual/libelf:0=
-	=dev-util/gdbus-codegen-${PV}
+	utils? (
+		${PYTHON_DEPS}
+		>=dev-util/gdbus-codegen-${PV}[${PYTHON_USEDEP}]
+		virtual/libelf:0=
+	)
 "
 DEPEND="${RDEPEND}
 	app-text/docbook-xml-dtd:4.1.2
@@ -57,6 +58,7 @@ DEPEND="${RDEPEND}
 	test? (
 		sys-devel/gdb
 		${PYTHON_DEPS}
+		>=dev-util/gdbus-codegen-${PV}[${PYTHON_USEDEP}]
 		>=sys-apps/dbus-1.2.14 )
 	!<dev-util/gtk-doc-1.15-r2
 "
@@ -86,7 +88,10 @@ pkg_setup() {
 src_prepare() {
 	# Prevent build failure in stage3 where pkgconfig is not available, bug #481056
 	mv -f "${WORKDIR}"/pkg-config-*/pkg.m4 "${S}"/m4macros/ || die
+	# Copy missing gengiotypefuncs.py
+	cp  "${FILESDIR}"/gengiotypefuncs.py "${S}"/gio/tests/ || die
 
+	# We need gengiotypefuncs
 	if use test; then
 		# Disable tests requiring dev-util/desktop-file-utils when not installed, bug #286629, upstream bug #629163
 		if ! has_version dev-util/desktop-file-utils ; then
@@ -114,15 +119,22 @@ src_prepare() {
 		sed -i -e 's/ tests//' {.,gio,glib}/Makefile.am || die
 	fi
 
-	# Also needed to prevent cross-compile failures, see bug #267603
-	eautoreconf
+	# gdbus-codegen is a separate package
+	eapply "${FILESDIR}"/${PN}-2.54.2-external-codegen.patch
 
-	gnome2_src_prepare
+	# Leave python shebang alone - handled by python_replicate_script
+	# We could call python_setup and give configure a valid --with-python
+	# arg, but that would mean a build dep on python when USE=utils.
+	sed -e '/${PYTHON}/d' \
+		-i glib/Makefile.{am,in} || die
+
+	gnome-meson_src_prepare
 
 	epunt_cxx
 }
 
 multilib_src_configure() {
+	# TODO is this still relevent?
 	# Avoid circular depend with dev-util/pkgconfig and
 	# native builds (cross-compiles won't need pkg-config
 	# in the target ROOT to work here)
@@ -152,26 +164,24 @@ multilib_src_configure() {
 
 	local myconf
 
-	case "${CHOST}" in
-		*-mingw*) myconf="${myconf} --with-threads=win32" ;;
-		*)        myconf="${myconf} --with-threads=posix" ;;
-	esac
+	# FIXME multilib automagic for libelf
+	# FIXME set systemtap/tapse/static-lib install dir and test it.
+	# FIXME no selinux, fam, xattr for now.
+	# FIXME is this still valid.
+	# libelf used only by the gresource bin ??
+	# FIXME enable docs if possible.
 
-	# libelf used only by the gresource bin
-	ECONF_SOURCE="${S}" gnome2_src_configure ${myconf} \
-		$(usex debug --enable-debug=yes ' ') \
-		$(use_enable xattr) \
-		$(use_enable fam) \
-		$(use_enable kernel_linux libmount) \
-		$(use_enable selinux) \
-		$(use_enable static-libs static) \
-		$(use_enable systemtap dtrace) \
-		$(use_enable systemtap systemtap) \
-		$(multilib_native_use_enable utils libelf) \
-		--disable-compile-warnings \
-		--enable-man \
-		--with-pcre=system \
-		--with-xml-catalog="${EPREFIX}/etc/xml/catalog"
+	use static-libs && myconf="-Ddefault_library='static'"
+	use debug && myconf="$myconf -Dbuildtype='debug'"
+
+	gnome-meson_src_configure \
+		${myconf} \
+		-Denable-libmount=$(usex kernel_linux yes no) \
+		$(gnome-meson_use systemtap dtrace) \
+		$(gnome-meson_use systemtap) \
+		-Dwith-pcre=system \
+		-Dwith-docs=no \
+		-Dwith-man=yes
 
 	if multilib_is_native_abi; then
 		local d
@@ -181,6 +191,10 @@ multilib_src_configure() {
 	fi
 }
 
+multilib_src_compile() {
+	gnome-meson_src_compile
+}
+# FIXME
 multilib_src_test() {
 	export XDG_CONFIG_DIRS=/etc/xdg
 	export XDG_DATA_DIRS=/usr/local/share:/usr/share
@@ -200,18 +214,25 @@ multilib_src_test() {
 	fi
 
 	# Need X for dbus-launch session X11 initialization
-	virtx emake check
+	virtx meson_src_test
 }
 
+# FIXME completentiondir
 multilib_src_install() {
-	gnome2_src_install completiondir="$(get_bashcompdir)"
+	chmod +x glib-gettextize || die
+	gnome-meson_src_install completiondir="$(get_bashcompdir)"
 	keepdir /usr/$(get_libdir)/gio/modules
 }
 
 multilib_src_install_all() {
 	einstalldocs
 
-	python_replicate_script "${ED}"/usr/bin/gtester-report
+	if use utils ; then
+		python_replicate_script "${ED}"/usr/bin/gtester-report
+	else
+		rm "${ED}usr/bin/gtester-report"
+		rm "${ED}usr/share/man/man1/gtester-report.1"
+	fi
 
 	# Do not install charset.alias even if generated, leave it to libiconv
 	rm -f "${ED}/usr/lib/charset.alias"
@@ -221,7 +242,7 @@ multilib_src_install_all() {
 }
 
 pkg_preinst() {
-	gnome2_pkg_preinst
+	gnome-meson_pkg_preinst
 
 	# Make gschemas.compiled belong to glib alone
 	local cache="usr/share/glib-2.0/schemas/gschemas.compiled"
@@ -254,7 +275,7 @@ pkg_postinst() {
 	# force (re)generation of gschemas.compiled
 	GNOME2_ECLASS_GLIB_SCHEMAS="force"
 
-	gnome2_pkg_postinst
+	gnome-meson_pkg_postinst
 
 	multilib_pkg_postinst() {
 		gnome2_giomodule_cache_update \
@@ -271,7 +292,7 @@ pkg_postinst() {
 }
 
 pkg_postrm() {
-	gnome2_pkg_postrm
+	gnome-meson_pkg_postrm
 
 	if [[ -z ${REPLACED_BY_VERSION} ]]; then
 		multilib_pkg_postrm() {
