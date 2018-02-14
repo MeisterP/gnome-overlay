@@ -1,4 +1,4 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -20,7 +20,7 @@ COMMON_DEPEND="
 	>=gnome-base/gnome-desktop-2.91.6:3=
 	>=media-libs/libcanberra-0.26[gtk3]
 	>=media-libs/clutter-1.13.2:1.0[introspection?]
-	>=media-libs/clutter-gtk-0.91.8:1.0
+	>=media-libs/clutter-gtk-1:1.0
 	media-libs/clutter-gst:3.0
 	media-libs/cogl:1.0=[introspection?]
 
