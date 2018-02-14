@@ -1,4 +1,4 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -9,7 +9,7 @@ HOMEPAGE="https://git.gnome.org/browse/mutter/"
 
 LICENSE="GPL-2+"
 SLOT="0/0"
-
+#FIXME add remote desktop support
 IUSE="debug gles2 input_devices_wacom +introspection test udev wayland"
 
 KEYWORDS="~amd64 ~x86"
@@ -23,7 +23,7 @@ COMMON_DEPEND="
 	>=x11-libs/pango-1.30[introspection?]
 	>=x11-libs/cairo-1.14[X]
 	>=x11-libs/gtk+-3.19.8:3[X,introspection?]
-	>=dev-libs/glib-2.53.4:2[dbus]
+	>=dev-libs/glib-2.53.2:2[dbus]
 	>=media-libs/libcanberra-0.26[gtk3]
 	>=x11-libs/startup-notification-0.7
 	>=x11-libs/libXcomposite-0.2
@@ -57,8 +57,8 @@ COMMON_DEPEND="
 	udev? ( >=virtual/libgudev-232:= )
 	wayland? (
 		>=dev-libs/libinput-1.4
-		>=dev-libs/wayland-1.6.90
-		>=dev-libs/wayland-protocols-1.7
+		>=dev-libs/wayland-1.13
+		>=dev-libs/wayland-protocols-1.9
 		>=media-libs/mesa-10.3[egl,gbm,wayland]
 		sys-apps/systemd
 		>=virtual/libgudev-232:=
