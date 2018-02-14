@@ -1,4 +1,4 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -23,7 +23,7 @@ REQUIRED_USE="vala? ( introspection )"
 # https://bugzilla.gnome.org/show_bug.cgi?id=692250
 # json-glib-0.16 needed for bug #485092
 RDEPEND="
-	>=dev-libs/glib-2.44:2
+	>=dev-libs/glib-2.52:2
 	>=app-crypt/libsecret-0.5
 	>=dev-libs/json-glib-0.16
 	dev-libs/libxml2:2
@@ -82,6 +82,7 @@ src_configure() {
 		--enable-owncloud \
 		--enable-pocket \
 		--enable-telepathy \
+		--enable-todoist \
 		--enable-windows-live \
 		$(usex debug --enable-debug=yes ' ') \
 		$(use_enable kerberos) \
