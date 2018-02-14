@@ -1,4 +1,4 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -9,6 +9,7 @@ inherit bash-completion-r1 gnome2
 
 DESCRIPTION="GNOME's main interface to configure various aspects of the desktop"
 HOMEPAGE="https://git.gnome.org/browse/gnome-control-center/"
+SRC_URI+=" https://dev.gentoo.org/~mgorny/dist/${PN}-3.24.2-patchset.tar.xz"
 
 LICENSE="GPL-2+"
 SLOT="2"
@@ -23,15 +24,15 @@ QA_CONFIGURE_OPTIONS=".*"
 # kerberos unfortunately means mit-krb5; build fails with heimdal
 # udev could be made optional, only conditions gsd-device-panel
 # (mouse, keyboards, touchscreen, etc)
-# display panel requires colord
+# display panel requires colord and gnome-settings-daemon[colord]
 # printer panel requires cups and smbclient (the latter is not patch yet to be separately optional)
 COMMON_DEPEND="
-	>=dev-libs/glib-2.44.0:2[dbus]
+	>=dev-libs/glib-2.53.0:2[dbus]
 	>=x11-libs/gdk-pixbuf-2.23.0:2
 	>=x11-libs/gtk+-3.22.0:3[X,wayland?]
 	>=gnome-base/gsettings-desktop-schemas-3.21.4
 	>=gnome-base/gnome-desktop-3.21.2:3=
-	>=gnome-base/gnome-settings-daemon-3.23.90[colord?,policykit]
+	>=gnome-base/gnome-settings-daemon-3.25.90[colord,policykit]
 	>=x11-misc/colord-0.1.34:0=
 
 	>=dev-libs/libpwquality-1.2.2
@@ -58,12 +59,12 @@ COMMON_DEPEND="
 		>=x11-misc/colord-0.1.34:0=
 		>=x11-libs/colord-gtk-0.1.24 )
 	cups? (
-		>=net-print/cups-1.4[dbus]
+		>=net-print/cups-1.7[dbus]
 		>=net-fs/samba-4.0.0[client]
 	)
 	gnome-online-accounts? (
 		>=media-libs/grilo-0.3.0:0.3=
-		>=net-libs/gnome-online-accounts-3.21.5:= )
+		>=net-libs/gnome-online-accounts-3.25.3:= )
 	ibus? ( >=app-i18n/ibus-1.5.2 )
 	kerberos? ( app-crypt/mit-krb5 )
 	networkmanager? (
@@ -132,14 +133,14 @@ DEPEND="${COMMON_DEPEND}
 PATCHES=(
 	# Make some panels and dependencies optional; requires eautoreconf
 	# https://bugzilla.gnome.org/686840, 697478, 700145
-	"${FILESDIR}"/3.24.2-optional.patch
-	"${FILESDIR}"/3.24.2-optional-wayland.patch
-	"${FILESDIR}"/3.24.2-optional-networkmanager.patch
-	"${FILESDIR}"/3.24.2-optional-cups.patch
+	"${WORKDIR}"/${PN}-3.24.2-patchset/3.24.2-optional.patch
+	"${WORKDIR}"/${PN}-3.24.2-patchset/3.24.2-optional-wayland.patch
+	"${WORKDIR}"/${PN}-3.24.2-patchset/3.24.2-optional-networkmanager.patch
+	"${WORKDIR}"/${PN}-3.24.2-patchset/3.24.2-optional-cups.patch
 	# Fix some absolute paths to be appropriate for Gentoo
-	"${FILESDIR}"/3.24.2-gentoo-paths.patch
+	"${WORKDIR}"/${PN}-3.24.2-patchset/3.24.2-gentoo-paths.patch
 	# https://bugzilla.gnome.org/show_bug.cgi?id=780544
-	"${FILESDIR}"/3.24.2-fix-without-gdkwayland.patch
+	"${WORKDIR}"/${PN}-3.24.2-patchset/3.24.2-fix-without-gdkwayland.patch
 )
 
 src_configure() {
