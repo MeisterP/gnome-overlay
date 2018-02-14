@@ -1,17 +1,19 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
 GNOME2_LA_PUNT="yes" # Needed with USE 'sendto'
 
-inherit gnome2 readme.gentoo-r1 meson
+inherit gnome-meson readme.gentoo-r1 virtualx
 
 DESCRIPTION="A file manager for the GNOME desktop"
 HOMEPAGE="https://wiki.gnome.org/Apps/Nautilus"
 
+#FIXME: shoudln't this be GPL-3+?
 LICENSE="GPL-2+ LGPL-2+ FDL-1.1"
 SLOT="0"
-IUSE="exif gnome +introspection packagekit +previewer selinux sendto tracker xmp"
+#FIXME: tracker is needed
+IUSE="exif gnome +introspection packagekit +previewer selinux sendto xmp"
 
 KEYWORDS="~amd64 ~x86"
 
@@ -26,7 +28,7 @@ COMMON_DEPEND="
 	>=app-arch/gnome-autoar-0.2.1
 	>=dev-libs/glib-2.51.2:2[dbus]
 	>=x11-libs/pango-1.28.3
-	>=x11-libs/gtk+-3.21.6:3[introspection?]
+	>=x11-libs/gtk+-3.22.6:3[introspection?]
 	>=dev-libs/libxml2-2.7.8:2
 	>=gnome-base/gnome-desktop-3:3=
 
@@ -36,16 +38,16 @@ COMMON_DEPEND="
 	x11-libs/libXext
 	x11-libs/libXrender
 
+	>=app-misc/tracker-1:=
 	exif? ( >=media-libs/libexif-0.6.20 )
 	introspection? ( >=dev-libs/gobject-introspection-0.6.4:= )
 	selinux? ( >=sys-libs/libselinux-2 )
-	tracker? ( >=app-misc/tracker-1:= )
 	xmp? ( >=media-libs/exempi-2.1.0:2 )
 "
 DEPEND="${COMMON_DEPEND}
 	>=dev-lang/perl-5
 	>=dev-util/gdbus-codegen-2.33
-	>=dev-util/gtk-doc-am-1.10
+	>=dev-util/gtk-doc-1.10
 	>=sys-devel/gettext-0.19.7
 	virtual/pkgconfig
 	x11-proto/xproto
@@ -55,9 +57,8 @@ RDEPEND="${COMMON_DEPEND}
 	sendto? ( !<gnome-extra/nautilus-sendto-3.0.1 )
 "
 
-# For eautoreconf
-#	gnome-base/gnome-common
-#	dev-util/gtk-doc-am"
+# FIXME: does nautilus tracker tags work with tracker 2? there seems to be
+# some automagic involved
 
 PDEPEND="
 	gnome? ( x11-themes/adwaita-icon-theme )
@@ -73,31 +74,33 @@ src_prepare() {
 			To activate the previewer, select a file and press space; to
 			close the previewer, press space again."
 	fi
-	eapply_user
-	meson_src_prepare
+	gnome-meson_src_prepare
 }
 
 src_configure() {
-	local emesonargs=(
-		-Denable-exif=$(usex exif true false)
-		-Denable-xmp=$(usex xmp true false)
-		-Denable-packagekit=$(usex packagekit true false)
-		-Denable-nst-extension=$(usex sendto true false)
-		-Denable-selinux=$(usex selinux true false)
-		-Denable-selinux=$(usex selinux true false)
-		-Denable-profiling=false
-		-Denable-desktop=true
-	)
-	meson_src_configure
+	# FIXME no doc useflag??
+	gnome-meson_src_configure \
+		-Denable-desktop=true \
+		-Denable-gtk-doc=true \
+		-Denable-profiling=false \
+		$(meson_use exif enable-exif) \
+		$(meson_use packagekit enable-packagekit) \
+		$(meson_use sendto nst-extension) \
+		$(meson_use selinux enable-selinux) \
+		$(meson_use xmp enable-xmp)
+}
+
+src_test() {
+	virtx meson_src_test
 }
 
 src_install() {
 	use previewer && readme.gentoo_create_doc
-	meson_src_install
+	gnome-meson_src_install
 }
 
 pkg_postinst() {
-	gnome2_pkg_postinst
+	gnome-meson_pkg_postinst
 
 	if use previewer; then
 		readme.gentoo_print_elog
