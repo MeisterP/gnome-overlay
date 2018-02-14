@@ -1,18 +1,19 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
 GNOME2_LA_PUNT="yes"
-PYTHON_COMPAT=( python3_{4,5,6} )
+GNOME2_EAUTORECONF="yes"
+PYTHON_COMPAT=( python{3_4,3_5} )
 
-inherit gnome2 multilib pax-utils python-r1 systemd meson
+inherit gnome-meson multilib pax-utils python-r1 systemd
 
 DESCRIPTION="Provides core UI functions for the GNOME 3 desktop"
 HOMEPAGE="https://wiki.gnome.org/Projects/GnomeShell"
 
 LICENSE="GPL-2+ LGPL-2+"
 SLOT="0"
-IUSE="+bluetooth +browser-extension +ibus +networkmanager nsplugin +systemd"
+IUSE="+bluetooth +browser-extension +ibus +networkmanager nsplugin -openrc-force"
 REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 
 KEYWORDS="~amd64 ~x86"
@@ -20,11 +21,13 @@ KEYWORDS="~amd64 ~x86"
 # libXfixes-5.0 needed for pointer barriers
 # FIXME:
 #  * gstreamer support is currently automagic
+#  * gnome-bluetooth is automagic
+#  * BROWSER_PLUGIN_DIR is not set
 COMMON_DEPEND="
 	>=app-accessibility/at-spi2-atk-2.5.3
 	>=dev-libs/atk-2[introspection]
 	>=app-crypt/gcr-3.7.5[introspection]
-	>=dev-libs/glib-2.53.0:2[dbus]
+	>=dev-libs/glib-2.53:2[dbus]
 	>=dev-libs/gjs-1.47.0
 	>=dev-libs/gobject-introspection-1.49.1:=
 	dev-libs/libical:=
@@ -58,7 +61,7 @@ COMMON_DEPEND="
 
 	bluetooth? ( >=net-wireless/gnome-bluetooth-3.9[introspection] )
 	networkmanager? (
-		app-crypt/libsecret
+		>=app-crypt/libsecret-0.18
 		>=gnome-extra/nm-applet-0.9.8
 		>=net-misc/networkmanager-0.9.8:=[introspection] )
 	nsplugin? ( >=dev-libs/json-glib-0.13.2 )
@@ -86,7 +89,7 @@ RDEPEND="${COMMON_DEPEND}
 	>=gnome-base/gnome-session-2.91.91
 	>=gnome-base/gnome-settings-daemon-3.8.3
 
-	systemd? ( >=sys-apps/systemd-31 )
+	!openrc-force? ( >=sys-apps/systemd-31 )
 
 	x11-misc/xdg-utils
 
@@ -117,20 +120,20 @@ DEPEND="${COMMON_DEPEND}
 PATCHES=(
 	# Change favorites defaults, bug #479918
 	"${FILESDIR}"/${PN}-3.22.0-defaults.patch
+	# Fix automagic gnome-bluetooth dep, bug #398145
 )
 
 src_configure() {
-	local emesonargs=(
-		-D enable-browser-plugin=$(usex nsplugin true false)
-		-D enable-networkmanager=$(usex networkmanager yes no)
-		-D enable-systemd=$(usex systemd yes no)
-		-D enable-man=true
-	)
-	meson_src_configure
+	gnome-meson_src_configure \
+		-Denable-man=true \
+		-Denable-documentation=false \
+		-Denable-systemd=$(usex !openrc-force yes no) \
+		-Denable-networkmanager=$(usex networkmanager yes no) \
+		$(meson_use nsplugin enable-browser-plugin)
 }
 
 src_install() {
-	meson_src_install
+	gnome-meson_src_install
 	python_replicate_script "${ED}/usr/bin/gnome-shell-extension-tool"
 	python_replicate_script "${ED}/usr/bin/gnome-shell-perf-tool"
 
@@ -149,14 +152,8 @@ src_install() {
 	fi
 }
 
-pkg_postrm() {
-	gnome2_icon_cache_update
-	gnome2_schemas_update
-}
-
 pkg_postinst() {
-	gnome2_pkg_postinst
-	gnome2_schemas_update
+	gnome-meson_pkg_postinst
 
 	if ! has_version 'media-libs/gst-plugins-good:1.0' || \
 	   ! has_version 'media-plugins/gst-plugins-vpx:1.0'; then
@@ -182,5 +179,13 @@ pkg_postinst() {
 		ewarn "${PN} needs Systemd to be *running* for working"
 		ewarn "properly. Please follow this guide to migrate:"
 		ewarn "https://wiki.gentoo.org/wiki/Systemd"
+	fi
+
+	if use openrc-force; then
+		ewarn "You are enabling 'openrc-force' USE flag to skip systemd requirement,"
+		ewarn "this can lead to unexpected problems and is not supported neither by"
+		ewarn "upstream neither by Gnome Gentoo maintainers. If you suffer any problem,"
+		ewarn "you will need to disable this USE flag system wide and retest before"
+		ewarn "opening any bug report."
 	fi
 }
