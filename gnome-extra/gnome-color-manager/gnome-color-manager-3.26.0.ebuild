@@ -1,8 +1,8 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
-inherit gnome2 meson
+inherit gnome-meson virtualx
 
 DESCRIPTION="Color profile manager for the GNOME desktop"
 HOMEPAGE="https://git.gnome.org/browse/gnome-color-manager"
@@ -11,7 +11,7 @@ LICENSE="GPL-2+"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE="packagekit raw"
-
+# FIXME: libvte atomagic
 # Need gtk+-3.3.8 for https://bugzilla.gnome.org/show_bug.cgi?id=673331
 RDEPEND="
 	>=dev-libs/glib-2.31.10:2
@@ -25,8 +25,10 @@ RDEPEND="
 	>=x11-misc/colord-1.3.1:0=
 	>=x11-libs/colord-gtk-0.1.20
 
+	x11-libs/vte:2.91
+
 	packagekit? ( app-admin/packagekit-base )
-	raw? ( media-gfx/exiv2 )
+	raw? ( media-gfx/exiv2:0= )
 "
 # docbook-sgml-{utils,dtd:4.1} needed to generate man pages
 DEPEND="${RDEPEND}
@@ -40,10 +42,23 @@ DEPEND="${RDEPEND}
 "
 
 src_configure() {
-	local emesonargs=(
-		-D enable-tests=false
-		-D enable-exiv=$(usex raw true false)
-		-D enable-packagekit=$(usex packagekit true false)
-	)
-	meson_src_configure
+	# Always enable tests since they are check_PROGRAMS anyway
+	# appstream does not want to be relax by default !
+	gnome-meson_src_configure \
+		-Denable-tests=true \
+		$(meson_use raw enable-exiv) \
+		$(meson_use packagekit enable-packagekit)
+}
+
+src_test() {
+	virtx meson_src_test
+}
+
+pkg_postinst() {
+	gnome-meson_pkg_postinst
+
+	if ! has_version media-gfx/argyllcms ; then
+		elog "If you want to do display or scanner calibration, you will need to"
+		elog "install media-gfx/argyllcms"
+	fi
 }
