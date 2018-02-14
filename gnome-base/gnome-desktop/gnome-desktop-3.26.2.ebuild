@@ -1,4 +1,4 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -15,7 +15,7 @@ KEYWORDS="~amd64 ~x86"
 # cairo[X] needed for gnome-bg
 COMMON_DEPEND="
 	app-text/iso-codes
-	>=dev-libs/glib-2.44.0:2[dbus]
+	>=dev-libs/glib-2.53.0:2[dbus]
 	sys-libs/libseccomp
 	>=x11-libs/gdk-pixbuf-2.36.5:2[introspection?]
 	>=x11-libs/gtk+-3.3.6:3[X,introspection?]
