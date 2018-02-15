@@ -2,7 +2,9 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
-inherit gnome2 autotools virtualx
+GNOME2_EAUTORECONF="yes"
+
+inherit gnome2 virtualx
 
 DESCRIPTION="Libraries for the gnome desktop that are not part of the UI"
 HOMEPAGE="https://git.gnome.org/browse/gnome-desktop"
@@ -45,11 +47,6 @@ DEPEND="${COMMON_DEPEND}
 # Includes X11/Xatom.h in libgnome-desktop/gnome-bg.c which comes from xproto
 
 PATCHES=( "${FILESDIR}/disable-bubblewrap.patch")
-
-src_prepare() {
-	gnome2_src_prepare
-	eautoreconf
-}
 
 src_configure() {
 	gnome2_src_configure \
