@@ -1,4 +1,4 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -23,7 +23,7 @@ REQUIRED_USE="
 KEYWORDS="~amd64 ~x86"
 
 COMMON_DEPEND="
-	>=dev-libs/glib-2.44.0:2[dbus]
+	>=dev-libs/glib-2.53.0:2[dbus]
 	>=x11-libs/gtk+-3.15.3:3[X,wayland?]
 	>=gnome-base/gnome-desktop-3.11.1:3=
 	>=gnome-base/gsettings-desktop-schemas-3.23.3
@@ -75,7 +75,7 @@ RDEPEND="${COMMON_DEPEND}
 	!<gnome-base/gnome-control-center-2.22
 	!<gnome-extra/gnome-color-manager-3.1.1
 	!<gnome-extra/gnome-power-manager-3.1.3
-	!<gnome-base/gnome-session-3.23.2
+	!<gnome-base/gnome-session-3.25
 "
 # xproto-7.0.15 needed for power plugin
 DEPEND="${COMMON_DEPEND}
@@ -96,12 +96,11 @@ DEPEND="${COMMON_DEPEND}
 "
 
 # TypeErrors with python3; weird test errors with python2; all in power component that was made required now
-RESTRICT="test"
-# RESTRICT="!test? ( test )"
+RESTRICT="!test? ( test )"
 
 PATCHES=(
 	# Make colord and wacom optional; requires eautoreconf
-	"${FILESDIR}"/3.24.3-optional.patch
+	"${FILESDIR}"/3.26.1-optional.patch
 	# Allow specifying udevrulesdir via configure, bug 509484; requires eautoreconf
 	"${FILESDIR}"/3.24.2-udevrulesdir-configure.patch
 	# Fix build issue when gudev is present but not wayland, bug #627966
