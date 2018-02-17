@@ -167,8 +167,6 @@ multilib_src_configure() {
 	# FIXME multilib automagic for libelf
 	# FIXME set systemtap/tapse/static-lib install dir and test it.
 	# FIXME no selinux, fam, xattr for now.
-	# FIXME is this still valid.
-	# libelf used only by the gresource bin ??
 	# FIXME enable docs if possible.
 
 	use static-libs && myconf="-Ddefault_library='static'"
@@ -177,8 +175,8 @@ multilib_src_configure() {
 	gnome-meson_src_configure \
 		${myconf} \
 		-Denable-libmount=$(usex kernel_linux yes no) \
-		$(gnome-meson_use systemtap dtrace) \
-		$(gnome-meson_use systemtap) \
+		$(meson_use systemtap enable-dtrace) \
+		$(meson_use systemtap enable-systemtap) \
 		-Dwith-pcre=system \
 		-Dwith-docs=no \
 		-Dwith-man=yes
@@ -217,7 +215,6 @@ multilib_src_test() {
 	virtx meson_src_test
 }
 
-# FIXME completentiondir
 multilib_src_install() {
 	chmod +x glib-gettextize || die
 	gnome-meson_src_install completiondir="$(get_bashcompdir)"
