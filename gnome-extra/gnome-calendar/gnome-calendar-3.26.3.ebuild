@@ -7,11 +7,10 @@ inherit gnome-meson
 DESCRIPTION="Manage your online calendars with simple and modern interface"
 HOMEPAGE="https://wiki.gnome.org/Apps/Calendar"
 
-LICENSE="GPL-2+"
+LICENSE="GPL-3+"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
-
 # >=libical-1.0.1 for https://bugzilla.gnome.org/show_bug.cgi?id=751244
 RDEPEND="
 	>=dev-libs/glib-2.43.4:2
