@@ -13,7 +13,6 @@ IUSE=""
 KEYWORDS="~amd64 ~x86"
 
 COMMON_DEPEND="
-	dev-lang/vala
 	>=dev-libs/glib-2.40:2[dbus]
 	>=x11-libs/gtk+-3.19.1:3
 "
