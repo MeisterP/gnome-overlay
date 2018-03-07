@@ -120,7 +120,7 @@ DEPEND="${COMMON_DEPEND}
 PATCHES=(
 	# Change favorites defaults, bug #479918
 	"${FILESDIR}"/${PN}-3.22.0-defaults.patch
-	# Fix automagic gnome-bluetooth dep, bug #398145
+	"${FILESDIR}"/debian/
 )
 
 src_configure() {
