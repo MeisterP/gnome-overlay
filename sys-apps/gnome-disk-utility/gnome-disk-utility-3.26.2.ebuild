@@ -1,10 +1,10 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
 GNOME2_LA_PUNT="yes"
 
-inherit gnome2 meson
+inherit gnome-meson
 
 DESCRIPTION="Disk Utility for GNOME using udisks"
 HOMEPAGE="https://git.gnome.org/browse/gnome-disk-utility"
@@ -39,9 +39,7 @@ DEPEND="${COMMON_DEPEND}
 "
 
 src_configure() {
-	local emesonargs=(
-		-D enable-libsystemd=$(usex systemd true false)
-		-D enable-gsd-plugin=$(usex gnome true false)
-	)
-	meson_src_configure
+	gnome-meson_src_configure \
+		$(meson_use gnome enable-gsd-plugin) \
+		$(meson_use systemd enable-libsystemd)
 }
