@@ -3,7 +3,7 @@
 
 EAPI=6
 GNOME2_LA_PUNT="yes"
-PYTHON_COMPAT=( python2_7 python3_{4,5,6} pypy )
+PYTHON_COMPAT=( python3_{4,5,6} )
 VALA_USE_DEPEND="vapigen"
 
 inherit cmake-utils db-use flag-o-matic gnome2 python-any-r1 systemd vala virtualx
@@ -80,6 +80,7 @@ pkg_setup() {
 src_prepare() {
 	use vala && vala_src_prepare
 	gnome2_src_prepare
+	cmake-utils_src_prepare
 
 	# Make CMakeLists versioned vala enabled
 	sed -e "s;\(find_program(VALAC\) valac);\1 ${VALAC});" \
