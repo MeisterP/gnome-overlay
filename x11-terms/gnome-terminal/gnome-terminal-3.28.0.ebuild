@@ -1,4 +1,4 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI="6"
@@ -19,8 +19,8 @@ KEYWORDS="~amd64 ~x86"
 # FIXME: automagic dependency on gtk+[X], just transitive but needs proper control
 # Needed vte in 3.24.2 is 0.48.2, but we add desktop notification patches in 0.48.3 that non-vanilla needs
 RDEPEND="
-	>=dev-libs/glib-2.42:2[dbus]
-	>=x11-libs/gtk+-3.20:3[X]
+	>=dev-libs/glib-2.50:2[dbus]
+	>=x11-libs/gtk+-3.22:3[X]
 	>=x11-libs/vte-0.50.1:2.91
 	>=dev-libs/libpcre2-10
 	>=gnome-base/dconf-0.14
@@ -51,8 +51,7 @@ src_configure() {
 		--disable-migration \
 		$(use_enable debug) \
 		$(use_enable gnome-shell search-provider) \
-		$(use_with nautilus nautilus-extension) \
-		VALAC=$(type -P true)
+		$(use_with nautilus nautilus-extension)
 }
 
 src_install() {
