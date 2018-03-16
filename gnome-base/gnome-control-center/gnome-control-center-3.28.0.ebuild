@@ -5,15 +5,14 @@ EAPI=6
 GNOME2_LA_PUNT="yes"
 GNOME2_EAUTORECONF="yes"
 
-inherit bash-completion-r1 gnome2
+inherit gnome-meson
 
 DESCRIPTION="GNOME's main interface to configure various aspects of the desktop"
 HOMEPAGE="https://git.gnome.org/browse/gnome-control-center/"
-SRC_URI+=" https://dev.gentoo.org/~mgorny/dist/${PN}-3.24.2-patchset.tar.xz"
 
 LICENSE="GPL-2+"
 SLOT="2"
-IUSE="+bluetooth +colord +cups debug +gnome-online-accounts +ibus input_devices_wacom kerberos networkmanager v4l wayland"
+IUSE="+bluetooth +colord +cups debug +gnome-online-accounts +ibus input_devices_wacom kerberos networkmanager +v4l wayland"
 KEYWORDS="~amd64 ~x86"
 
 # False positives caused by nested configure scripts
@@ -31,7 +30,7 @@ COMMON_DEPEND="
 	>=x11-libs/gdk-pixbuf-2.23.0:2
 	>=x11-libs/gtk+-3.22.0:3[X,wayland?]
 	>=gnome-base/gsettings-desktop-schemas-3.21.4
-	>=gnome-base/gnome-desktop-3.21.2:3=
+	>=gnome-base/gnome-desktop-3.27.90:3=
 	>=gnome-base/gnome-settings-daemon-3.25.90[colord,policykit]
 	>=x11-misc/colord-0.1.34:0=
 
@@ -44,7 +43,7 @@ COMMON_DEPEND="
 	>=media-libs/libcanberra-0.13[gtk3]
 	>=media-sound/pulseaudio-2[glib]
 	>=sys-auth/polkit-0.97
-	>=sys-power/upower-0.99:=
+	>=sys-power/upower-0.99.6:=
 
 	virtual/libgudev
 	x11-apps/xmodmap
@@ -126,41 +125,20 @@ DEPEND="${COMMON_DEPEND}
 	gnome-base/gnome-common
 	sys-devel/autoconf-archive
 "
-# Needed for autoreconf
-#	gnome-base/gnome-common
-#	sys-devel/autoconf-archive
 
 PATCHES=(
-	# Make some panels and dependencies optional; requires eautoreconf
+	# Make some panels and dependencies optional
 	# https://bugzilla.gnome.org/686840, 697478, 700145
-	"${WORKDIR}"/${PN}-3.24.2-patchset/3.24.2-optional.patch
-	"${WORKDIR}"/${PN}-3.24.2-patchset/3.24.2-optional-wayland.patch
-	"${WORKDIR}"/${PN}-3.24.2-patchset/3.24.2-optional-networkmanager.patch
-	"${WORKDIR}"/${PN}-3.24.2-patchset/3.24.2-optional-cups.patch
-	# Fix some absolute paths to be appropriate for Gentoo
-	"${WORKDIR}"/${PN}-3.24.2-patchset/3.24.2-gentoo-paths.patch
-	# https://bugzilla.gnome.org/show_bug.cgi?id=780544
-	"${WORKDIR}"/${PN}-3.24.2-patchset/3.24.2-fix-without-gdkwayland.patch
+	"${FILESDIR}"/3.28.0-optional/
 )
 
 src_configure() {
-	gnome2_src_configure \
-		--disable-update-mimedb \
-		--disable-static \
-		--enable-documentation \
-		$(use_enable bluetooth) \
-		$(use_enable colord color) \
-		$(use_enable cups) \
-		$(usex debug --enable-debug=yes ' ') \
-		$(use_enable gnome-online-accounts goa) \
-		$(use_enable ibus) \
-		$(use_enable kerberos) \
-		$(use_enable networkmanager) \
-		$(use_with v4l cheese) \
-		$(use_enable input_devices_wacom wacom) \
-		$(use_enable wayland)
-}
-
-src_install() {
-	gnome2_src_install completiondir="$(get_bashcompdir)"
+	gnome-meson_src_configure \
+		-Denable-documentation=true \
+		$(meson_use ibus) \
+		$(meson_use input_devices_wacom wacom) \
+		$(meson_use v4l cheese) \
+		$(meson_use wayland) \
+		$(meson_use networkmanager network) \
+		$(meson_use bluetooth)
 }
