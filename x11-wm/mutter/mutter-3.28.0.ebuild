@@ -58,7 +58,7 @@ COMMON_DEPEND="
 	wayland? (
 		>=dev-libs/libinput-1.4
 		>=dev-libs/wayland-1.13
-		>=dev-libs/wayland-protocols-1.9
+		>=dev-libs/wayland-protocols-1.12
 		>=media-libs/mesa-10.3[egl,gbm,wayland]
 		sys-apps/systemd
 		>=virtual/libgudev-232:=
@@ -107,8 +107,10 @@ src_configure() {
 	# GLX is forced by mutter but optional in clutter
 	# xlib-egl-platform required by mutter x11 backend
 	# native backend without wayland is useless
+	# remote-desktop needs pipewire
 	gnome2_src_configure \
 		--disable-static \
+		--disable-remote-desktop \
 		--enable-compile-warnings=minimum \
 		--enable-gl \
 		--enable-glx \
