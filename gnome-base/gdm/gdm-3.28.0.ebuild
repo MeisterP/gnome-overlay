@@ -1,4 +1,4 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -143,7 +143,7 @@ src_configure() {
 	# of https://bugzilla.gnome.org/show_bug.cgi?id=607643#c4
 	# Xevie is obsolete, bug #482304
 	# --with-initial-vt=7 conflicts with plymouth, bug #453392
-	! use plymouth && myconf="${myconf} --with-initial-vt=7"
+	#! use plymouth && myconf="${myconf} --with-initial-vt=7"
 
 	gnome2_src_configure \
 		--enable-gdm-xsession \
