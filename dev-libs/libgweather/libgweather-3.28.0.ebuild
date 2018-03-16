@@ -1,10 +1,10 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
 VALA_USE_DEPEND="vapigen"
 
-inherit gnome2 vala
+inherit gnome-meson vala
 
 DESCRIPTION="Library to access weather information from online services"
 HOMEPAGE="https://wiki.gnome.org/Projects/LibGWeather"
@@ -41,13 +41,11 @@ DEPEND="${COMMON_DEPEND}
 
 src_prepare() {
 	use vala && vala_src_prepare
-	gnome2_src_prepare
+	gnome-meson_src_prepare
 }
 
 src_configure() {
-	gnome2_src_configure \
-		--disable-static \
-		$(use_enable glade glade-catalog) \
-		$(use_enable introspection) \
-		$(use_enable vala)
+	gnome-meson_src_configure \
+		$(meson_use glade glade-catalog) \
+		$(meson_use vala)
 }
