@@ -13,7 +13,7 @@ HOMEPAGE="https://wiki.gnome.org/Projects/GnomeShell"
 
 LICENSE="GPL-2+ LGPL-2+"
 SLOT="0"
-IUSE="+bluetooth +browser-extension +ibus +networkmanager nsplugin -openrc-force"
+IUSE="+bluetooth +browser-extension +networkmanager nsplugin -openrc-force"
 REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 
 KEYWORDS="~amd64 ~x86"
@@ -42,7 +42,7 @@ COMMON_DEPEND="
 	>=sys-auth/polkit-0.100[introspection]
 	>=x11-libs/libXfixes-5.0
 	x11-libs/libXtst
-	>=x11-wm/mutter-3.26.0:0/0[introspection]
+	>=x11-wm/mutter-3.28.0:0/0[introspection]
 	>=x11-libs/startup-notification-0.11
 
 	${PYTHON_DEPS}
@@ -77,7 +77,6 @@ COMMON_DEPEND="
 # 5. xdg-utils needed for xdg-open, used by extension tool
 # 6. adwaita-icon-theme and dejavu font neeed for various icons & arrows
 # 7. mobile-broadband-provider-info, timezone-data for shell-mobile-providers.c
-# 8. IBus is needed for nls integration
 RDEPEND="${COMMON_DEPEND}
 	app-accessibility/at-spi2-core:2[introspection]
 	>=app-accessibility/caribou-0.4.8
@@ -99,7 +98,7 @@ RDEPEND="${COMMON_DEPEND}
 	networkmanager? (
 		net-misc/mobile-broadband-provider-info
 		sys-libs/timezone-data )
-	ibus? ( >=app-i18n/ibus-1.4.99[dconf(+),gtk,introspection] )
+	>=app-i18n/ibus-1.5.2[dconf(+),gtk,introspection]
 "
 # avoid circular dependency, see bug #546134
 PDEPEND="
@@ -108,6 +107,7 @@ PDEPEND="
 	browser-extension? ( gnome-extra/chrome-gnome-shell )
 "
 DEPEND="${COMMON_DEPEND}
+	dev-lang/sassc
 	dev-libs/libxslt
 	>=dev-util/gdbus-codegen-2.45.3
 	>=dev-util/gtk-doc-am-1.17
@@ -120,7 +120,6 @@ DEPEND="${COMMON_DEPEND}
 PATCHES=(
 	# Change favorites defaults, bug #479918
 	"${FILESDIR}"/${PN}-3.22.0-defaults.patch
-	"${FILESDIR}"/debian/
 )
 
 src_configure() {
