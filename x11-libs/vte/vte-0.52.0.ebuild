@@ -1,4 +1,4 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI="6"
@@ -19,6 +19,8 @@ REQUIRED_USE="vala? ( introspection )"
 RDEPEND="
 	>=dev-libs/glib-2.40:2
 	>=dev-libs/libpcre2-10.21
+	x11-libs/cairo
+	x11-libs/gdk-pixbuf:2
 	>=x11-libs/gtk+-3.16:3[introspection?]
 	>=x11-libs/pango-1.22.0
 
@@ -67,7 +69,6 @@ src_configure() {
 	# Python bindings are via gobject-introspection
 	# Ex: from gi.repository import Vte
 	gnome2_src_configure \
-		--disable-test-application \
 		--disable-static \
 		--with-gtk=3.0 \
 		$(use_enable debug) \
