@@ -10,7 +10,7 @@
 		unknown file types</flag>
 	<flag name="previewer">Use <pkg>gnome-extra/sushi</pkg> to preview files
 		from the file mananger</flag>
-	<flag name="sendto">Enable the nautilus-sendto extension to send files to
-		various locations/devices</flag>
+	<flag name="extensions">Enable the nautilus-sendto extension as well
+		as the image-properties plugin</flag>
 </use>
 </pkgmetadata>

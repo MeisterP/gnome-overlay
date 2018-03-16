@@ -13,7 +13,7 @@ HOMEPAGE="https://wiki.gnome.org/Apps/Nautilus"
 LICENSE="GPL-2+ LGPL-2+ FDL-1.1"
 SLOT="0"
 #FIXME: tracker is needed
-IUSE="exif gnome +introspection packagekit +previewer selinux sendto xmp"
+IUSE="extensions gnome +introspection packagekit +previewer selinux"
 
 KEYWORDS="~amd64 ~x86"
 
@@ -26,9 +26,9 @@ RESTRICT="test"
 # and 2.30.0
 COMMON_DEPEND="
 	>=app-arch/gnome-autoar-0.2.1
-	>=dev-libs/glib-2.51.2:2[dbus]
+	>=dev-libs/glib-2.55.1:2[dbus]
 	>=x11-libs/pango-1.28.3
-	>=x11-libs/gtk+-3.22.6:3[introspection?]
+	>=x11-libs/gtk+-3.22.26:3[introspection?]
 	>=dev-libs/libxml2-2.7.8:2
 	>=gnome-base/gnome-desktop-3:3=
 
@@ -39,10 +39,9 @@ COMMON_DEPEND="
 	x11-libs/libXrender
 
 	>=app-misc/tracker-1:=
-	exif? ( >=media-libs/libexif-0.6.20 )
+	extensions? ( >=media-libs/gexiv2-0.10.0 )
 	introspection? ( >=dev-libs/gobject-introspection-0.6.4:= )
 	selinux? ( >=sys-libs/libselinux-2 )
-	xmp? ( >=media-libs/exempi-2.1.0:2 )
 "
 DEPEND="${COMMON_DEPEND}
 	>=dev-lang/perl-5
@@ -54,7 +53,7 @@ DEPEND="${COMMON_DEPEND}
 "
 RDEPEND="${COMMON_DEPEND}
 	packagekit? ( app-admin/packagekit-base )
-	sendto? ( !<gnome-extra/nautilus-sendto-3.0.1 )
+	extensions? ( !<gnome-extra/nautilus-sendto-3.0.1 )
 "
 
 # FIXME: does nautilus tracker tags work with tracker 2? there seems to be
@@ -63,7 +62,7 @@ RDEPEND="${COMMON_DEPEND}
 PDEPEND="
 	gnome? ( x11-themes/adwaita-icon-theme )
 	previewer? ( >=gnome-extra/sushi-0.1.9 )
-	sendto? ( >=gnome-extra/nautilus-sendto-3.0.1 )
+	extensions? ( >=gnome-extra/nautilus-sendto-3.0.1 )
 	>=gnome-base/gvfs-1.14[gtk]
 "
 # Need gvfs[gtk] for recent:/// support
@@ -80,14 +79,11 @@ src_prepare() {
 src_configure() {
 	# FIXME no doc useflag??
 	gnome-meson_src_configure \
-		-Denable-desktop=true \
 		-Denable-gtk-doc=true \
 		-Denable-profiling=false \
-		$(meson_use exif enable-exif) \
+		$(meson_use extensions) \
 		$(meson_use packagekit enable-packagekit) \
-		$(meson_use sendto nst-extension) \
-		$(meson_use selinux enable-selinux) \
-		$(meson_use xmp enable-xmp)
+		$(meson_use selinux enable-selinux)
 }
 
 src_test() {
