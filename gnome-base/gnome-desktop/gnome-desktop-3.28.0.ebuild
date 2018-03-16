@@ -24,7 +24,7 @@ COMMON_DEPEND="
 	x11-libs/cairo:=[X]
 	x11-libs/libX11
 	x11-misc/xkeyboard-config
-	>=gnome-base/gsettings-desktop-schemas-3.5.91
+	>=gnome-base/gsettings-desktop-schemas-3.27.0
 	introspection? ( >=dev-libs/gobject-introspection-0.9.7:= )
 	udev? (
 		sys-apps/hwids
@@ -46,7 +46,7 @@ DEPEND="${COMMON_DEPEND}
 
 # Includes X11/Xatom.h in libgnome-desktop/gnome-bg.c which comes from xproto
 
-PATCHES=( "${FILESDIR}/disable-bubblewrap.patch")
+PATCHES=( "${FILESDIR}/3.28.0-disable-bubblewrap.patch")
 
 src_configure() {
 	gnome2_src_configure \
