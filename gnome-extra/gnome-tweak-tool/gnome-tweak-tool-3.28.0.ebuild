@@ -1,14 +1,15 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
 GNOME2_LA_PUNT="yes"
 PYTHON_COMPAT=( python3_5 python3_6 )
 
-inherit gnome2 python-r1 meson
+inherit gnome-meson python-r1
 
 DESCRIPTION="Tool to customize GNOME 3 options"
 HOMEPAGE="https://wiki.gnome.org/action/show/Apps/GnomeTweakTool"
+SRC_URI="https://gitlab.gnome.org/GNOME/gnome-tweaks/repository/3.28.0/archive.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-2+"
 SLOT="0"
@@ -41,10 +42,9 @@ DEPEND="${COMMON_DEPEND}
 	virtual/pkgconfig
 "
 
-src_prepare() {
-	# Add contents of Gentoo's cursor theme directory to cursor theme list
-	eapply "${FILESDIR}/${PN}-3.25.92-gentoo-cursor-themes.patch"
+S="${WORKDIR}/gnome-tweaks-3.28.0-9e4143d786c29c88d289b3d5755b51a47bdb650f"
 
-	gnome2_src_prepare
+src_prepare() {
+	gnome-meson_src_prepare
 	python_copy_sources
 }
