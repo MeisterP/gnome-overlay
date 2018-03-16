@@ -2,12 +2,11 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
-GNOME2_EAUTORECONF="yes"
 GNOME2_LA_PUNT="yes"
 #PYTHON_COMPAT=( python{2_7,3_4,3_5,3_6} ) # https://bugzilla.gnome.org/show_bug.cgi?id=783186
 PYTHON_COMPAT=( python2_7 )
 
-inherit gnome2 python-any-r1 systemd udev virtualx
+inherit gnome-meson python-any-r1 systemd udev virtualx
 
 DESCRIPTION="Gnome Settings Daemon"
 HOMEPAGE="https://git.gnome.org/browse/gnome-settings-daemon"
@@ -99,12 +98,10 @@ DEPEND="${COMMON_DEPEND}
 RESTRICT="!test? ( test )"
 
 PATCHES=(
-	# Make colord and wacom optional; requires eautoreconf
-	"${FILESDIR}"/3.26.1-optional.patch
-	# Allow specifying udevrulesdir via configure, bug 509484; requires eautoreconf
-	"${FILESDIR}"/3.24.2-udevrulesdir-configure.patch
+	# Make colord, wacom and networkmanager optional
+	"${FILESDIR}"/3.28.0-optional/
 	# Fix build issue when gudev is present but not wayland, bug #627966
-	"${FILESDIR}"/3.24.3-fix-wayland-build.patch
+	"${FILESDIR}"/3.28.0-fix-wayland-build.patch
 )
 
 python_check_deps() {
@@ -119,26 +116,23 @@ pkg_setup() {
 }
 
 src_configure() {
-	gnome2_src_configure \
-		--disable-static \
-		--with-udevrulesdir="$(get_udevdir)"/rules.d \
-		$(use_enable colord color) \
-		$(use_enable cups) \
-		$(use_enable debug) \
-		$(use_enable debug more-warnings) \
-		$(use_enable networkmanager network-manager) \
-		$(use_enable smartcard smartcard-support) \
-		$(use_enable udev gudev) \
-		$(use_enable input_devices_wacom wacom) \
-		$(use_enable wayland)
-}
+	gnome-meson_src_configure \
+		$(meson_use colord color) \
+		$(meson_use cups) \
+		$(meson_use input_devices_wacom wacom) \
+		$(meson_use networkmanager network_manager) \
+		$(meson_use smartcard) \
+		$(meson_use udev gudev) \
+		$(meson_use wayland)
 
-src_test() {
-	virtx emake check
 }
 
 pkg_postinst() {
-	gnome2_pkg_postinst
+	gnome-meson_pkg_postinst
+
+	ewarn "This needs a patched version of sys-auth/polkit"
+	ewarn "https://bugs.freedesktop.org/show_bug.cgi?id=104970"
+	ewarn "https://cgit.freedesktop.org/polkit/commit/?id=c78819245ff8a270f97c9f800773e727918be838"
 
 	if ! systemd_is_booted; then
 		ewarn "${PN} needs Systemd to be *running* for working"

@@ -1,0 +1,38 @@
+From 73198cb2d0cc99c1f6b544a37afbfdf9bc2a6361 Mon Sep 17 00:00:00 2001
+From: Poncho <poncho@spahan.ch>
+Date: Sat, 17 Mar 2018 10:37:21 +0100
+Subject: [PATCH 1/5] make Wacom optional
+
+---
+ meson.build       | 4 ++--
+ meson_options.txt | 2 ++
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/meson.build b/meson.build
+index a6e676f5..62cf9bec 100644
+--- a/meson.build
++++ b/meson.build
+@@ -133,8 +133,8 @@ if enable_wayland
+ endif
+ config_h.set10('HAVE_WAYLAND', enable_wayland)
+ 
+-# wacom (disabled for s390/s390x and non Linux platforms)
+-enable_wacom = host_is_linux_not_s390
++# wacom
++enable_wacom = get_option('wacom')
+ if enable_wacom
+   assert(enable_gudev, 'GUDev support is required for wacom support.')
+   libwacom_dep = dependency('libwacom', version: '>= 0.7')
+diff --git a/meson_options.txt b/meson_options.txt
+index 50bd1749..f997444d 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -8,3 +8,5 @@ option('network_manager', type: 'boolean', value: true, description: 'build with
+ option('rfkill', type: 'boolean', value: true, description: 'build with rfkill support (not optional on Linux platforms)')
+ option('smartcard', type: 'boolean', value: true, description: 'build with smartcard support')
+ option('wayland', type: 'boolean', value: true, description: 'build with Wayland support')
++
++option('wacom', type: 'boolean', value: true, description: 'build with Wacom support')
+-- 
+2.16.1
+

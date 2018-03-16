@@ -1,0 +1,38 @@
+From e350aa11fa75d94021f2b9ca499d1cf0e3cf0c24 Mon Sep 17 00:00:00 2001
+From: Poncho <poncho@spahan.ch>
+Date: Sat, 17 Mar 2018 10:41:17 +0100
+Subject: [PATCH 3/5] make Gudev optional
+
+---
+ meson.build       | 1 -
+ meson_options.txt | 2 +-
+ 2 files changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/meson.build b/meson.build
+index f2b4ce62..4124482e 100644
+--- a/meson.build
++++ b/meson.build
+@@ -120,7 +120,6 @@ libgvc_dep = libgvc.get_variable('libgvc_dep')
+ # GUdev integration (default enabled)
+ enable_gudev = get_option('gudev')
+ if enable_gudev
+-  assert(enable_gudev, 'GUdev is not optional on Linux platforms')
+   gudev_dep = dependency('gudev-1.0')
+ endif
+ config_h.set('HAVE_GUDEV', enable_gudev)
+diff --git a/meson_options.txt b/meson_options.txt
+index a536e218..9198aee1 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -2,7 +2,7 @@ option('nssdb_dir', type: 'string', value: '', description: 'Absolute path to th
+ option('udev_dir', type: 'string', value: '', description: 'Absolute path of the udev base directory')
+ 
+ option('alsa', type: 'boolean', value: true, description: 'build with ALSA support (not optional on Linux platforms)')
+-option('gudev', type: 'boolean', value: true, description: 'build with gudev device support (not optional on Linux platforms)')
++option('gudev', type: 'boolean', value: true, description: 'build with gudev device support')
+ option('cups', type: 'boolean', value: true, description: 'build with CUPS support')
+ option('network_manager', type: 'boolean', value: true, description: 'build with NetworkManager support')
+ option('rfkill', type: 'boolean', value: true, description: 'build with rfkill support (not optional on Linux platforms)')
+-- 
+2.16.1
+
