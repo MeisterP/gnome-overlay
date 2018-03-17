@@ -2,6 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
+GNOME2_EAUTORECONF="yes"
 GNOME2_LA_PUNT="yes"
 
 inherit eutils gnome2 pam readme.gentoo-r1 systemd user versionator
@@ -130,6 +131,9 @@ src_prepare() {
 
 	# Show logo when branding is enabled
 	use branding && eapply "${FILESDIR}/${PN}-3.8.4-logo.patch"
+
+	# Use the standard way to find the udev rules directory via pkg-config
+	eapply "${FILESDIR}/${PN}-3.28.0-udevrulesdir-configure.patch"
 
 	gnome2_src_prepare
 }
