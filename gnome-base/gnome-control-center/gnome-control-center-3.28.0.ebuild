@@ -12,11 +12,8 @@ HOMEPAGE="https://git.gnome.org/browse/gnome-control-center/"
 
 LICENSE="GPL-2+"
 SLOT="2"
-IUSE="+bluetooth +colord +cups debug +gnome-online-accounts +ibus input_devices_wacom kerberos networkmanager +v4l wayland"
+IUSE="+bluetooth debug +ibus input_devices_wacom networkmanager +v4l wayland"
 KEYWORDS="~amd64 ~x86"
-
-# False positives caused by nested configure scripts
-QA_CONFIGURE_OPTIONS=".*"
 
 # gnome-session-2.91.6-r1 is needed so that 10-user-dirs-update is run at login
 # g-s-d[policykit] needed for bug #403527
@@ -53,19 +50,13 @@ COMMON_DEPEND="
 	>=x11-libs/libXi-1.2
 
 	bluetooth? ( >=net-wireless/gnome-bluetooth-3.18.2:= )
-	colord? (
-		net-libs/libsoup:2.4
-		>=x11-misc/colord-0.1.34:0=
-		>=x11-libs/colord-gtk-0.1.24 )
-	cups? (
-		>=net-print/cups-1.7[dbus]
-		>=net-fs/samba-4.0.0[client]
-	)
-	gnome-online-accounts? (
-		>=media-libs/grilo-0.3.0:0.3=
-		>=net-libs/gnome-online-accounts-3.25.3:= )
+	net-libs/libsoup:2.4
+	>=x11-libs/colord-gtk-0.1.24
+	>=net-print/cups-1.7[dbus]
+	>=net-fs/samba-4.0.0[client]
+	>=media-libs/grilo-0.3.0:0.3=
+	>=net-libs/gnome-online-accounts-3.25.3:=
 	ibus? ( >=app-i18n/ibus-1.5.2 )
-	kerberos? ( app-crypt/mit-krb5 )
 	networkmanager? (
 		>=gnome-extra/nm-applet-1.2.0
 		>=net-misc/networkmanager-1.2.0:=[modemmanager]
@@ -91,10 +82,9 @@ COMMON_DEPEND="
 RDEPEND="${COMMON_DEPEND}
 	|| ( >=sys-apps/systemd-31 ( app-admin/openrc-settingsd sys-auth/consolekit ) )
 	x11-themes/adwaita-icon-theme
-	colord? ( >=gnome-extra/gnome-color-manager-3 )
-	cups? (
-		app-admin/system-config-printer
-		net-print/cups-pk-helper )
+	>=gnome-extra/gnome-color-manager-3
+	app-admin/system-config-printer
+	net-print/cups-pk-helper
 	input_devices_wacom? ( gnome-base/gnome-settings-daemon[input_devices_wacom] )
 	>=gnome-base/libgnomekbd-3
 	wayland? ( dev-libs/libinput )
@@ -125,6 +115,12 @@ DEPEND="${COMMON_DEPEND}
 	gnome-base/gnome-common
 	sys-devel/autoconf-archive
 "
+
+# Missing optional patches
+#$(use_enable colord color)
+#$(use_enable cups)
+#$(use_enable gnome-online-accounts goa)
+#$(use_enable kerberos)
 
 PATCHES=(
 	# Make some panels and dependencies optional
