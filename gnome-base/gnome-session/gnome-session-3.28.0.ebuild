@@ -2,8 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
-GNOME2_EAUTORECONF="yes"
-inherit gnome2
+inherit gnome-meson
 
 DESCRIPTION="Gnome session manager"
 HOMEPAGE="https://git.gnome.org/browse/gnome-session"
@@ -58,7 +57,6 @@ RDEPEND="${COMMON_DEPEND}
 "
 DEPEND="${COMMON_DEPEND}
 	dev-libs/libxslt
-	>=dev-util/intltool-0.40.6
 	>=sys-devel/gettext-0.10.40
 	virtual/pkgconfig
 	!<gnome-base/gdm-2.20.4
@@ -67,31 +65,19 @@ DEPEND="${COMMON_DEPEND}
 		dev-libs/libxslt )
 	gnome-base/gnome-common
 "
-# gnome-common needed for eautoreconf
-# gnome-base/gdm does not provide gnome.desktop anymore
 
 src_configure() {
-	# 1. Avoid automagic on old upower releases
-	# 2. xsltproc is always checked due to man configure
-	#    switch, even if USE=-doc
-	# 3. Disable old gconf support as other distributions did long time
-	#    ago
-	gnome2_src_configure \
-		--disable-deprecation-flags \
-		--disable-gconf \
-		--enable-session-selector \
-		$(use_enable doc docbook-docs) \
-		$(use_enable ipv6) \
-		$(use_enable systemd) \
-		$(use_enable !systemd consolekit) \
-		UPOWER_CFLAGS="" \
-		UPOWER_LIBS=""
-		# gnome-session-selector pre-generated man page is missing
-		#$(usex !doc XSLTPROC=$(type -P true))
+	gnome-meson_src_configure \
+		-Denable-session_selector=true \
+		$(meson_use doc docbook) \
+		$(meson_use doc man) \
+		$(meson_use systemd) \
+		$(meson_use systemd systemd_journal) \
+		$(meson_use !systemd consolekit)
 }
 
 src_install() {
-	gnome2_src_install
+	gnome-meson_src_install
 
 	dodir /etc/X11/Sessions
 	exeinto /etc/X11/Sessions
@@ -114,7 +100,7 @@ src_install() {
 }
 
 pkg_postinst() {
-	gnome2_pkg_postinst
+	gnome-meson_pkg_postinst
 
 	if ! has_version gnome-base/gdm && ! has_version x11-misc/sddm; then
 		ewarn "If you use a custom .xinitrc for your X session,"
