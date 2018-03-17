@@ -1,4 +1,4 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -13,7 +13,7 @@ HOMEPAGE="https://wiki.gnome.org/Projects/PyGObject"
 LICENSE="LGPL-2.1+"
 SLOT="3"
 KEYWORDS="~amd64 ~x86"
-IUSE="+cairo examples test +threads"
+IUSE="+cairo examples test"
 
 REQUIRED_USE="
 	${PYTHON_REQUIRED_USE}
@@ -72,8 +72,7 @@ src_configure() {
 	# docs disabled by upstream default since they are very out of date
 	configuring() {
 		gnome2_src_configure \
-			$(use_enable cairo) \
-			$(use_enable threads thread)
+			$(use_enable cairo)
 
 		# Pyflakes tests work only in python2, bug #516744
 		if use test && [[ ${EPYTHON} != python2.7 ]]; then
