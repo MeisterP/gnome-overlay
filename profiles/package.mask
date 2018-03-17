@@ -1,4 +1,4 @@
 # Poncho <poncho@spahan.ch> (14 Dec 2017)
 # Wait for spidermonkey:52 to be unmasked
-=dev-libs/gjs-1.50.4
+=dev-libs/gjs-1.50.2
 =gnome-extra/gnome-weather-3.26.0
