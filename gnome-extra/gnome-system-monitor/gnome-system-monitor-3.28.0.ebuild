@@ -1,4 +1,4 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -13,7 +13,7 @@ IUSE="systemd X"
 KEYWORDS="~amd64 ~x86"
 
 RDEPEND="
-	>=dev-libs/glib-2.37.3:2
+	>=dev-libs/glib-2.55.0:2
 	>=gnome-base/libgtop-2.37.2:2=
 	>=x11-libs/gtk+-3.22:3[X(+)]
 	>=dev-cpp/gtkmm-3.3.18:3.0
@@ -26,7 +26,7 @@ RDEPEND="
 # eautoreconf requires gnome-base/gnome-common
 DEPEND="${RDEPEND}
 	app-text/yelp-tools
-	>=dev-util/intltool-0.41.0
+	>=sys-devel/gettext-0.19.8
 	virtual/pkgconfig
 "
 
