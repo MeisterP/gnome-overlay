@@ -1,4 +1,4 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI="6"
@@ -22,9 +22,9 @@ COMMON_DEPEND="
 	>=dev-libs/glib-2.50:2[dbus]
 	>=dev-libs/libgee-0.10:0.8=
 	gnome-base/gsettings-desktop-schemas
-	x11-libs/tepl
+	>=x11-libs/tepl-3.99.1
 	>=x11-libs/gtk+-3.20:3
-	>=x11-libs/gtksourceview-3.24:3.0=
+	>=x11-libs/gtksourceview-3.99.6:4=[vala]
 	x11-libs/gdk-pixbuf:2
 	x11-libs/pango
 	introspection? ( >=dev-libs/gobject-introspection-1.30.0:= )
