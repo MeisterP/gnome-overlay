@@ -11,7 +11,7 @@ HOMEPAGE="https://git.gnome.org/browse/glib-networking/"
 
 LICENSE="LGPL-2+"
 SLOT="0"
-IUSE="+gnome +libproxy smartcard test"
+IUSE="+gnome +libproxy smartcard test +ssl"
 KEYWORDS="~amd64 ~x86"
 
 RDEPEND="
