@@ -1,10 +1,10 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
 GNOME2_LA_PUNT="yes"
 
-inherit eutils gnome2 readme.gentoo-r1
+inherit gnome-meson readme.gentoo-r1
 
 DESCRIPTION="Archive manager for GNOME"
 HOMEPAGE="https://wiki.gnome.org/Apps/FileRoller"
@@ -36,8 +36,6 @@ DEPEND="${RDEPEND}
 	sys-devel/gettext
 	virtual/pkgconfig
 "
-# eautoreconf needs:
-#	gnome-base/gnome-common
 
 DISABLE_AUTOFORMATTING="yes"
 DOC_CONTENTS="
@@ -62,28 +60,25 @@ zoo     - app-arch/zoo"
 src_prepare() {
 	# File providing Gentoo package names for various archivers
 	cp -f "${FILESDIR}"/3.22-packages.match data/packages.match || die
-	gnome2_src_prepare
+	gnome-meson_src_prepare
 }
 
 src_configure() {
-	# --disable-debug because enabling it adds -O0 to CFLAGS
-	gnome2_src_configure \
-		--disable-run-in-place \
-		--disable-static \
-		--disable-debug \
-		--enable-magic \
-		--enable-libarchive \
-		$(use_enable libnotify notification) \
-		$(use_enable nautilus nautilus-actions) \
-		$(use_enable packagekit)
+	gnome-meson_src_configure \
+		-Denable-run-in-place=false \
+		-Denable-libarchive=true \
+		-Denable-magic=true \
+		$(meson_use nautilus nautilus-actions) \
+		$(meson_use libnotify notification) \
+		$(meson_use packagekit)
 }
 
 src_install() {
-	gnome2_src_install
+	gnome-meson_src_install
 	readme.gentoo_create_doc
 }
 
 pkg_postinst() {
-	gnome2_pkg_postinst
+	gnome-meson_pkg_postinst
 	readme.gentoo_print_elog
 }
