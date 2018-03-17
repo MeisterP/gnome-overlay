@@ -1,36 +1,36 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
 GNOME2_LA_PUNT="yes"
 
-inherit gnome2 multilib-minimal virtualx
+inherit gnome-meson multilib-minimal virtualx
 
 DESCRIPTION="Network-related giomodules for glib"
 HOMEPAGE="https://git.gnome.org/browse/glib-networking/"
 
 LICENSE="LGPL-2+"
 SLOT="0"
-IUSE="+gnome +libproxy smartcard +ssl test"
+IUSE="+gnome +libproxy smartcard test"
 KEYWORDS="~amd64 ~x86"
 
 RDEPEND="
-	>=dev-libs/glib-2.46.0:2[${MULTILIB_USEDEP}]
+	>=dev-libs/glib-2.55.1:2[${MULTILIB_USEDEP}]
 	gnome? ( gnome-base/gsettings-desktop-schemas )
-	libproxy? ( >=net-libs/libproxy-0.4.11-r1:=[${MULTILIB_USEDEP}] )
+	libproxy? ( >=net-libs/libproxy-0.3.1-r1:=[${MULTILIB_USEDEP}] )
 	smartcard? (
-		>=app-crypt/p11-kit-0.18.4[${MULTILIB_USEDEP}]
+		>=app-crypt/p11-kit-0.20[${MULTILIB_USEDEP}]
 		>=net-libs/gnutls-3:=[pkcs11,${MULTILIB_USEDEP}] )
-	ssl? (
-		app-misc/ca-certificates
-		>=net-libs/gnutls-3:=[${MULTILIB_USEDEP}] )
+	app-misc/ca-certificates
+	>=net-libs/gnutls-3:=[${MULTILIB_USEDEP}]
 "
 DEPEND="${RDEPEND}
 	>=sys-devel/gettext-0.19.4
 	>=virtual/pkgconfig-0-r1[${MULTILIB_USEDEP}]
 	test? ( sys-apps/dbus[X] )
 "
-# eautoreconf needs >=sys-devel/autoconf-2.65:2.5
+
+PATCHES=( "${FILESDIR}/2.56.0-fix_building_tls_plugin_without_pkcs11.patch" )
 
 src_prepare() {
 	default
@@ -40,14 +40,13 @@ src_prepare() {
 }
 
 multilib_src_configure() {
-	ECONF_SOURCE=${S} \
-	gnome2_src_configure \
-		--disable-static \
-		--with-ca-certificates="${EPREFIX}"/etc/ssl/certs/ca-certificates.crt \
-		$(use_with gnome gnome-proxy) \
-		$(use_with libproxy) \
-		$(use_with smartcard pkcs11) \
-		$(use_with ssl gnutls)
+	gnome-meson_src_configure \
+		-Denable-static_modules=false \
+		-Denable-ca_certificates_path="${EPREFIX}"/etc/ssl/certs/ca-certificates.crt \
+		$(meson_use test installed_tests) \
+		$(meson_use libproxy libproxy_support) \
+		$(meson_use gnome gnome_proxy_support) \
+		$(meson_use smartcard pkcs11_support)
 }
 
 multilib_src_test() {
@@ -59,11 +58,11 @@ multilib_src_test() {
 }
 
 multilib_src_install() {
-	gnome2_src_install
+	gnome-meson_src_install
 }
 
 pkg_postinst() {
-	gnome2_pkg_postinst
+	gnome-meson_pkg_postinst
 
 	multilib_pkg_postinst() {
 		gnome2_giomodule_cache_update \
@@ -73,7 +72,7 @@ pkg_postinst() {
 }
 
 pkg_postrm() {
-	gnome2_pkg_postrm
+	gnome-meson_pkg_postrm
 
 	multilib_pkg_postrm() {
 		gnome2_giomodule_cache_update \
