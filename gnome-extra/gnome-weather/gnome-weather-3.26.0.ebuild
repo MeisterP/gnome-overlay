@@ -1,4 +1,4 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python{2_7,3_4,3_5} )
 inherit gnome2 python-any-r1 virtualx
 
 DESCRIPTION="A weather application for GNOME"
-HOMEPAGE="https://wiki.gnome.org/Design/Apps/Weather"
+HOMEPAGE="https://wiki.gnome.org/Apps/Weather"
 
 LICENSE="GPL-2+ LGPL-2+ MIT CC-BY-3.0 CC-BY-SA-3.0"
 SLOT="0"
