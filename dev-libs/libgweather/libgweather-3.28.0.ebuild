@@ -46,6 +46,7 @@ src_prepare() {
 
 src_configure() {
 	gnome-meson_src_configure \
+		-Dgtk_doc=true \
 		$(meson_use glade glade-catalog) \
 		$(meson_use vala)
 }
