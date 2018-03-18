@@ -1,8 +1,8 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
-inherit gnome2 udev user meson
+inherit gnome-meson udev user
 
 DESCRIPTION="Bluetooth graphical utilities integrated with GNOME"
 HOMEPAGE="https://wiki.gnome.org/Projects/GnomeBluetooth"
@@ -36,25 +36,19 @@ DEPEND="${COMMON_DEPEND}
 	virtual/pkgconfig
 	x11-proto/xproto
 "
-# eautoreconf needs:
-#	gnome-base/gnome-common
 
 pkg_setup() {
 	enewgroup plugdev
 }
 
-PATCHES=( "${FILESDIR}/${P}-fix-post-install.patch" )
-
 src_configure() {
-	local emesonargs=(
-		-Denable-introspection=$(usex introspection true false)
-		-Denable-gtk-doc=true
-		-Denable-icon-update=false
-	)
-	meson_src_configure
+	gnome-meson_src_configure \
+		-Dgtk_doc=true \
+		-Dicon_update=false \
+		$(meson_use introspection)
 }
 
 src_install() {
-	meson_src_install
+	gnome-meson_src_install
 	udev_dorules "${FILESDIR}"/61-${PN}.rules
 }
