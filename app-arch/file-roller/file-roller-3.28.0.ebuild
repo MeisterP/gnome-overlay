@@ -18,6 +18,7 @@ KEYWORDS="~amd64 ~x86"
 # cairo used in eggtreemultidnd.c
 # pango used in fr-window
 RDEPEND="
+	app-arch/cpio
 	>=app-arch/libarchive-3:=
 	>=dev-libs/glib-2.36:2
 	>=dev-libs/json-glib-0.14
@@ -45,7 +46,6 @@ and install the relevant package. For example:
 7-zip   - app-arch/p7zip
 ace     - app-arch/unace
 arj     - app-arch/arj
-cpio    - app-arch/cpio
 deb     - app-arch/dpkg
 iso     - app-cdr/cdrtools
 jar,zip - app-arch/zip and app-arch/unzip
@@ -65,9 +65,10 @@ src_prepare() {
 
 src_configure() {
 	gnome-meson_src_configure \
-		-Denable-run-in-place=false \
-		-Denable-libarchive=true \
-		-Denable-magic=true \
+		-Drun-in-place=false \
+		-Dlibarchive=true \
+		-Dmagic=true \
+		-Dcpio="${EPREFIX%/}/bin/cpio" \
 		$(meson_use nautilus nautilus-actions) \
 		$(meson_use libnotify notification) \
 		$(meson_use packagekit)
