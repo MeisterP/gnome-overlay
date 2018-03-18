@@ -45,9 +45,9 @@ src_configure() {
 	# Always enable tests since they are check_PROGRAMS anyway
 	# appstream does not want to be relax by default !
 	gnome-meson_src_configure \
-		-Denable-tests=true \
-		$(meson_use raw enable-exiv) \
-		$(meson_use packagekit enable-packagekit)
+		-Dtests=true \
+		$(meson_use raw exiv) \
+		$(meson_use packagekit)
 }
 
 src_test() {
