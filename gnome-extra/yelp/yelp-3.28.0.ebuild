@@ -1,4 +1,4 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -21,8 +21,8 @@ RDEPEND="
 	>=dev-libs/glib-2.38:2
 	>=dev-libs/libxml2-2.6.5:2
 	>=dev-libs/libxslt-1.1.4
-	>=gnome-extra/yelp-xsl-3.12
-	>=net-libs/webkit-gtk-2.7.2:4
+	>=gnome-extra/yelp-xsl-3.27.1
+	>=net-libs/webkit-gtk-2.15.1:4
 	>=x11-libs/gtk+-3.13.3:3
 	x11-themes/adwaita-icon-theme
 "
@@ -38,6 +38,9 @@ src_prepare() {
 	# Fix compatibility with Gentoo's sys-apps/man
 	# https://bugzilla.gnome.org/show_bug.cgi?id=648854
 	eapply "${FILESDIR}"/${PN}-3.20.0-man-compatibility.patch
+
+	# remove when >=net-libs/webkit-gtk-2.19.2:4 enters the tree
+	eapply "${FILESDIR}"/${PN}-3.28.0-lower-webkit-dependency.patch
 
 	eautoreconf
 	gnome2_src_prepare
