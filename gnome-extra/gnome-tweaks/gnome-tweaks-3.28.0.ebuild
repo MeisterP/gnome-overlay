@@ -3,13 +3,12 @@
 
 EAPI=6
 GNOME2_LA_PUNT="yes"
-PYTHON_COMPAT=( python3_5 python3_6 )
+PYTHON_COMPAT=( python3_{4,5,6} )
 
 inherit gnome-meson python-r1
 
 DESCRIPTION="Tool to customize GNOME 3 options"
-HOMEPAGE="https://wiki.gnome.org/action/show/Apps/GnomeTweakTool"
-SRC_URI="https://gitlab.gnome.org/GNOME/gnome-tweaks/repository/3.28.0/archive.tar.gz -> ${P}.tar.gz"
+HOMEPAGE="https://wiki.gnome.org/Apps/Tweaks"
 
 LICENSE="GPL-2+"
 SLOT="0"
@@ -41,8 +40,6 @@ DEPEND="${COMMON_DEPEND}
 	>=dev-util/intltool-0.40.0
 	virtual/pkgconfig
 "
-
-S="${WORKDIR}/gnome-tweaks-3.28.0-9e4143d786c29c88d289b3d5755b51a47bdb650f"
 
 src_prepare() {
 	gnome-meson_src_prepare

@@ -1,4 +1,5 @@
-# Poncho <poncho@spahan.ch> (14 Dec 2017)
-# Wait for spidermonkey:52 to be unmasked
+# Poncho <poncho@spahan.ch> (18 March 2018)
+# Keep repoman happy
 =dev-libs/gjs-1.50.2
 =gnome-extra/gnome-weather-3.26.0
+=gnome-extra/gnome-tweaks-3.28.0
