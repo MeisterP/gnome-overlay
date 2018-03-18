@@ -124,11 +124,11 @@ PATCHES=(
 
 src_configure() {
 	gnome-meson_src_configure \
-		-Denable-man=true \
-		-Denable-documentation=false \
-		-Denable-systemd=$(usex !openrc-force yes no) \
-		-Denable-networkmanager=$(usex networkmanager yes no) \
-		$(meson_use nsplugin enable-browser-plugin)
+		-Dman=true \
+		-Dgtk_doc=false \
+		-Dsystemd=$(usex !openrc-force true false) \
+		$(meson_use networkmanager) \
+		$(meson_use nsplugin browser_plugin)
 }
 
 src_install() {
