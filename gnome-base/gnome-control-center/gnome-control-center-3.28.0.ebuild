@@ -130,11 +130,11 @@ PATCHES=(
 
 src_configure() {
 	gnome-meson_src_configure \
-		-Denable-documentation=true \
+		-Ddocumentation=true \
+		$(meson_use bluetooth) \
 		$(meson_use ibus) \
 		$(meson_use input_devices_wacom wacom) \
-		$(meson_use v4l cheese) \
-		$(meson_use wayland) \
 		$(meson_use networkmanager network) \
-		$(meson_use bluetooth)
+		$(meson_use v4l cheese) \
+		$(meson_use wayland)
 }
