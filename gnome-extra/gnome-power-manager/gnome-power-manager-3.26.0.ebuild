@@ -1,8 +1,8 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
-inherit gnome2 meson
+inherit gnome-meson
 
 DESCRIPTION="GNOME power management service"
 HOMEPAGE="https://projects.gnome.org/gnome-power-manager/"
@@ -32,9 +32,6 @@ DEPEND="${COMMON_DEPEND}
 "
 
 src_configure() {
-	local emesonargs=(
-		-D enable-tests=$(usex test true false)
-	)
-
-	meson_src_configure
+	gnome-meson_src_configure \
+		$(meson_use test enable-tests)
 }
