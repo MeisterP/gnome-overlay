@@ -30,7 +30,7 @@ RDEPEND="
 	>=net-libs/libsoup-2.42:2.4
 	net-libs/rest:0.7
 	net-libs/telepathy-glib
-	>=net-libs/webkit-gtk-2.7.2:4
+	>=net-libs/webkit-gtk-2.12.0:4
 	>=x11-libs/gtk+-3.19.12:3
 	x11-libs/pango
 
@@ -48,12 +48,10 @@ DEPEND="${RDEPEND}
 	dev-libs/libxslt
 	>=dev-util/gtk-doc-am-1.3
 	>=dev-util/gdbus-codegen-2.30.0
-	>=dev-util/intltool-0.50.1
-	sys-devel/gettext
+	>=sys-devel/gettext-0.19.8
 	virtual/pkgconfig
 
 	dev-libs/gobject-introspection-common
-	gnome-base/gnome-common
 "
 # eautoreconf needs gobject-introspection-common, gnome-common
 
