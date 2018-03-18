@@ -2,28 +2,17 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
-GNOME2_LA_PUNT="yes" # Needed with USE 'sendto'
 
-inherit gnome-meson readme.gentoo-r1 virtualx
+inherit gnome-meson readme.gentoo-r1
 
 DESCRIPTION="A file manager for the GNOME desktop"
 HOMEPAGE="https://wiki.gnome.org/Apps/Nautilus"
 
-#FIXME: shoudln't this be GPL-3+?
-LICENSE="GPL-2+ LGPL-2+ FDL-1.1"
+LICENSE="GPL-3"
 SLOT="0"
-#FIXME: tracker is needed
 IUSE="extensions gnome +introspection packagekit +previewer selinux"
-
 KEYWORDS="~amd64 ~x86"
 
-# FIXME: tests fails under Xvfb, but pass when building manually
-# "FAIL: check failed in nautilus-file.c, line 8307"
-# need org.gnome.SessionManager service (aka gnome-session) but cannot find it
-RESTRICT="test"
-
-# Require {glib,gdbus-codegen}-2.30.0 due to GDBus API changes between 2.29.92
-# and 2.30.0
 COMMON_DEPEND="
 	>=app-arch/gnome-autoar-0.2.1
 	>=dev-libs/glib-2.55.1:2[dbus]
@@ -56,16 +45,12 @@ RDEPEND="${COMMON_DEPEND}
 	extensions? ( !<gnome-extra/nautilus-sendto-3.0.1 )
 "
 
-# FIXME: does nautilus tracker tags work with tracker 2? there seems to be
-# some automagic involved
-
 PDEPEND="
 	gnome? ( x11-themes/adwaita-icon-theme )
 	previewer? ( >=gnome-extra/sushi-0.1.9 )
 	extensions? ( >=gnome-extra/nautilus-sendto-3.0.1 )
 	>=gnome-base/gvfs-1.14[gtk]
 "
-# Need gvfs[gtk] for recent:/// support
 
 src_prepare() {
 	if use previewer; then
@@ -77,17 +62,13 @@ src_prepare() {
 }
 
 src_configure() {
-	# FIXME no doc useflag??
 	gnome-meson_src_configure \
-		-Denable-gtk-doc=true \
-		-Denable-profiling=false \
+		-Ddocs=true \
+		-Dprofiling=false \
+		-Ddisplay-tests=false \
 		$(meson_use extensions) \
-		$(meson_use packagekit enable-packagekit) \
-		$(meson_use selinux enable-selinux)
-}
-
-src_test() {
-	virtx meson_src_test
+		$(meson_use packagekit) \
+		$(meson_use selinux)
 }
 
 src_install() {
