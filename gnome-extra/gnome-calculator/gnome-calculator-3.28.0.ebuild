@@ -1,8 +1,8 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
-inherit gnome2
+inherit gnome-meson vala
 
 DESCRIPTION="A calculator application for GNOME"
 HOMEPAGE="https://wiki.gnome.org/Apps/Calculator"
@@ -13,6 +13,7 @@ IUSE=""
 KEYWORDS="~amd64 ~x86"
 
 COMMON_DEPEND="
+	$(vala_depend)
 	>=dev-libs/glib-2.40:2
 	dev-libs/libxml2:2
 	dev-libs/mpfr:0
@@ -32,8 +33,7 @@ DEPEND="${COMMON_DEPEND}
 	virtual/pkgconfig
 "
 
-src_configure() {
-	gnome2_src_configure \
-		--disable-static \
-		VALAC=$(type -P true)
+src_prepare() {
+	gnome-meson_src_prepare
+	vala_src_prepare
 }
