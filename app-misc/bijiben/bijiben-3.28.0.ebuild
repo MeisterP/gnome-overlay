@@ -33,6 +33,6 @@ DEPEND="${RDEPEND}
 
 src_configure() {
 	gnome-meson_src_configure \
-		-Denable-zeitgeist=false \
-		-Denable-update_mimedb=false
+		-Dzeitgeist=false \
+		-Dupdate_mimedb=false
 }
