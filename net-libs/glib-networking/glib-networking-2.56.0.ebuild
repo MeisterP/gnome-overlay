@@ -41,8 +41,8 @@ src_prepare() {
 
 multilib_src_configure() {
 	gnome-meson_src_configure \
-		-Denable-static_modules=false \
-		-Denable-ca_certificates_path="${EPREFIX}"/etc/ssl/certs/ca-certificates.crt \
+		-Dstatic_modules=false \
+		-Dca_certificates_path="${EPREFIX}"/etc/ssl/certs/ca-certificates.crt \
 		$(meson_use test installed_tests) \
 		$(meson_use libproxy libproxy_support) \
 		$(meson_use gnome gnome_proxy_support) \
