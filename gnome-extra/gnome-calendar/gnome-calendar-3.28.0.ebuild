@@ -11,7 +11,7 @@ LICENSE="GPL-3+"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
-# >=libical-1.0.1 for https://bugzilla.gnome.org/show_bug.cgi?id=751244
+
 RDEPEND="
 	>=app-misc/geoclue-2.4.0:2.0
 	>=dev-libs/glib-2.43.4:2
@@ -32,4 +32,8 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig
 "
 
-# FIXME: test fails
+src_configure() {
+	gnome-meson_src_configure \
+		-Dgtk_doc=true \
+		-Dtracing=false
+}
