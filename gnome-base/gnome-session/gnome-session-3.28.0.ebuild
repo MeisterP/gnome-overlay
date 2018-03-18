@@ -68,7 +68,7 @@ DEPEND="${COMMON_DEPEND}
 
 src_configure() {
 	gnome-meson_src_configure \
-		-Denable-session_selector=true \
+		-Dsession_selector=true \
 		$(meson_use doc docbook) \
 		$(meson_use doc man) \
 		$(meson_use systemd) \
