@@ -21,7 +21,7 @@ LICENSE="
 
 SLOT="0"
 
-IUSE="accessibility audit branding fprint +introspection ipv6 plymouth selinux smartcard tcpd test wayland xinerama"
+IUSE="accessibility audit branding fprint +introspection ipv6 nvidia plymouth selinux smartcard tcpd test wayland xinerama"
 
 KEYWORDS="~amd64 ~x86"
 
@@ -151,7 +151,6 @@ src_configure() {
 
 	gnome2_src_configure \
 		--enable-gdm-xsession \
-		--enable-user-display-server \
 		--with-run-dir=/run/gdm \
 		--localstatedir="${EPREFIX}"/var \
 		--disable-static \
@@ -163,6 +162,7 @@ src_configure() {
 		--without-xevie \
 		--enable-systemd-journal \
 		--with-systemdsystemunitdir="$(systemd_get_systemunitdir)" \
+		$(use_enable !nvidia user-display-server) \
 		$(use_with audit libaudit) \
 		$(use_enable ipv6) \
 		$(use_with plymouth) \
