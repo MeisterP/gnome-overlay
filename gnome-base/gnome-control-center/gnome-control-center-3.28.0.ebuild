@@ -12,7 +12,7 @@ HOMEPAGE="https://git.gnome.org/browse/gnome-control-center/"
 
 LICENSE="GPL-2+"
 SLOT="2"
-IUSE="+bluetooth debug +ibus input_devices_wacom networkmanager +v4l wayland"
+IUSE="+bluetooth +cups debug +ibus input_devices_wacom networkmanager +v4l wayland"
 KEYWORDS="~amd64 ~x86"
 
 # gnome-session-2.91.6-r1 is needed so that 10-user-dirs-update is run at login
