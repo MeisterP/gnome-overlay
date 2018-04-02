@@ -29,6 +29,7 @@ KEYWORDS="~amd64 ~x86"
 # nspr used by smartcard extension
 # dconf, dbus and g-s-d are needed at install time for dconf update
 # We need either systemd or >=openrc-0.12 to restart gdm properly, bug #463784
+# keyutils are automagic, see https://git.gnome.org/browse/gdm/commit/?id=31ed6f2b3f1ab45ae07aad41c13a51ba91fd159d
 COMMON_DEPEND="
 	app-text/iso-codes
 	>=dev-libs/glib-2.36:2[dbus]
@@ -54,8 +55,8 @@ COMMON_DEPEND="
 
 	virtual/pam
 	>=sys-apps/systemd-186:0=[pam]
-
 	sys-auth/pambase[systemd]
+	sys-apps/keyutils
 
 	audit? ( sys-process/audit )
 	introspection? ( >=dev-libs/gobject-introspection-0.9.12:= )
@@ -97,9 +98,8 @@ DOC_CONTENTS="
 	To make GDM start at boot, run:\n
 	# systemctl enable gdm.service\n
 	\n
-	For passwordless login to unlock your keyring, you need to install
-	sys-auth/pambase with USE=gnome-keyring and set an empty password
-	on your keyring. Use app-crypt/seahorse for that.\n
+	For passwordless login to unlock your keyring, you need to set an empty
+	password on your keyring. Use app-crypt/seahorse for that.\n
 	\n
 	You may need to install app-crypt/coolkey and sys-auth/pam_pkcs11
 	for smartcard support
@@ -134,6 +134,9 @@ src_prepare() {
 
 	# Use the standard way to find the udev rules directory via pkg-config
 	eapply "${FILESDIR}/${PN}-3.28.0-udevrulesdir-configure.patch"
+
+	# Drop obsolete option from pam_systemd.so
+	eapply "${FILESDIR}/${PN}-3.28.0-pam-exherbo-remove-obsolete-kill-session-processes.patch"
 
 	gnome2_src_prepare
 }
