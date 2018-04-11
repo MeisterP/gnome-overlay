@@ -118,7 +118,6 @@ src_configure() {
 		$(use_enable samba) \
 		$(use_enable systemd libsystemd-login) \
 		$(use_enable udev gudev) \
-		$(use_enable udev) \
 		$(use_enable udisks udisks2) \
 		$(use_enable zeroconf avahi)
 }
