@@ -8,7 +8,7 @@ VALA_USE_DEPEND="vapigen"
 inherit gnome2 vala
 
 DESCRIPTION="Integrated LaTeX environment for GNOME"
-HOMEPAGE="https://wiki.gnome.org/Apps/LaTeXila"
+HOMEPAGE="https://wiki.gnome.org/Apps/GNOME-LaTeX"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -21,12 +21,14 @@ COMMON_DEPEND="
 	>=app-text/gspell-1.0:0=
 	>=dev-libs/glib-2.50:2[dbus]
 	>=dev-libs/libgee-0.10:0.8=
+	gnome-base/dconf
 	gnome-base/gsettings-desktop-schemas
 	>=x11-libs/tepl-3.99.1
 	>=x11-libs/gtk+-3.20:3
 	>=x11-libs/gtksourceview-3.99.6:4=[vala]
 	x11-libs/gdk-pixbuf:2
 	x11-libs/pango
+
 	introspection? ( >=dev-libs/gobject-introspection-1.30.0:= )
 "
 RDEPEND="${COMMON_DEPEND}
