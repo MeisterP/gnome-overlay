@@ -80,6 +80,10 @@ DEPEND="${RDEPEND}
 # https://bugzilla.gnome.org/700162
 RESTRICT="test"
 
+PATCHES=( "${FILESDIR}/${PV}-GUdevDevice_is_not_found.patch"
+	"${FILESDIR}/${PV}-prevent_deadlock.patch"
+	"${FILESDIR}/${PV}-remove_optical_disc.patch" )
+
 src_prepare() {
 	if ! use udev; then
 		sed -e 's/gvfsd-burn/ /' \
