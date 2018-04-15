@@ -118,7 +118,7 @@ src_prepare() {
 	fi
 
 	# gdbus-codegen is a separate package
-	eapply "${FILESDIR}"/${PN}-2.54.3-external-gdbus-codegen-for-autotools.patch
+	eapply "${FILESDIR}"/${PN}-2.56.1-external-gdbus-codegen-for-autotools.patch
 
 	# Leave python shebang alone - handled by python_replicate_script
 	# We could call python_setup and give configure a valid --with-python
@@ -127,7 +127,6 @@ src_prepare() {
 		-i glib/Makefile.{am,in} || die
 	sed -e 's:@PYTHON@:python:' \
 		-i gobject/glib-{genmarshal.in,mkenums.in} || die
-	python_setup
 	# Also needed to prevent cross-compile failures, see bug #267603
 	eautoreconf
 
