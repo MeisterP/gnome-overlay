@@ -15,14 +15,14 @@ IUSE="+gnome +libproxy smartcard test +ssl"
 KEYWORDS="~amd64 ~x86"
 
 RDEPEND="
-	>=dev-libs/glib-2.55.1:2[${MULTILIB_USEDEP}]
-	gnome? ( gnome-base/gsettings-desktop-schemas )
-	libproxy? ( >=net-libs/libproxy-0.3.1-r1:=[${MULTILIB_USEDEP}] )
-	smartcard? (
-		>=app-crypt/p11-kit-0.20[${MULTILIB_USEDEP}]
-		>=net-libs/gnutls-3:=[pkcs11,${MULTILIB_USEDEP}] )
+	>=dev-libs/glib-2.56.0:2[${MULTILIB_USEDEP}]
 	app-misc/ca-certificates
 	>=net-libs/gnutls-3:=[${MULTILIB_USEDEP}]
+	gnome? ( gnome-base/gsettings-desktop-schemas )
+	libproxy? ( >=net-libs/libproxy-0.4.11-r1:=[${MULTILIB_USEDEP}] )
+	smartcard? (
+		>=app-crypt/p11-kit-0.18.4[${MULTILIB_USEDEP}]
+		>=net-libs/gnutls-3:=[pkcs11,${MULTILIB_USEDEP}] )
 "
 DEPEND="${RDEPEND}
 	>=sys-devel/gettext-0.19.4
@@ -30,7 +30,9 @@ DEPEND="${RDEPEND}
 	test? ( sys-apps/dbus[X] )
 "
 
-PATCHES=( "${FILESDIR}/2.56.0-fix_building_tls_plugin_without_pkcs11.patch" )
+PATCHES=(
+	"${FILESDIR}"/2.56.0-Fix-building-tls-plugin-without-pkcs11.patch
+)
 
 src_prepare() {
 	default
@@ -43,10 +45,10 @@ multilib_src_configure() {
 	gnome-meson_src_configure \
 		-Dstatic_modules=false \
 		-Dca_certificates_path="${EPREFIX}"/etc/ssl/certs/ca-certificates.crt \
-		$(meson_use test installed_tests) \
-		$(meson_use libproxy libproxy_support) \
 		$(meson_use gnome gnome_proxy_support) \
+		$(meson_use libproxy libproxy_support) \
 		$(meson_use smartcard pkcs11_support)
+		# TODO gnutls is mandatory with meson
 }
 
 multilib_src_test() {
@@ -54,7 +56,7 @@ multilib_src_test() {
 	# have no idea what's wrong. would appreciate some help.
 	multilib_is_native_abi || return 0
 
-	virtx emake check
+	virtx meson_src_test
 }
 
 multilib_src_install() {

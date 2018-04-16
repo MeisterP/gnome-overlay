@@ -1,7 +1,7 @@
 From 4e9bfe7e32767be5a18fc38734da09607f13799a Mon Sep 17 00:00:00 2001
 From: Tom Schoonjans <Tom.Schoonjans@diamond.ac.uk>
 Date: Tue, 13 Mar 2018 16:57:03 +0000
-Subject: Fix building tls plugin without pkcs11
+Subject: [PATCH] Fix building tls plugin without pkcs11
 
 https://bugzilla.gnome.org/show_bug.cgi?id=794292
 ---
@@ -53,5 +53,5 @@ index 7e1ae13..d3611c1 100644
      libgiopkcs11_dep,
      pkcs11_dep
 -- 
-cgit v0.12
+2.17.0
 
