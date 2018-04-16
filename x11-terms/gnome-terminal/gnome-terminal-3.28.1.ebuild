@@ -11,12 +11,13 @@ HOMEPAGE="https://wiki.gnome.org/Apps/Terminal/"
 
 LICENSE="GPL-3+"
 SLOT="0"
-IUSE="debug +gnome-shell +nautilus"
-SRC_URI="${SRC_URI}"
+IUSE="debug +gnome-shell +nautilus vanilla"
+SRC_URI="${SRC_URI} !vanilla? ( https://src.fedoraproject.org/cgit/rpms/gnome-terminal.git/plain/gnome-terminal-notify-open-title-transparency.patch?h=f28 \
+	-> ${P}-notify-open-title-transparency.patch )"
 
 KEYWORDS="~amd64 ~x86"
 
-# FIXME: automagic dependency on gtk+[X], just transitive but needs proper control
+# FIXME: automagic dependency on gtk+[X], just transitive but needs proper control, bug 624960
 # Needed vte in 3.24.2 is 0.48.2, but we add desktop notification patches in 0.48.3 that non-vanilla needs
 RDEPEND="
 	>=dev-libs/glib-2.50:2[dbus]
@@ -45,13 +46,29 @@ DOC_CONTENTS="To get previous working directory inherited in new opened tab, or
 	to add the following line to your ~/.bashrc:\n
 	. /etc/profile.d/vte-2.91.sh"
 
+src_prepare() {
+	if ! use vanilla; then
+		# https://bugzilla.gnome.org/show_bug.cgi?id=695371
+		# Fedora patches:
+		# Restore transparency support (with compositing WMs only)
+		# OSC 777 desktop notification support (notifications on tabs for long-running commands completing)
+		# Restore separate menuitems for opening tabs and windows
+		# Restore "Set title" support
+		# http://pkgs.fedoraproject.org/cgit/rpms/gnome-terminal.git/plain/gnome-terminal-notify-open-title-transparency.patch
+		# Depends on vte[-vanilla] for OSC 777 patch in VTE
+		eapply "${DISTDIR}"/${P}-notify-open-title-transparency.patch
+	fi
+	gnome2_src_prepare
+}
+
 src_configure() {
 	gnome2_src_configure \
 		--disable-static \
 		--disable-migration \
 		$(use_enable debug) \
 		$(use_enable gnome-shell search-provider) \
-		$(use_with nautilus nautilus-extension)
+		$(use_with nautilus nautilus-extension) \
+		VALAC=$(type -P true)
 }
 
 src_install() {
