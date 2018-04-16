@@ -5,22 +5,23 @@ EAPI="6"
 VALA_USE_DEPEND="vapigen"
 VALA_MIN_API_VERSION="0.32"
 
-inherit gnome2 vala autotools
+inherit gnome2 vala
 
 DESCRIPTION="Library providing a virtual terminal emulator widget"
 HOMEPAGE="https://wiki.gnome.org/action/show/Apps/Terminal/VTE"
 
 LICENSE="LGPL-2+"
 SLOT="2.91"
-IUSE="+crypt debug glade +introspection vala"
+IUSE="+crypt debug glade +introspection vala vanilla"
 KEYWORDS="~amd64 ~x86"
 REQUIRED_USE="vala? ( introspection )"
+
+SRC_URI="${SRC_URI} !vanilla? ( https://src.fedoraproject.org/cgit/rpms/vte291.git/plain/vte291-command-notify-scroll-speed.patch?h=f28 \
+	-> ${P}-command-notify-scroll-speed.patch )"
 
 RDEPEND="
 	>=dev-libs/glib-2.40:2
 	>=dev-libs/libpcre2-10.21
-	x11-libs/cairo
-	x11-libs/gdk-pixbuf:2
 	>=x11-libs/gtk+-3.16:3[introspection?]
 	>=x11-libs/pango-1.22.0
 
@@ -34,7 +35,6 @@ RDEPEND="
 DEPEND="${RDEPEND}
 	dev-util/gperf
 	dev-libs/libxml2
-	dev-util/gtk-doc
 	>=dev-util/gtk-doc-am-1.13
 	>=dev-util/intltool-0.35
 	sys-devel/gettext
@@ -47,7 +47,12 @@ RDEPEND="${RDEPEND}
 "
 
 src_prepare() {
-	eautoreconf
+	if ! use vanilla; then
+		# First half of http://pkgs.fedoraproject.org/cgit/rpms/vte291.git/tree/vte291-command-notify-scroll-speed.patch
+		# Adds OSC 777 support for desktop notifications in gnome-terminal or elsewhere
+		eapply "${DISTDIR}"/${P}-command-notify-scroll-speed.patch
+	fi
+
 	use vala && vala_src_prepare
 
 	# build fails because of -Werror with gcc-5.x
@@ -81,5 +86,5 @@ src_configure() {
 
 src_install() {
 	gnome2_src_install
-	mv "${D}"/etc/profile.d/vte{,-${SLOT}}.sh || die
+	mv "${ED}"/etc/profile.d/vte{,-${SLOT}}.sh || die
 }
