@@ -2,10 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
-GNOME2_LA_PUNT="yes"
-GNOME2_EAUTORECONF="yes"
 
-inherit gnome2 systemd
+inherit gnome-meson systemd
 
 DESCRIPTION="Virtual filesystem implementation for gio"
 HOMEPAGE="https://wiki.gnome.org/Projects/gvfs"
@@ -72,8 +70,6 @@ DEPEND="${RDEPEND}
 			net-analyzer/netcat6 ) )
 	!udev? ( >=dev-libs/libgcrypt-1.2.2:0 )
 "
-# libgcrypt.m4, provided by libgcrypt, needed for eautoreconf, bug #399043
-# test dependencies needed per https://bugzilla.gnome.org/700162
 
 # FIXME
 # Tests with multiple failures, this is being handled upstream at:
@@ -84,44 +80,35 @@ PATCHES=( "${FILESDIR}/${PV}-GUdevDevice_is_not_found.patch"
 	"${FILESDIR}/${PV}-prevent_deadlock.patch"
 	"${FILESDIR}/${PV}-remove_optical_disc.patch" )
 
-src_prepare() {
-	if ! use udev; then
-		sed -e 's/gvfsd-burn/ /' \
-			-e 's/burn.mount.in/ /' \
-			-e 's/burn.mount/ /' \
-			-i daemon/Makefile.am || die
-	fi
-
-	gnome2_src_prepare
-}
-
 src_configure() {
-	# --enable-documentation installs man pages
-	# --disable-obexftp, upstream bug #729945
-	gnome2_src_configure \
-		--disable-gdu \
-		--enable-documentation \
-		--enable-gcr \
-		--with-dbus-service-dir="${EPREFIX}"/usr/share/dbus-1/services \
-		--with-systemduserunitdir="$(systemd_get_userunitdir)" \
-		$(use_enable afp) \
-		$(use_enable archive) \
-		$(use_enable bluray) \
-		$(use_enable cdda) \
-		$(use_enable fuse) \
-		$(use_enable gnome-keyring keyring) \
-		$(use_enable gnome-online-accounts goa) \
-		$(use_enable google) \
-		$(use_enable gphoto2) \
-		$(use_enable http) \
-		$(use_enable ios afc) \
-		$(use_enable mtp libmtp) \
-		$(use_enable mtp libusb) \
-		$(use_enable nfs) \
-		$(use_enable policykit admin) \
-		$(use_enable samba) \
-		$(use_enable systemd libsystemd-login) \
-		$(use_enable udev gudev) \
-		$(use_enable udisks udisks2) \
-		$(use_enable zeroconf avahi)
+	gnome-meson_src_configure \
+		-Dgdu=false \
+		-Dgcr=true \
+		-Ddeprecated_programs=false \
+		-Ddevel_utils=false \
+		-Dinstalled_tests=false \
+		-Dman=true \
+		-Ddbus_service_dir="${EPREFIX}"/usr/share/dbus-1/services \
+		-Dsystemduserunitdir="$(systemd_get_userunitdir)" \
+		$(meson_use policykit admin) \
+		$(meson_use afp) \
+		$(meson_use afp gcrypt) \
+		$(meson_use ios afc) \
+		$(meson_use archive) \
+		$(meson_use cdda) \
+		$(meson_use zeroconf dnssd) \
+		$(meson_use gnome-online-accounts goa) \
+		$(meson_use google) \
+		$(meson_use gphoto2) \
+		$(meson_use http) \
+		$(meson_use mtp) \
+		$(meson_use mtp libusb) \
+		$(meson_use nfs) \
+		$(meson_use samba smb) \
+		$(meson_use udisks udisks2) \
+		$(meson_use bluray) \
+		$(meson_use fuse) \
+		$(meson_use udev gudev) \
+		$(meson_use gnome-keyring keyring) \
+		$(meson_use systemd logind)
 }
