@@ -11,7 +11,7 @@ DESCRIPTION="Desktop-neutral user information store, search tool and indexer"
 HOMEPAGE="https://wiki.gnome.org/Projects/Tracker"
 
 LICENSE="GPL-2+ LGPL-2.1+"
-SLOT="0/100"
+SLOT="0/2.0"
 KEYWORDS="~amd64 ~x86"
 IUSE="networkmanager stemmer upower"
 
