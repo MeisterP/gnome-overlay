@@ -10,7 +10,7 @@ DESCRIPTION="Collection of data extractors for Tracker"
 HOMEPAGE="https://wiki.gnome.org/Projects/Tracker"
 
 LICENSE="GPL-2+ LGPL-2.1+"
-SLOT="0/100"
+SLOT="0/2.0"
 KEYWORDS="~amd64 ~x86"
 
 IUSE=" cue exif ffmpeg flac gif gsf gstreamer iptc +iso +jpeg libav +miner-fs
