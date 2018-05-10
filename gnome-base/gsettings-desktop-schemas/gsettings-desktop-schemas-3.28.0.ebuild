@@ -23,6 +23,9 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig
 "
 
+# https://bugzilla.gnome.org/794698
+PATCHES=( "${FILESDIR}/schemas-default-lock-background.patch" )
+
 src_configure() {
 	gnome2_src_configure $(use_enable introspection)
 }
