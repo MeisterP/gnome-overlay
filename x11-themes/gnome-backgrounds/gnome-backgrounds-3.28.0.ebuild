@@ -6,7 +6,6 @@ inherit gnome-meson
 
 DESCRIPTION="A set of backgrounds packaged with the GNOME desktop"
 HOMEPAGE="https://git.gnome.org/browse/gnome-backgrounds"
-SRC_URI+=" https://git.gnome.org/browse/gnome-backgrounds/plain/backgrounds/adwaita-lock.jpg?id=e669e59367ca39aa53e4f388ae2e78173047aecf -> ${PV}-adwaita-lock.jpg"
 
 LICENSE="GPL-2"
 SLOT="0"
@@ -18,9 +17,3 @@ DEPEND="
 	>=dev-util/intltool-0.40.0
 	sys-devel/gettext
 "
-
-src_install() {
-	gnome-meson_src_install
-	insinto /usr/share/backgrounds/gnome/
-	newins "${DISTDIR}/${PV}-adwaita-lock.jpg" adwaita-lock.jpg
-}
