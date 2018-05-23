@@ -11,7 +11,7 @@ DESCRIPTION="A text widget implementing syntax highlighting and other features"
 HOMEPAGE="https://wiki.gnome.org/Projects/GtkSourceView"
 
 LICENSE="GPL-2+ LGPL-2.1+"
-SLOT="4/4"
+SLOT="4.0/4"
 
 IUSE="glade +introspection vala"
 REQUIRED_USE="vala? ( introspection )"
