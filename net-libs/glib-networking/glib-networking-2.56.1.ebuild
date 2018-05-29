@@ -30,10 +30,6 @@ DEPEND="${RDEPEND}
 	test? ( sys-apps/dbus[X] )
 "
 
-PATCHES=(
-	"${FILESDIR}"/2.56.0-Fix-building-tls-plugin-without-pkcs11.patch
-)
-
 src_prepare() {
 	default
 	# Disable SSLv3 requiring fallback test, which fails with net-libs/gnutls[-sslv3], bug 595952
