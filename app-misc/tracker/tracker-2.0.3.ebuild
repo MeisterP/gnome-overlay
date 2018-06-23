@@ -3,7 +3,7 @@
 
 EAPI=6
 GNOME2_LA_PUNT="yes"
-PYTHON_COMPAT=( python3_5 )
+PYTHON_COMPAT=( python3_5 python3_6 )
 
 inherit bash-completion-r1 gnome2 linux-info python-any-r1 vala systemd
 
