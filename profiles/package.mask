@@ -3,3 +3,4 @@
 =dev-libs/gjs-1.50.2
 =gnome-extra/gnome-weather-3.26.0
 =gnome-extra/gnome-tweaks-3.28.1
+=gnome-extra/gnome-calendar-3.28.2
