@@ -17,9 +17,9 @@ COMMON_DEPEND="
 	>=app-arch/gnome-autoar-0.2.1
 	>=dev-libs/glib-2.55.1:2[dbus]
 	>=x11-libs/pango-1.28.3
-	>=x11-libs/gtk+-3.22.26:3[introspection?]
+	>=x11-libs/gtk+-3.22.27:3[introspection?]
 	>=dev-libs/libxml2-2.7.8:2
-	>=gnome-base/gnome-desktop-3:3=
+	sys-libs/libseccomp
 
 	gnome-base/dconf
 	>=gnome-base/gsettings-desktop-schemas-3.8.0
@@ -27,7 +27,7 @@ COMMON_DEPEND="
 	x11-libs/libXext
 	x11-libs/libXrender
 
-	>=app-misc/tracker-1:=
+	>=app-misc/tracker-2:=
 	extensions? ( >=media-libs/gexiv2-0.10.0 )
 	introspection? ( >=dev-libs/gobject-introspection-0.6.4:= )
 	selinux? ( >=sys-libs/libselinux-2 )
@@ -52,6 +52,9 @@ PDEPEND="
 	>=gnome-base/gvfs-1.14[gtk]
 "
 
+# see https://gitlab.gnome.org/GNOME/nautilus/issues/398
+PATCHES=( ${FILESDIR}/3.30.0-disable-bubblewrap.patch ${FILESDIR}/3.30.0-show-thumbnails.patch )
+
 src_prepare() {
 	if use previewer; then
 		DOC_CONTENTS="nautilus uses gnome-extra/sushi to preview media files.
@@ -65,7 +68,6 @@ src_configure() {
 	gnome-meson_src_configure \
 		-Ddocs=true \
 		-Dprofiling=false \
-		-Ddisplay-tests=false \
 		$(meson_use extensions) \
 		$(meson_use packagekit) \
 		$(meson_use selinux)
