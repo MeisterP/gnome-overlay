@@ -35,6 +35,7 @@ COMMON_DEPEND="
 	x11-libs/libXext
 	x11-libs/libXrender
 	x11-libs/libXtst
+	x11-libs/xtrans
 	x11-misc/xdg-user-dirs
 	x11-misc/xdg-user-dirs-gtk
 	x11-apps/xdpyinfo
@@ -68,12 +69,13 @@ DEPEND="${COMMON_DEPEND}
 
 src_configure() {
 	gnome-meson_src_configure \
+		-Ddeprecation_flags=false \
 		-Dsession_selector=true \
-		$(meson_use doc docbook) \
-		$(meson_use doc man) \
 		$(meson_use systemd) \
 		$(meson_use systemd systemd_journal) \
-		$(meson_use !systemd consolekit)
+		$(meson_use !systemd consolekit) \
+		$(meson_use doc docbook) \
+		$(meson_use doc man)
 }
 
 src_install() {
