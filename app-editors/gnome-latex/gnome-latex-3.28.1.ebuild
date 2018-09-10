@@ -45,6 +45,8 @@ DEPEND="${COMMON_DEPEND}
 	virtual/pkgconfig
 "
 
+PATCHES=( ${FILESDIR}/xelatex-parse.patch )
+
 src_prepare() {
 	gnome2_src_prepare
 	vala_src_prepare
