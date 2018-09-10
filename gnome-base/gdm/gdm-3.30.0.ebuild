@@ -32,7 +32,7 @@ KEYWORDS="~amd64 ~x86"
 # keyutils are automagic, see https://git.gnome.org/browse/gdm/commit/?id=31ed6f2b3f1ab45ae07aad41c13a51ba91fd159d
 COMMON_DEPEND="
 	app-text/iso-codes
-	>=dev-libs/glib-2.36:2[dbus]
+	>=dev-libs/glib-2.44.0:2[dbus]
 	>=x11-libs/gtk+-2.91.1:3
 	>=gnome-base/dconf-0.20
 	>=gnome-base/gnome-settings-daemon-3.1.4
@@ -85,8 +85,7 @@ RDEPEND="${COMMON_DEPEND}
 DEPEND="${COMMON_DEPEND}
 	app-text/docbook-xml-dtd:4.1.2
 	dev-util/gdbus-codegen
-	>=dev-util/intltool-0.40.0
-	dev-util/itstool
+	>=sys-devel/gettext-0.19.8
 	virtual/pkgconfig
 	x11-base/xorg-proto
 	test? ( >=dev-libs/check-0.9.4 )
@@ -131,7 +130,7 @@ src_prepare() {
 	use branding && eapply "${FILESDIR}/${PN}-3.8.4-logo.patch"
 
 	# Use the standard way to find the udev rules directory via pkg-config
-	eapply "${FILESDIR}/${PN}-3.28.0-udevrulesdir-configure.patch"
+	eapply "${FILESDIR}/${PN}-3.30.0-udevrulesdir-configure.patch"
 
 	# Drop obsolete option from pam_systemd.so
 	eapply "${FILESDIR}/${PN}-3.28.0-pam-exherbo-remove-obsolete-kill-session-processes.patch"

@@ -1,0 +1,95 @@
+From ef231c2790e7a3bbee3f09ac4a125e28e95011b4 Mon Sep 17 00:00:00 2001
+From: Bin Li <bin.li@canonical.com>
+Date: Mon, 3 Sep 2018 22:46:48 +0800
+Subject: [PATCH] autogoo: make udev rules dir configurable
+
+Different distributions place udev rules in
+different locations (depending on whether or
+not /usr is a symlink to /)
+
+That means the location needs to be configurable.
+
+This commit adds a new ./configure argument,
+--with-udevdir that allows distributions to specify
+where udev looks for its data files.
+
+By default it pulls the answer from pkg-config.
+
+This commit also fixes `make distcheck` when run
+by an unprivileged user by disabling udev rule
+installation entirely during distcheck.
+
+Small changes by Ray Strode.
+
+Closes https://gitlab.gnome.org/GNOME/gdm/merge_requests/44
+---
+ Makefile.am      |  2 +-
+ configure.ac     | 11 ++++++++++-
+ data/Makefile.am |  4 +++-
+ 3 files changed, 14 insertions(+), 3 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index 1b710098..7896f59d 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -30,4 +30,4 @@ EXTRA_DIST = \
+ DISTCLEANFILES = \
+ 	$(NULL)
+ 
+-AM_DISTCHECK_CONFIGURE_FLAGS = --enable-split-authentication --enable-introspection --without-systemdsystemunitdir
++AM_DISTCHECK_CONFIGURE_FLAGS = --enable-split-authentication --enable-introspection --without-systemdsystemunitdir --without-udevdir
+diff --git a/configure.ac b/configure.ac
+index 1a25c808..bba96d2b 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -254,7 +254,10 @@ AC_ARG_WITH(tcp-wrappers,
+                            [Use TCP Wrappers @<:@default=auto@:>@]),,
+             with_tcp_wrappers=auto)
+ 
+-
++AC_ARG_WITH([udevdir],
++            AS_HELP_STRING([--with-udevdir=DIR],
++                           [Directory for udev files]),
++                [with_udevdir=$withval], [with_udevdir=$($PKG_CONFIG --variable=udevdir udev)])
+ AC_ARG_WITH([systemdsystemunitdir],
+             AS_HELP_STRING([--with-systemdsystemunitdir=DIR],
+                            [Directory for systemd service files]),
+@@ -867,6 +870,11 @@ AC_PATH_PROG(SYSTEMD_X_SERVER, systemd-multi-seat-x, [/lib/systemd/systemd-multi
+ AC_SUBST(SYSTEMD_X_SERVER)
+ AC_DEFINE_UNQUOTED(SYSTEMD_X_SERVER,"$SYSTEMD_X_SERVER",[Path to systemd X server wrapper])
+ 
++if test "x$with_udevdir" != xno; then
++        AC_SUBST(UDEV_DIR, [$with_udevdir])
++fi
++AM_CONDITIONAL(INSTALL_UDEV_RULES, test x$with_udevdir != xno)
++
+ if test "x$with_systemdsystemunitdir" != xno; then
+         AC_SUBST(SYSTEMD_SYSTEM_UNIT_DIR, [$with_systemdsystemunitdir])
+ fi
+@@ -1517,6 +1525,7 @@ echo \
+         XDMCP support:            ${XDMCP_SUPPORT}
+         SELinux support:          ${use_selinux}
+         systemd unit dir:         ${with_systemdsystemunitdir}
++        udev dir:                 ${with_udevdir}
+         plymouth support:         ${use_plymouth}
+         wayland support:          ${enable_wayland_support}
+         Build with RBAC:          ${msg_rbac_shutdown}
+diff --git a/data/Makefile.am b/data/Makefile.am
+index 7c6a2eb3..162074f1 100644
+--- a/data/Makefile.am
++++ b/data/Makefile.am
+@@ -154,8 +154,10 @@ if ENABLE_ARCH_PAM_CONFIG
+ pam_files = $(pam_arch_files)
+ endif
+ 
+-udevrulesdir = /lib/udev/rules.d
++if INSTALL_UDEV_RULES
++udevrulesdir = $(UDEV_DIR)/rules.d
+ udevrules_DATA = 61-gdm.rules
++endif
+ 
+ EXTRA_DIST += $(srcdir)/61-gdm.rules.in
+ 61-gdm.rules: $(srcdir)/61-gdm.rules.in
+-- 
+2.18.0
+
