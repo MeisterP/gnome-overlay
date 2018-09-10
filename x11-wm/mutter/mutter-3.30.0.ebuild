@@ -10,7 +10,11 @@ HOMEPAGE="https://git.gnome.org/browse/mutter/"
 LICENSE="GPL-2+"
 SLOT="0/0"
 #FIXME add remote desktop support
-IUSE="debug gles2 input_devices_wacom +introspection test udev wayland"
+IUSE="debug elogind gles2 input_devices_wacom +introspection systemd test udev wayland"
+
+REQUIRED_USE="
+	^^ ( elogind systemd )
+"
 
 KEYWORDS="~amd64 ~x86"
 
@@ -29,7 +33,6 @@ COMMON_DEPEND="
 	>=x11-libs/libXcomposite-0.2
 	>=gnome-base/gsettings-desktop-schemas-3.21.4[introspection?]
 	gnome-base/gnome-desktop:3=
-	>sys-power/upower-0.99:=
 
 	x11-libs/libICE
 	x11-libs/libSM
@@ -51,16 +54,17 @@ COMMON_DEPEND="
 	gnome-extra/zenity
 	media-libs/mesa[egl]
 
+	elogind? ( sys-auth/elogind )
 	gles2? ( media-libs/mesa[gles2] )
 	input_devices_wacom? ( >=dev-libs/libwacom-0.13 )
 	introspection? ( >=dev-libs/gobject-introspection-1.42:= )
+	systemd? ( sys-apps/systemd )
 	udev? ( >=virtual/libgudev-232:= )
 	wayland? (
 		>=dev-libs/libinput-1.4
 		>=dev-libs/wayland-1.13
-		>=dev-libs/wayland-protocols-1.12
+		>=dev-libs/wayland-protocols-1.16
 		>=media-libs/mesa-10.3[egl,gbm,wayland]
-		sys-apps/systemd
 		>=virtual/libgudev-232:=
 		>=virtual/libudev-136:=
 		x11-base/xorg-server[wayland]
@@ -77,6 +81,8 @@ DEPEND="${COMMON_DEPEND}
 RDEPEND="${COMMON_DEPEND}
 	!x11-misc/expocity
 "
+
+PATCHES=( ${FILESDIR}/3.30.0-fix-include.patch )
 
 src_prepare() {
 	# Disable building of noinst_PROGRAM for tests
@@ -119,13 +125,16 @@ src_configure() {
 		--with-default-driver=gl \
 		--with-libcanberra \
 		$(usex debug --enable-debug=yes "") \
-		$(use_enable gles2)        \
+		$(use_enable elogind) \
+		$(use_enable systemd) \
+		$(use_enable gles2) \
 		$(use_enable gles2 cogl-gles2) \
 		$(use_enable introspection) \
 		$(use_enable wayland) \
 		$(use_enable wayland kms-egl-platform) \
 		$(use_enable wayland native-backend) \
 		$(use_enable wayland wayland-egl-server) \
+		$(use_enable wayland wayland-egl-stream) \
 		$(use_with input_devices_wacom libwacom) \
 		$(use_with udev gudev)
 }
