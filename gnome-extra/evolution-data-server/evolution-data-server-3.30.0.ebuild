@@ -3,10 +3,9 @@
 
 EAPI=6
 GNOME2_LA_PUNT="yes"
-PYTHON_COMPAT=( python3_{4,5,6} )
 VALA_USE_DEPEND="vapigen"
 
-inherit cmake-utils db-use flag-o-matic gnome2 python-any-r1 systemd vala virtualx
+inherit cmake-utils db-use flag-o-matic gnome2 systemd vala virtualx
 
 DESCRIPTION="Evolution groupware backend"
 HOMEPAGE="https://wiki.gnome.org/Apps/Evolution"
@@ -15,7 +14,7 @@ HOMEPAGE="https://wiki.gnome.org/Apps/Evolution"
 LICENSE="|| ( LGPL-2 LGPL-3 ) BSD Sleepycat"
 SLOT="0/60" # subslot = libcamel-1.2 soname version
 
-IUSE="api-doc-extras berkdb +gnome-online-accounts +gtk google +introspection ipv6 ldap kerberos vala +weather"
+IUSE="api-doc-extras berkdb +gnome-online-accounts +gtk google +introspection ipv6 ldap kerberos sound vala +weather"
 REQUIRED_USE="vala? ( introspection )"
 
 KEYWORDS="~amd64 ~x86"
@@ -55,10 +54,10 @@ RDEPEND="
 	introspection? ( >=dev-libs/gobject-introspection-0.9.12:= )
 	kerberos? ( virtual/krb5:= )
 	ldap? ( >=net-nds/openldap-2:= )
+	sound? ( media-libs/libcanberra )
 	weather? ( >=dev-libs/libgweather-3.10:2= )
 "
 DEPEND="${RDEPEND}
-	${PYTHON_DEPS}
 	dev-util/gdbus-codegen
 	dev-util/gperf
 	>=dev-util/gtk-doc-am-1.14
@@ -72,10 +71,6 @@ DEPEND="${RDEPEND}
 # Also, dbus tests are flacky, bugs #397975 #501834
 # It looks like a nightmare to disable those for now.
 RESTRICT="test"
-
-pkg_setup() {
-	python-any-r1_pkg_setup
-}
 
 src_prepare() {
 	use vala && vala_src_prepare
@@ -102,28 +97,29 @@ src_configure() {
 
 	# phonenumber does not exist in tree
 	local mycmakeargs=(
-		-DENABLE_GTK_DOC=$(usex api-doc-extras)
-		-DWITH_PRIVATE_DOCS=$(usex api-doc-extras)
-		-DENABLE_SCHEMAS_COMPILE=OFF
-		-DENABLE_INTROSPECTION=$(usex introspection)
-		-DWITH_KRB5=$(usex kerberos)
-		-DWITH_KRB5_INCLUDES=$(usex kerberos "${EPREFIX}"/usr "")
-		-DWITH_KRB5_LIBS=$(usex kerberos "${EPREFIX}"/usr/$(get_libdir) "")
-		-DWITH_OPENLDAP=$(usex ldap)
-		-DWITH_PHONENUMBER=OFF
-		-DENABLE_SMIME=ON
-		-DENABLE_GTK=$(usex gtk)
-		-DENABLE_GOOGLE_AUTH=${google_auth_enable}
+		-DENABLE_BACKTRACES=OFF
+		-DENABLE_CANBERRA=$(usex sound)
 		-DENABLE_EXAMPLES=OFF
 		-DENABLE_GOA=$(usex gnome-online-accounts)
-		-DENABLE_UOA=OFF
-		-DWITH_LIBDB=$(usex berkdb "${EPREFIX}"/usr OFF)
-		# ENABLE_BACKTRACES requires libdwarf ?
-		-DENABLE_IPV6=$(usex ipv6)
-		-DENABLE_WEATHER=$(usex weather)
 		-DENABLE_GOOGLE=$(usex google)
+		-DENABLE_GTK_DOC=$(usex api-doc-extras)
+		-DENABLE_GTK=$(usex gtk)
+		-DENABLE_INTROSPECTION=$(usex introspection)
+		-DENABLE_IPV6=$(usex ipv6)
 		-DENABLE_LARGEFILE=ON
+		-DENABLE_OAUTH2=${google_auth_enable}
+		-DENABLE_SCHEMAS_COMPILE=OFF
+		-DENABLE_SMIME=ON
+		-DENABLE_UOA=OFF
 		-DENABLE_VALA_BINDINGS=$(usex vala)
+		-DENABLE_WEATHER=$(usex weather)
+		-DWITH_KRB5_INCLUDES=$(usex kerberos "${EPREFIX}"/usr "")
+		-DWITH_KRB5_LIBS=$(usex kerberos "${EPREFIX}"/usr/$(get_libdir) "")
+		-DWITH_KRB5=$(usex kerberos)
+		-DWITH_LIBDB=$(usex berkdb "${EPREFIX}"/usr OFF)
+		-DWITH_OPENLDAP=$(usex ldap)
+		-DWITH_PHONENUMBER=OFF
+		-DWITH_PRIVATE_DOCS=$(usex api-doc-extras)
 	)
 
 	cmake-utils_src_configure
