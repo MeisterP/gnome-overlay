@@ -37,8 +37,6 @@ DEPEND="${COMMON_DEPEND}
 	app-text/docbook-xml-dtd:4.1.2
 	dev-util/gdbus-codegen
 	>=dev-util/gtk-doc-am-1.14
-	>=dev-util/intltool-0.40.6
-	dev-util/itstool
 	sys-devel/gettext
 	x11-base/xorg-proto
 	virtual/pkgconfig
