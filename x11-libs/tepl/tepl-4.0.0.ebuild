@@ -21,7 +21,7 @@ RDEPEND="
 	app-i18n/uchardet
 	introspection? ( >=dev-libs/gobject-introspection-1.42:= )
 "
-DEPEND="${DEPEND}
+DEPEND="${RDEPEND}
 	test? ( dev-util/valgrind )
 	>=sys-devel/gettext-0.19.4
 	>=dev-util/gtk-doc-am-1.25
