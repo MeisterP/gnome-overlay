@@ -1,4 +1,4 @@
-From 313a2d7dd9011856bb9a098e8aca197ea8e3e2e8 Mon Sep 17 00:00:00 2001
+From b4c9c97ab5309812ab91171c84a3e59bb78f133d Mon Sep 17 00:00:00 2001
 From: Poncho <poncho@spahan.ch>
 Date: Sat, 17 Mar 2018 12:45:39 +0100
 Subject: [PATCH 2/3] make bluetooth optional
@@ -6,15 +6,15 @@ Subject: [PATCH 2/3] make bluetooth optional
 ---
  meson.build              | 13 ++++++-------
  meson_options.txt        |  1 +
- panels/meson.build       |  2 +-
+ panels/meson.build       |  9 +++++----
  panels/power/meson.build |  2 +-
- 4 files changed, 9 insertions(+), 9 deletions(-)
+ 4 files changed, 13 insertions(+), 12 deletions(-)
 
 diff --git a/meson.build b/meson.build
-index 18ff55fff..465c4abba 100644
+index c4cfed5fb..c1fa21dd8 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -199,15 +199,14 @@ config_h.set('BUILD_NETWORK', host_is_linux,
+@@ -194,15 +194,14 @@ config_h.set('BUILD_NETWORK', host_is_linux,
  config_h.set('HAVE_NETWORK_MANAGER', host_is_linux,
               description: 'Define to 1 if NetworkManager is available')
  
@@ -35,40 +35,46 @@ index 18ff55fff..465c4abba 100644
               description: 'Define to 1 if bluetooth support is available')
  
  
-@@ -280,7 +279,7 @@ meson.add_install_script(
- )
- 
- output = meson.project_name() + ' was configured with the following options:\n'
--output += '** gnome-bluetooth (Bluetooth panel): ' + host_is_linux_not_s390.to_string() + '\n'
-+output += '** gnome-bluetooth (Bluetooth panel): ' + enable_bluetooth.to_string() + '\n'
- output += '** Cheese (Users panel webcam support): ' + enable_cheese.to_string() + '\n'
- output += '** IBus (Region panel IBus support): ' + enable_ibus.to_string() + '\n'
- output += '** NetworkManager (Network panel): ' + host_is_linux.to_string() + '\n'
+@@ -280,7 +279,7 @@ output += '     Tracing .................................... ' + enable_tracing.
+ output += '     gnome-session libexecdir ................... ' + gnome_session_libexecdir + '\n'
+ output += '     Optimized .................................. ' + control_center_optimized.to_string() + '\n'
+ output += ' Panels \n'
+-output += '     GNOME Bluetooth (Bluetooth panel) .......... ' + host_is_linux_not_s390.to_string() + '\n'
++output += '     GNOME Bluetooth (Bluetooth panel) .......... ' + enable_bluetooth.to_string() + '\n'
+ output += '     Cheese (Users panel webcam support) ........ ' + enable_cheese.to_string() + '\n'
+ output += '     IBus (Region panel IBus support) ........... ' + enable_ibus.to_string() + '\n'
+ output += '     NetworkManager (Network panel) ............. ' + host_is_linux.to_string() + '\n'
 diff --git a/meson_options.txt b/meson_options.txt
-index 2da13003b..608e8121a 100644
+index 28e214c36..f80edddd7 100644
 --- a/meson_options.txt
 +++ b/meson_options.txt
-@@ -4,4 +4,5 @@ option('gnome_session_libexecdir', type: 'string', value: '', description: 'Dire
- option('ibus', type: 'boolean', value: true, description: 'build with IBus support')
+@@ -5,3 +5,4 @@ option('ibus', type: 'boolean', value: true, description: 'build with IBus suppo
+ option('tracing', type: 'boolean', value: false, description: 'add extra debugging information')
  option('wayland', type: 'boolean', value: true, description: 'build with Wayland support')
  option('wacom', type: 'boolean', value: true, description: 'build with wacom support')
 +option('bluetooth', type: 'boolean', value: true, description: 'build with gnome-bluetooth support')
- 
 diff --git a/panels/meson.build b/panels/meson.build
-index 6bb0cb778..0de00baa3 100644
+index 8e71f3c44..7ecab5abe 100644
 --- a/panels/meson.build
 +++ b/panels/meson.build
-@@ -29,7 +29,7 @@ if host_is_linux
-   panels += ['network']
+@@ -30,10 +30,11 @@ if host_is_linux
  endif
  
--if host_is_linux_not_s390
+ if host_is_linux_not_s390
+-  panels += [
+-    'bluetooth',
+-    'thunderbolt',
+-  ]
++  panels += ['thunderbolt']
++endif
++
 +if enable_bluetooth
-   panels += ['bluetooth']
++  panels += ['bluetooth']
  endif
  
+ panels_list = []
 diff --git a/panels/power/meson.build b/panels/power/meson.build
-index 9a27e93bd..22f3fbf55 100644
+index d4091eaa1..edc088e05 100644
 --- a/panels/power/meson.build
 +++ b/panels/power/meson.build
 @@ -40,7 +40,7 @@ if host_is_linux
@@ -81,5 +87,5 @@ index 9a27e93bd..22f3fbf55 100644
  endif
  
 -- 
-2.16.1
+2.16.4
 

@@ -59,11 +59,11 @@ COMMON_DEPEND="
 	ibus? ( >=app-i18n/ibus-1.5.2 )
 	networkmanager? (
 		>=gnome-extra/nm-applet-1.2.0
-		>=net-misc/networkmanager-1.2.0:=[modemmanager]
+		>=net-misc/networkmanager-1.10.0:=[modemmanager]
 		>=net-misc/modemmanager-0.7.990 )
 	v4l? (
 		media-libs/clutter-gtk:1.0
-		>=media-video/cheese-3.5.91 )
+		>=media-video/cheese-3.28.0 )
 	input_devices_wacom? (
 		>=dev-libs/libwacom-0.7
 		>=media-libs/clutter-1.11.3:1.0
@@ -123,12 +123,13 @@ DEPEND="${COMMON_DEPEND}
 PATCHES=(
 	# Make some panels and dependencies optional
 	# https://bugzilla.gnome.org/686840, 697478, 700145
-	"${FILESDIR}"/3.28.0-optional/
+	"${FILESDIR}"/3.30.0-optional/
 )
 
 src_configure() {
 	gnome-meson_src_configure \
 		-Ddocumentation=true \
+		-Dtracing=false \
 		$(meson_use bluetooth) \
 		$(meson_use ibus) \
 		$(meson_use input_devices_wacom wacom) \

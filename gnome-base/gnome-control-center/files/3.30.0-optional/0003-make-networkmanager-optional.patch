@@ -1,20 +1,20 @@
-From 700cd29c3e2b8f65ed750efd1089c7441d6419e2 Mon Sep 17 00:00:00 2001
+From 963d112773950d30ed4c39d60ae8ba7df05ca772 Mon Sep 17 00:00:00 2001
 From: Poncho <poncho@spahan.ch>
 Date: Sat, 17 Mar 2018 12:58:21 +0100
 Subject: [PATCH 3/3] make networkmanager optional
 
 ---
  meson.build              | 11 ++++++-----
- meson_options.txt        |  2 +-
+ meson_options.txt        |  1 +
  panels/meson.build       |  2 +-
  panels/power/meson.build |  2 +-
- 4 files changed, 9 insertions(+), 8 deletions(-)
+ 4 files changed, 9 insertions(+), 7 deletions(-)
 
 diff --git a/meson.build b/meson.build
-index 465c4abba..18bdc4fe6 100644
+index c1fa21dd8..c10869d3f 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -182,8 +182,9 @@ endif
+@@ -181,17 +181,18 @@ endif
  config_h.set('HAVE_WAYLAND', enable_wayland,
               description: 'Define to 1 if Wayland is enabled')
  
@@ -24,11 +24,10 @@ index 465c4abba..18bdc4fe6 100644
 +enable_network = get_option('network')
 +if enable_network
    network_manager_deps = [
-     dependency('libnm', version: '>= 1.2.0'),
-     dependency('libnma', version: '>= 1.2.0'),
-@@ -194,9 +195,9 @@ if host_is_linux
-   nm_vpn_config_dir = join_paths(network_manager_dep.get_pkgconfig_variable('configdir'), 'VPN')
-   nm_vpn_module_dir = network_manager_dep.get_pkgconfig_variable('plugindir')
+     dependency('libnm', version: '>= 1.10.0'),
+     dependency('libnma', version: '>= 1.8.0'),
+     dependency('mm-glib', version: '>= 0.7')
+   ]
  endif
 -config_h.set('BUILD_NETWORK', host_is_linux,
 +config_h.set('BUILD_NETWORK', enable_network,
@@ -38,27 +37,26 @@ index 465c4abba..18bdc4fe6 100644
               description: 'Define to 1 if NetworkManager is available')
  
  # gnome-bluetooth
-@@ -282,7 +283,7 @@ output = meson.project_name() + ' was configured with the following options:\n'
- output += '** gnome-bluetooth (Bluetooth panel): ' + enable_bluetooth.to_string() + '\n'
- output += '** Cheese (Users panel webcam support): ' + enable_cheese.to_string() + '\n'
- output += '** IBus (Region panel IBus support): ' + enable_ibus.to_string() + '\n'
--output += '** NetworkManager (Network panel): ' + host_is_linux.to_string() + '\n'
-+output += '** NetworkManager (Network panel): ' + enable_network.to_string() + '\n'
- output += '** wacom (Wacom tablet panel): ' + enable_wacom.to_string() + '\n'
- output += '** Wayland: ' + enable_wayland.to_string() + '\n'
- output += '** gnome-session libexecdir: ' + gnome_session_libexecdir + '\n'
+@@ -282,7 +283,7 @@ output += ' Panels \n'
+ output += '     GNOME Bluetooth (Bluetooth panel) .......... ' + enable_bluetooth.to_string() + '\n'
+ output += '     Cheese (Users panel webcam support) ........ ' + enable_cheese.to_string() + '\n'
+ output += '     IBus (Region panel IBus support) ........... ' + enable_ibus.to_string() + '\n'
+-output += '     NetworkManager (Network panel) ............. ' + host_is_linux.to_string() + '\n'
++output += '     NetworkManager (Network panel) ............. ' + enable_network.to_string() + '\n'
+ output += '     Wacom (Wacom tablet panel) ................. ' + enable_wacom.to_string() + '\n'
+ output += '     Wayland .................................... ' + enable_wayland.to_string() + '\n'
+ 
 diff --git a/meson_options.txt b/meson_options.txt
-index 608e8121a..edaa33023 100644
+index f80edddd7..ac5186228 100644
 --- a/meson_options.txt
 +++ b/meson_options.txt
-@@ -5,4 +5,4 @@ option('ibus', type: 'boolean', value: true, description: 'build with IBus suppo
+@@ -6,3 +6,4 @@ option('tracing', type: 'boolean', value: false, description: 'add extra debuggi
  option('wayland', type: 'boolean', value: true, description: 'build with Wayland support')
  option('wacom', type: 'boolean', value: true, description: 'build with wacom support')
  option('bluetooth', type: 'boolean', value: true, description: 'build with gnome-bluetooth support')
--
 +option('network', type: 'boolean', value: true, description: 'build with networkmanager support')
 diff --git a/panels/meson.build b/panels/meson.build
-index 0de00baa3..9407ccbec 100644
+index 7ecab5abe..5cf6b1640 100644
 --- a/panels/meson.build
 +++ b/panels/meson.build
 @@ -25,7 +25,7 @@ if enable_wacom
@@ -71,7 +69,7 @@ index 0de00baa3..9407ccbec 100644
  endif
  
 diff --git a/panels/power/meson.build b/panels/power/meson.build
-index 22f3fbf55..d2660c6ed 100644
+index edc088e05..659e02257 100644
 --- a/panels/power/meson.build
 +++ b/panels/power/meson.build
 @@ -36,7 +36,7 @@ deps = common_deps + [
@@ -84,5 +82,5 @@ index 22f3fbf55..d2660c6ed 100644
  endif
  
 -- 
-2.16.1
+2.16.4
 
