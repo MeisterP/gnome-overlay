@@ -3,7 +3,7 @@ Unofficial GNOME overlay [![Build Status](https://travis-ci.org/MeisterP/gnome-o
 
 Version
 --------
- - GNOME `3.28`
+ - GNOME `3.30`
 
 
 Information
