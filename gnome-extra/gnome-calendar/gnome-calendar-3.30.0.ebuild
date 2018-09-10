@@ -9,7 +9,7 @@ HOMEPAGE="https://wiki.gnome.org/Apps/Calendar"
 
 LICENSE="GPL-3+"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="~amd64" #libdazzle is only ~amd64
 IUSE=""
 
 RDEPEND="
@@ -34,6 +34,6 @@ DEPEND="${RDEPEND}
 
 src_configure() {
 	gnome-meson_src_configure \
-		-Dgtk_doc=true \
+		-Ddocumentation=true \
 		-Dtracing=false
 }
