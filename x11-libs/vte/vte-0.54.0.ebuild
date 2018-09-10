@@ -16,9 +16,6 @@ IUSE="+crypt debug glade +introspection vala vanilla"
 KEYWORDS="~amd64 ~x86"
 REQUIRED_USE="vala? ( introspection )"
 
-SRC_URI="${SRC_URI} !vanilla? ( https://src.fedoraproject.org/cgit/rpms/vte291.git/plain/vte291-command-notify-scroll-speed.patch?h=f28 \
-	-> ${P}-command-notify-scroll-speed.patch )"
-
 RDEPEND="
 	>=dev-libs/glib-2.40:2
 	>=dev-libs/libpcre2-10.21
@@ -47,12 +44,6 @@ RDEPEND="${RDEPEND}
 "
 
 src_prepare() {
-	if ! use vanilla; then
-		# First half of http://pkgs.fedoraproject.org/cgit/rpms/vte291.git/tree/vte291-command-notify-scroll-speed.patch
-		# Adds OSC 777 support for desktop notifications in gnome-terminal or elsewhere
-		eapply "${DISTDIR}"/${P}-command-notify-scroll-speed.patch
-	fi
-
 	use vala && vala_src_prepare
 
 	# build fails because of -Werror with gcc-5.x
@@ -75,6 +66,7 @@ src_configure() {
 	# Ex: from gi.repository import Vte
 	gnome2_src_configure \
 		--disable-static \
+		--without-iconv \
 		--with-gtk=3.0 \
 		$(use_enable debug) \
 		$(use_enable glade glade-catalogue) \
