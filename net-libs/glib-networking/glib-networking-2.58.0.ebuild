@@ -40,11 +40,9 @@ src_prepare() {
 multilib_src_configure() {
 	gnome-meson_src_configure \
 		-Dstatic_modules=false \
-		-Dca_certificates_path="${EPREFIX}"/etc/ssl/certs/ca-certificates.crt \
 		$(meson_use gnome gnome_proxy_support) \
 		$(meson_use libproxy libproxy_support) \
 		$(meson_use smartcard pkcs11_support)
-		# TODO gnutls is mandatory with meson
 }
 
 multilib_src_compile() {
