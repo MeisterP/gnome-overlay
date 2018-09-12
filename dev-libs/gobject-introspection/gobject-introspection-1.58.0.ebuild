@@ -2,10 +2,10 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
-PYTHON_COMPAT=( python{2_7,3_4,3_5,3_6} )
+PYTHON_COMPAT=( python{2_7,3_4,3_5,3_6,3_7} )
 PYTHON_REQ_USE="xml"
 
-inherit gnome2 python-single-r1 toolchain-funcs versionator
+inherit gnome2 python-single-r1 toolchain-funcs
 
 DESCRIPTION="Introspection system for GObject-based libraries"
 HOMEPAGE="https://wiki.gnome.org/Projects/GObjectIntrospection"
@@ -23,7 +23,7 @@ KEYWORDS="~amd64 ~x86"
 # We force glib and g-i to be in sync by this way as explained in bug #518424
 RDEPEND="
 	>=dev-libs/gobject-introspection-common-${PV}
-	>=dev-libs/glib-2.$(get_version_component_range 2):2
+	>=dev-libs/glib-2.57.1:2
 	doctool? ( dev-python/mako[${PYTHON_USEDEP}] )
 	virtual/libffi:=
 	virtual/pkgconfig
@@ -35,8 +35,9 @@ DEPEND="${RDEPEND}
 	>=dev-util/gtk-doc-am-1.19
 	sys-devel/bison
 	sys-devel/flex
+	test? ( x11-libs/cairo[glib] )
 "
-# PDEPEND to avoid circular dependencies, bug #391213
+# PDEPEND to avoid circular dependencies, bug #391213; but needed for tests, thus test DEPEND as well
 PDEPEND="cairo? ( x11-libs/cairo[glib] )"
 
 pkg_setup() {
