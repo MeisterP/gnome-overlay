@@ -13,7 +13,6 @@
     <flag name="iso">Enable extraction of metadata from ISO disk images</flag>
     <flag name="miner-fs">Enable tracker-miner-fs (required for filesystem indexing)</flag>
     <flag name="playlist">Add support for playlists</flag>
-    <flag name="stemmer">Add word stemming via <pkg>dev-libs/snowball-stemmer</pkg>.</flag>
     <flag name="xps">Add support for XPS file format through <pkg>app-text/libgxps</pkg>.</flag>
   </use>
 </pkgmetadata>
