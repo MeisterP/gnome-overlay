@@ -11,7 +11,7 @@ HOMEPAGE="https://wiki.gnome.org/Projects/gvfs"
 LICENSE="LGPL-2+"
 SLOT="0"
 
-IUSE="afp archive bluray cdda fuse google gnome-keyring gnome-online-accounts gphoto2 gtk +http ios mtp nfs policykit samba systemd test +udev udisks zeroconf"
+IUSE="afp archive bluray cdda +ftp fuse google gnome-keyring gnome-online-accounts gphoto2 gtk +http ios mtp nfs policykit samba systemd test +udev udisks zeroconf"
 REQUIRED_USE="
 	cdda? ( udev )
 	google? ( gnome-online-accounts )
@@ -23,12 +23,12 @@ KEYWORDS="~amd64 ~x86"
 
 RDEPEND="
 	app-crypt/gcr:=
-	>=dev-libs/glib-2.51:2
+	>=dev-libs/glib-2.57.2:2
 	dev-libs/libxml2:2
-	net-misc/openssh
 	afp? ( >=dev-libs/libgcrypt-1.2.2:0= )
 	archive? ( app-arch/libarchive:= )
 	bluray? ( media-libs/libbluray:= )
+	ftp? ( net-misc/openssh )
 	fuse? ( >=sys-fs/fuse-2.8.0:0 )
 	gnome-keyring? ( app-crypt/libsecret )
 	gnome-online-accounts? ( >=net-libs/gnome-online-accounts-3.7.1:= )
@@ -45,7 +45,7 @@ RDEPEND="
 		>=media-libs/libmtp-1.1.12 )
 	nfs? ( >=net-fs/libnfs-1.9.8 )
 	policykit? (
-		sys-auth/polkit
+		>=sys-auth/polkit-0.114
 		sys-libs/libcap )
 	samba? ( >=net-fs/samba-4[client] )
 	systemd? ( >=sys-apps/systemd-206:0= )
@@ -78,13 +78,10 @@ RESTRICT="test"
 
 src_configure() {
 	gnome-meson_src_configure \
-		-Dgdu=false \
 		-Dgcr=true \
-		-Ddeprecated_programs=false \
 		-Ddevel_utils=false \
 		-Dinstalled_tests=false \
 		-Dman=true \
-		-Ddbus_service_dir="${EPREFIX}"/usr/share/dbus-1/services \
 		-Dsystemduserunitdir="$(systemd_get_userunitdir)" \
 		$(meson_use policykit admin) \
 		$(meson_use afp) \
@@ -100,6 +97,7 @@ src_configure() {
 		$(meson_use mtp) \
 		$(meson_use mtp libusb) \
 		$(meson_use nfs) \
+		$(meson_use ftp sftp) \
 		$(meson_use samba smb) \
 		$(meson_use udisks udisks2) \
 		$(meson_use bluray) \
