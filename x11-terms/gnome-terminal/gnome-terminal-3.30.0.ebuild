@@ -49,8 +49,7 @@ src_configure() {
 		--disable-static \
 		$(use_enable debug) \
 		$(use_enable gnome-shell search-provider) \
-		$(use_with nautilus nautilus-extension) \
-		VALAC=$(type -P true)
+		$(use_with nautilus nautilus-extension)
 }
 
 src_install() {
