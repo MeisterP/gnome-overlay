@@ -117,6 +117,11 @@ src_prepare() {
 	# gdbus-codegen is a separate package
 	eapply "${FILESDIR}"/${PN}-2.54.3-external-gdbus-codegen.patch
 
+	# https://gitlab.gnome.org/GNOME/glib/issues/1271
+	eapply "${FILESDIR}"/${P}-gunixmounts-Filter-out-mounts-with-device-path-tha.patch
+	eapply "${FILESDIR}"/${P}-gio-Add-gunixmountgetrootpath.patch
+	eapply "${FILESDIR}"/${P}-gunixmounts-Mark-mounts-as-system-internal-instead.patch
+
 	gnome2_src_prepare
 	epunt_cxx
 }
