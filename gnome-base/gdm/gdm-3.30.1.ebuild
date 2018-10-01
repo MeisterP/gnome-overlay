@@ -129,9 +129,6 @@ src_prepare() {
 	# Show logo when branding is enabled
 	use branding && eapply "${FILESDIR}/${PN}-3.8.4-logo.patch"
 
-	# Use the standard way to find the udev rules directory via pkg-config
-	eapply "${FILESDIR}/${PN}-3.30.0-udevrulesdir-configure.patch"
-
 	# Drop obsolete option from pam_systemd.so
 	eapply "${FILESDIR}/${PN}-3.28.0-pam-exherbo-remove-obsolete-kill-session-processes.patch"
 
