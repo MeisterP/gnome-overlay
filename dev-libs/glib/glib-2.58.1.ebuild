@@ -118,9 +118,9 @@ src_prepare() {
 	eapply "${FILESDIR}"/${PN}-2.54.3-external-gdbus-codegen.patch
 
 	# https://gitlab.gnome.org/GNOME/glib/issues/1271
-	eapply "${FILESDIR}"/${P}-gunixmounts-Filter-out-mounts-with-device-path-tha.patch
-	eapply "${FILESDIR}"/${P}-gio-Add-gunixmountgetrootpath.patch
-	eapply "${FILESDIR}"/${P}-gunixmounts-Mark-mounts-as-system-internal-instead.patch
+	eapply "${FILESDIR}"/${PN}-2.58.0-gunixmounts-Filter-out-mounts-with-device-path-tha.patch
+	eapply "${FILESDIR}"/${PN}-2.58.0-gio-Add-gunixmountgetrootpath.patch
+	eapply "${FILESDIR}"/${PN}-2.58.0-gunixmounts-Mark-mounts-as-system-internal-instead.patch
 
 	gnome2_src_prepare
 	epunt_cxx
