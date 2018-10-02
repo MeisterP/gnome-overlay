@@ -17,7 +17,7 @@ RDEPEND="
 	>=dev-libs/gobject-introspection-1.53.4:=
 
 	sys-libs/readline:0=
-	dev-lang/spidermonkey:52
+	dev-lang/spidermonkey:60
 	virtual/libffi
 	cairo? ( x11-libs/cairo[X] )
 	gtk? ( >=x11-libs/gtk+-3.20:3 )
@@ -37,6 +37,8 @@ src_configure() {
 		--disable-systemtap \
 		--disable-dtrace \
 		--disable-code-coverage \
+		--disable-profiler \
+		--enable-readline \
 		$(use_with cairo cairo) \
 		$(use_with gtk) \
 		$(use_with test dbus-tests) \
