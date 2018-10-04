@@ -1,9 +1,8 @@
 # Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI="5"
-GCONF_DEBUG="no"
-PYTHON_COMPAT=( python2_7 )
+EAPI=6
+PYTHON_COMPAT=( python3_{4,5,6} )
 PYTHON_REQ_USE="xml"
 
 inherit gnome2 python-single-r1 systemd versionator
@@ -11,11 +10,11 @@ inherit gnome2 python-single-r1 systemd versionator
 MY_V="$(get_version_component_range 1-2)"
 
 DESCRIPTION="GNOME frontend for a Red Hat's printer administration tool"
-HOMEPAGE="http://cyberelk.net/tim/software/system-config-printer/"
-SRC_URI="http://cyberelk.net/tim/data/system-config-printer/${MY_V}/${P}.tar.xz"
+HOMEPAGE="https://github.com/zdohnal/system-config-printer"
+SRC_URI="https://github.com/zdohnal/${PN}/releases/download/${PV}/${P}.tar.xz"
 
 LICENSE="GPL-2"
-KEYWORDS="~alpha amd64 ~arm ~arm64 ~ia64 ppc ppc64 ~sh ~sparc x86"
+KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~ia64 ~ppc ~ppc64 ~sh ~sparc ~x86"
 SLOT="0"
 
 IUSE="doc gnome-keyring policykit"
@@ -43,7 +42,7 @@ RDEPEND="
 	x11-libs/gtk+:3[introspection]
 	x11-libs/libnotify[introspection]
 	x11-libs/pango[introspection]
-	gnome-keyring? ( gnome-base/libgnome-keyring[introspection] )
+	gnome-keyring? ( app-crypt/libsecret[introspection] )
 	policykit? ( >=sys-auth/polkit-0.104-r1 )
 	!app-admin/system-config-printer-common
 	!app-admin/system-config-printer-gnome
@@ -55,11 +54,8 @@ DEPEND="${RDEPEND}
 	dev-util/intltool
 	sys-devel/gettext
 	virtual/pkgconfig
-	doc? ( dev-python/epydoc[${PYTHON_USEDEP}] )
+	doc? ( dev-python/epydoc )
 "
-
-# Bug 471472
-MAKEOPTS+=" -j1"
 
 pkg_setup() {
 	python-single-r1_pkg_setup
@@ -78,7 +74,7 @@ src_configure() {
 	gnome2_src_configure \
 		--with-desktop-vendor=Gentoo \
 		--with-udev-rules \
-		$(systemd_with_unitdir) \
+		--with-systemdsystemunitdir="$(systemd_get_systemunitdir)" \
 		${myconf}
 }
 
