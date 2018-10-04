@@ -62,7 +62,6 @@ PDEPEND="
 PATCHES=(
 	"${FILESDIR}"/3.30.0-disable-bubblewrap.patch
 	"${FILESDIR}"/3.30.0-show-thumbnails.patch
-	"${FILESDIR}"/3.30.0-fix-key-events.patch
 )
 
 src_prepare() {
