@@ -1,0 +1,71 @@
+From 5594a1ee0b4cd66be1729286b3c34ca519909366 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Florian=20M=C3=BCllner?= <fmuellner@gnome.org>
+Date: Fri, 5 Oct 2018 19:09:28 +0200
+Subject: [PATCH] automountManager: Explicitly track active operations
+
+As a mount operation's UI may be reused (for example after mistyping
+the password), we only close the operation once the mount has finished
+(successfully or with error).
+
+We therefore need to track ongoing operations, which we currently do
+by monkey-patching the corresponding volume object. However while the
+underlying GVolume object indeed remains the same through-out the
+operation, the JS wrapper object isn't referenced anywhere and may
+thus be garbage collected, resulting in a stuck dialog.
+
+Fix this issue by tracking active operations explicitly, so that all
+involved objects are referenced until the end of the operation.
+
+https://gitlab.gnome.org/GNOME/gnome-shell/issues/565
+---
+ js/ui/components/automountManager.js | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/js/ui/components/automountManager.js b/js/ui/components/automountManager.js
+index a6cd85792..3e2dcd923 100644
+--- a/js/ui/components/automountManager.js
++++ b/js/ui/components/automountManager.js
+@@ -25,6 +25,7 @@ var AutomountManager = new Lang.Class({
+     _init() {
+         this._settings = new Gio.Settings({ schema_id: SETTINGS_SCHEMA });
+         this._volumeQueue = [];
++        this._activeOperations = new Map();
+         this._session = new GnomeSession.SessionManager();
+         this._session.connectSignal('InhibitorAdded',
+                                     this._InhibitorsChanged.bind(this));
+@@ -182,7 +183,7 @@ var AutomountManager = new Lang.Class({
+             this._allowAutorun(volume);
+ 
+         let mountOp = operation ? operation.mountOp : null;
+-        volume._operation = operation;
++        this._activeOperations.set(volume, operation);
+ 
+         volume.mount(0, mountOp, null,
+                      this._onVolumeMounted.bind(this));
+@@ -219,7 +220,8 @@ var AutomountManager = new Lang.Class({
+     },
+ 
+     _reaskPassword(volume) {
+-        let existingDialog = volume._operation ? volume._operation.borrowDialog() : null;
++        let prevOperation = this._activeOperations.get(volume);
++        let existingDialog = prevOperation ? prevOperation.borrowDialog() : null;
+         let operation = 
+             new ShellMountOperation.ShellMountOperation(volume,
+                                                         { existingDialog: existingDialog });
+@@ -227,8 +229,11 @@ var AutomountManager = new Lang.Class({
+     },
+ 
+     _closeOperation(volume) {
+-        if (volume._operation)
+-            volume._operation.close();
++        let operation = this._activeOperations.get(volume);
++        if (!operation)
++            return;
++        operation.close();
++        this._activeOperations.delete(volume);
+     },
+ 
+     _allowAutorun(volume) {
+-- 
+2.18.1
+

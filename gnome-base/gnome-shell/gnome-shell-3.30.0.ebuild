@@ -1,4 +1,4 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -53,7 +53,6 @@ COMMON_DEPEND="
 	media-libs/libcanberra[gtk3]
 	media-libs/mesa
 	>=media-sound/pulseaudio-2
-	>=net-libs/libsoup-2.40:2.4[introspection]
 	x11-libs/libX11
 	x11-libs/gdk-pixbuf:2[introspection]
 
@@ -121,6 +120,8 @@ DEPEND="${COMMON_DEPEND}
 PATCHES=(
 	# Change favorites defaults, bug #479918
 	"${FILESDIR}"/${PN}-3.22.0-defaults.patch
+	"${FILESDIR}"/${PN}-3.30-password-prompt.patch
+	"${FILESDIR}"/${PN}-3.30-automountManager.patch
 )
 
 src_configure() {
