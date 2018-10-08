@@ -1,7 +1,7 @@
-From 652ed37e190728b8c76852eca6929ac7eadd2bc8 Mon Sep 17 00:00:00 2001
+From 1a2f9b5f6b932f04ecf126648e1a9e1912a72a1b Mon Sep 17 00:00:00 2001
 From: Poncho <poncho@spahan.ch>
 Date: Sat, 17 Mar 2018 10:39:07 +0100
-Subject: [PATCH 2/5] make NetworkManager optional
+Subject: [PATCH 2/4] make NetworkManager optional
 
 ---
  meson.build       | 1 -
@@ -9,10 +9,10 @@ Subject: [PATCH 2/5] make NetworkManager optional
  2 files changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/meson.build b/meson.build
-index 62cf9bec..f2b4ce62 100644
+index 7c98d6d7..d77f0b26 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -186,7 +186,6 @@ endif
+@@ -194,7 +194,6 @@ endif
  
  # Sharing plugin
  enable_network_manager = get_option('network_manager')
@@ -21,7 +21,7 @@ index 62cf9bec..f2b4ce62 100644
    # network manager
    libnm_dep = dependency('libnm', version: '>= 1.0')
 diff --git a/meson_options.txt b/meson_options.txt
-index f997444d..a536e218 100644
+index 0ba79b18..c3bbd03d 100644
 --- a/meson_options.txt
 +++ b/meson_options.txt
 @@ -4,7 +4,7 @@ option('udev_dir', type: 'string', value: '', description: 'Absolute path of the
@@ -34,5 +34,5 @@ index f997444d..a536e218 100644
  option('smartcard', type: 'boolean', value: true, description: 'build with smartcard support')
  option('wayland', type: 'boolean', value: true, description: 'build with Wayland support')
 -- 
-2.16.1
+2.18.0
 

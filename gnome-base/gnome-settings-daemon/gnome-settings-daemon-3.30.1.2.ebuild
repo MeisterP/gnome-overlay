@@ -1,4 +1,4 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -114,7 +114,8 @@ pkg_setup() {
 
 src_configure() {
 	gnome-meson_src_configure \
-		$(meson_use colord color) \
+		-Dexperimental_suspend_then_hibernate=false \
+		$(meson_use colord) \
 		$(meson_use cups) \
 		$(meson_use input_devices_wacom wacom) \
 		$(meson_use networkmanager network_manager) \
@@ -126,10 +127,6 @@ src_configure() {
 
 pkg_postinst() {
 	gnome-meson_pkg_postinst
-
-	ewarn "This needs a patched version of sys-auth/polkit"
-	ewarn "https://bugs.freedesktop.org/show_bug.cgi?id=104970"
-	ewarn "https://cgit.freedesktop.org/polkit/commit/?id=c78819245ff8a270f97c9f800773e727918be838"
 
 	if ! systemd_is_booted; then
 		ewarn "${PN} needs Systemd to be *running* for working"

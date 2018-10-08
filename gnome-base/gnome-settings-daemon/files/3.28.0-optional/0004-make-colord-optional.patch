@@ -1,7 +1,7 @@
-From 55003d533aa3fefb87610330cfa515951e532cac Mon Sep 17 00:00:00 2001
+From dad0ddd8086515fb6cbe009c49104f2094f8050b Mon Sep 17 00:00:00 2001
 From: Poncho <poncho@spahan.ch>
 Date: Sat, 17 Mar 2018 10:48:17 +0100
-Subject: [PATCH 4/5] make colord optional
+Subject: [PATCH 4/4] make colord optional
 
 ---
  meson.build         | 8 +++++++-
@@ -10,7 +10,7 @@ Subject: [PATCH 4/5] make colord optional
  3 files changed, 12 insertions(+), 2 deletions(-)
 
 diff --git a/meson.build b/meson.build
-index 4124482e..6edd4c9c 100644
+index 4bada1da..c36f781c 100644
 --- a/meson.build
 +++ b/meson.build
 @@ -82,7 +82,6 @@ endif
@@ -21,7 +21,7 @@ index 4124482e..6edd4c9c 100644
  geocode_glib_dep = dependency('geocode-glib-1.0', version: '>= 3.10.0')
  gio_dep = dependency('gio-2.0', version: '>= 2.53.0')
  gio_unix_dep = dependency('gio-unix-2.0')
-@@ -140,6 +139,12 @@ if enable_wacom
+@@ -148,6 +147,12 @@ if enable_wacom
  endif
  config_h.set10('HAVE_WACOM', enable_wacom)
  
@@ -34,23 +34,25 @@ index 4124482e..6edd4c9c 100644
  # smartcard section
  enable_smartcard = get_option('smartcard')
  if enable_smartcard
-@@ -233,6 +238,7 @@ output += '        Smartcard support:        ' + enable_smartcard.to_string() +
+@@ -240,6 +245,7 @@ output += '        Smartcard support:        ' + enable_smartcard.to_string() +
  output += '        Cups support:             ' + enable_cups.to_string() + '\n'
  output += '        Wayland support:          ' + enable_wayland.to_string() + '\n'
  output += '        Wacom support:            ' + enable_wacom.to_string() + '\n'
 +output += '        Colord support:           ' + enable_colord.to_string() + '\n'
  output += '        RFKill support:           ' + enable_rfkill.to_string() + '\n'
+ output += '        Suspend-then-hibernate:   ' + use_suspend_then_hibernate.to_string() + '\n'
  if enable_smartcard
-   output += '        System nssdb:             ' + system_nssdb_dir + '\n'
 diff --git a/meson_options.txt b/meson_options.txt
-index 9198aee1..11c016b8 100644
+index 61df45b9..b205f2aa 100644
 --- a/meson_options.txt
 +++ b/meson_options.txt
-@@ -10,3 +10,4 @@ option('smartcard', type: 'boolean', value: true, description: 'build with smart
+@@ -9,5 +9,6 @@ option('rfkill', type: 'boolean', value: true, description: 'build with rfkill s
+ option('smartcard', type: 'boolean', value: true, description: 'build with smartcard support')
  option('wayland', type: 'boolean', value: true, description: 'build with Wayland support')
- 
  option('wacom', type: 'boolean', value: true, description: 'build with Wacom support')
 +option('colord', type: 'boolean', value: true, description: 'build with colord support')
+ 
+ option('experimental_suspend_then_hibernate', type: 'boolean', value: false, description: 'use suspend-then-hibernate if available (NOT recommended)')
 diff --git a/plugins/meson.build b/plugins/meson.build
 index 3db69da7..50d50e4c 100644
 --- a/plugins/meson.build
@@ -75,5 +77,5 @@ index 3db69da7..50d50e4c 100644
    enabled_plugins += [['print-notifications', 'PrintNotifications']]
  endif
 -- 
-2.16.1
+2.18.0
 
