@@ -1,4 +1,4 @@
-Unofficial GNOME overlay [![Build Status](https://travis-ci.org/MeisterP/gnome-overlay.svg?branch=master)](https://travis-ci.org/MeisterP/gnome-overlay)
+Unofficial GNOME overlay [![pipeline status](https://0xacab.org/Poncho/gnome-overlay/badges/master/pipeline.svg)](https://0xacab.org/Poncho/gnome-overlay/pipelines)
 ------------------------
 
 Version
