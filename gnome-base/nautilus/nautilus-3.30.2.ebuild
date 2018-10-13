@@ -1,4 +1,4 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -60,7 +60,7 @@ PDEPEND="
 
 # see https://gitlab.gnome.org/GNOME/nautilus/issues/398
 PATCHES=(
-	"${FILESDIR}"/3.30.0-disable-bubblewrap.patch
+	"${FILESDIR}"/3.30.2-disable-bubblewrap.patch
 	"${FILESDIR}"/3.30.0-show-thumbnails.patch
 )
 
