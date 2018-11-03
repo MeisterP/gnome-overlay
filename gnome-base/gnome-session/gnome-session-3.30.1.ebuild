@@ -1,8 +1,8 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
-inherit gnome-meson
+inherit gnome.org gnome2-utils meson xdg
 
 DESCRIPTION="Gnome session manager"
 HOMEPAGE="https://git.gnome.org/browse/gnome-session"
@@ -17,7 +17,7 @@ IUSE="doc elibc_FreeBSD ipv6 systemd"
 # xdg-user-dirs-update is run during login (see 10-user-dirs-update-gnome below).
 # gdk-pixbuf used in the inhibit dialog
 COMMON_DEPEND="
-	>=dev-libs/glib-2.46.0:2[dbus]
+	>=dev-libs/glib-2.46.0:2
 	x11-libs/gdk-pixbuf:2
 	>=x11-libs/gtk+-3.18.0:3
 	>=dev-libs/json-glib-0.10
@@ -45,7 +45,10 @@ COMMON_DEPEND="
 # Pure-runtime deps from the session files should *NOT* be added here
 # Otherwise, things like gdm pull in gnome-shell
 # gnome-themes-standard is needed for the failwhale dialog themeing
-# sys-apps/dbus[X] is needed for session management
+# sys-apps/dbus[X] is needed for session management.
+# gnome-settings-daemon is assumed to be >3.25.4, but this is about
+# removed components, so no need to strictly require it (older just
+# won't have those daemons loaded by gnome-session)
 RDEPEND="${COMMON_DEPEND}
 	>=gnome-base/gnome-settings-daemon-3.23.2
 	>=gnome-base/gsettings-desktop-schemas-0.1.7
@@ -58,6 +61,7 @@ RDEPEND="${COMMON_DEPEND}
 "
 DEPEND="${COMMON_DEPEND}
 	dev-libs/libxslt
+	>=dev-util/intltool-0.40.6
 	>=sys-devel/gettext-0.10.40
 	virtual/pkgconfig
 	!<gnome-base/gdm-2.20.4
@@ -68,18 +72,20 @@ DEPEND="${COMMON_DEPEND}
 "
 
 src_configure() {
-	gnome-meson_src_configure \
-		-Ddeprecation_flags=false \
-		-Dsession_selector=true \
-		$(meson_use systemd) \
-		$(meson_use systemd systemd_journal) \
-		$(meson_use !systemd consolekit) \
-		$(meson_use doc docbook) \
+	local emesonargs=(
+		-Ddeprecation_flags=false
+		-Dsession_selector=true
+		$(meson_use systemd)
+		$(meson_use systemd systemd_journal)
+		$(meson_use !systemd consolekit)
+		$(meson_use doc docbook)
 		$(meson_use doc man)
+	)
+	meson_src_configure
 }
 
 src_install() {
-	gnome-meson_src_install
+	meson_src_install
 
 	dodir /etc/X11/Sessions
 	exeinto /etc/X11/Sessions
@@ -102,7 +108,13 @@ src_install() {
 }
 
 pkg_postinst() {
-	gnome-meson_pkg_postinst
+	xdg_pkg_postinst
+	gnome2_schemas_update
+}
+
+pkg_postinst() {
+	xdg_pkg_postrm
+	gnome2_schemas_update
 
 	if ! has_version gnome-base/gdm && ! has_version x11-misc/sddm; then
 		ewarn "If you use a custom .xinitrc for your X session,"
