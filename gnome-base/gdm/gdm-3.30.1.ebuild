@@ -1,11 +1,10 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
-GNOME2_EAUTORECONF="yes"
 GNOME2_LA_PUNT="yes"
 
-inherit eutils gnome2 pam readme.gentoo-r1 systemd user versionator
+inherit eutils gnome2 pam readme.gentoo-r1 systemd user
 
 DESCRIPTION="GNOME Display Manager for managing graphical display servers and user logins"
 HOMEPAGE="https://wiki.gnome.org/Projects/GDM"
@@ -21,7 +20,7 @@ LICENSE="
 
 SLOT="0"
 
-IUSE="accessibility audit branding fprint +introspection ipv6 nvidia plymouth selinux smartcard tcpd test wayland xinerama"
+IUSE="accessibility audit branding fprint +introspection ipv6 plymouth selinux smartcard tcpd test wayland xinerama"
 
 KEYWORDS="~amd64 ~x86"
 
@@ -55,6 +54,7 @@ COMMON_DEPEND="
 
 	virtual/pam
 	>=sys-apps/systemd-186:0=[pam]
+
 	sys-auth/pambase[systemd]
 	sys-apps/keyutils
 
@@ -148,6 +148,7 @@ src_configure() {
 
 	gnome2_src_configure \
 		--enable-gdm-xsession \
+		--enable-user-display-server \
 		--with-run-dir=/run/gdm \
 		--localstatedir="${EPREFIX}"/var \
 		--disable-static \
@@ -159,7 +160,6 @@ src_configure() {
 		--without-xevie \
 		--enable-systemd-journal \
 		--with-systemdsystemunitdir="$(systemd_get_systemunitdir)" \
-		$(use_enable !nvidia user-display-server) \
 		$(use_with audit libaudit) \
 		$(use_enable ipv6) \
 		$(use_with plymouth) \
@@ -195,20 +195,7 @@ src_install() {
 }
 
 pkg_postinst() {
-	local d ret
-
 	gnome2_pkg_postinst
-
-	# bug #436456; gdm crashes if /var/lib/gdm subdirs are not owned by gdm:gdm
-	ret=0
-	ebegin "Fixing "${EROOT}"var/lib/gdm ownership"
-	chown gdm:gdm "${EROOT}var/lib/gdm" || ret=1
-	for d in "${EROOT}var/lib/gdm/"{.cache,.config,.local}; do
-		[[ ! -e "${d}" ]] || chown -R gdm:gdm "${d}" || ret=1
-	done
-	eend ${ret}
-
 	systemd_reenable gdm.service
-
 	readme.gentoo_print_elog
 }
