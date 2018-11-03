@@ -60,7 +60,7 @@ PDEPEND="
 
 # see https://gitlab.gnome.org/GNOME/nautilus/issues/398
 PATCHES=(
-	"${FILESDIR}"/3.30.2-disable-bubblewrap.patch
+	"${FILESDIR}"/3.30.2-fix-bubblewrap.patch
 	"${FILESDIR}"/3.30.0-show-thumbnails.patch
 )
 

@@ -1,0 +1,11 @@
+diff --unified --new-file --recursive --show-c-function nautilus-3.30.3/src/gnome-desktop/gnome-desktop-thumbnail-script.c nautilus-3.30.3-fix/src/gnome-desktop/gnome-desktop-thumbnail-script.c
+--- nautilus-3.30.3/src/gnome-desktop/gnome-desktop-thumbnail-script.c	2018-10-31 12:52:37.000000000 +0100
++++ nautilus-3.30.3-fix/src/gnome-desktop/gnome-desktop-thumbnail-script.c	2018-11-03 18:05:00.851018749 +0100
+@@ -518,6 +518,7 @@ add_bwrap (GPtrArray   *array,
+ 	    "--ro-bind", "/usr", "/usr",
+ 	    "--ro-bind", "/lib", "/lib",
+ 	    "--ro-bind", "/lib64", "/lib64",
++	    "--ro-bind", "/etc/ld.so.cache", "/etc/ld.so.cache",
+ 	    "--proc", "/proc",
+ 	    "--dev", "/dev",
+ 	    "--symlink", "usr/bin", "/bin",
