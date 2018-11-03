@@ -14,7 +14,7 @@ HOMEPAGE="https://wiki.gnome.org/Apps/Evolution"
 LICENSE="|| ( LGPL-2 LGPL-3 ) BSD Sleepycat"
 SLOT="0/60" # subslot = libcamel-1.2 soname version
 
-IUSE="api-doc-extras berkdb +gnome-online-accounts +gtk google +introspection ipv6 ldap kerberos sound vala +weather"
+IUSE="berkdb +gnome-online-accounts +gtk gtk-doc google +introspection ipv6 ldap kerberos sound vala +weather"
 REQUIRED_USE="vala? ( introspection )"
 
 KEYWORDS="~amd64 ~x86"
@@ -28,7 +28,7 @@ RDEPEND="
 	>=app-crypt/libsecret-0.5[crypt]
 	>=dev-db/sqlite-3.7.17:=
 	>=dev-libs/glib-2.46:2
-	>=dev-libs/libical-2:=
+	>=dev-libs/libical-2.0:=
 	>=dev-libs/libxml2-2
 	>=dev-libs/nspr-4.4:=
 	>=dev-libs/nss-3.9:=
@@ -59,27 +59,29 @@ RDEPEND="
 "
 DEPEND="${RDEPEND}
 	dev-util/gdbus-codegen
+	dev-util/glib-utils
 	dev-util/gperf
-	>=dev-util/gtk-doc-am-1.14
+	gtk-doc? ( >=dev-util/gtk-doc-1.14 )
 	>=dev-util/intltool-0.35.5
 	>=sys-devel/gettext-0.18.3
 	virtual/pkgconfig
 	vala? ( $(vala_depend) )
 "
 
-# Some tests fail due to missings locales.
-# Also, dbus tests are flacky, bugs #397975 #501834
+# Some tests fail due to missing locales.
+# Also, dbus tests are flaky, bugs #397975 #501834
 # It looks like a nightmare to disable those for now.
-RESTRICT="test"
+RESTRICT="test !test? ( test )"
 
+# global scope PATCHES or DOCS array mustn't be used due to double default_src_prepare call
 src_prepare() {
 	use vala && vala_src_prepare
-	gnome2_src_prepare
 	cmake-utils_src_prepare
+	gnome2_src_prepare
 
 	# Make CMakeLists versioned vala enabled
 	sed -e "s;\(find_program(VALAC\) valac);\1 ${VALAC});" \
-	    -e "s;\(find_program(VAPIGEN\) vapigen);\1 ${VAPIGEN});" \
+		-e "s;\(find_program(VAPIGEN\) vapigen);\1 ${VAPIGEN});" \
 		-i "${S}"/CMakeLists.txt || die
 }
 
@@ -97,29 +99,30 @@ src_configure() {
 
 	# phonenumber does not exist in tree
 	local mycmakeargs=(
-		-DENABLE_BACKTRACES=OFF
-		-DENABLE_CANBERRA=$(usex sound)
-		-DENABLE_EXAMPLES=OFF
-		-DENABLE_GOA=$(usex gnome-online-accounts)
-		-DENABLE_GOOGLE=$(usex google)
-		-DENABLE_GTK_DOC=$(usex api-doc-extras)
-		-DENABLE_GTK=$(usex gtk)
-		-DENABLE_INTROSPECTION=$(usex introspection)
-		-DENABLE_IPV6=$(usex ipv6)
-		-DENABLE_LARGEFILE=ON
-		-DENABLE_OAUTH2=${google_auth_enable}
+		-DENABLE_GTK_DOC=$(usex gtk-doc)
+		-DWITH_PRIVATE_DOCS=$(usex gtk-doc)
 		-DENABLE_SCHEMAS_COMPILE=OFF
-		-DENABLE_SMIME=ON
-		-DENABLE_UOA=OFF
-		-DENABLE_VALA_BINDINGS=$(usex vala)
-		-DENABLE_WEATHER=$(usex weather)
+		-DENABLE_INTROSPECTION=$(usex introspection)
+		-DWITH_KRB5=$(usex kerberos)
 		-DWITH_KRB5_INCLUDES=$(usex kerberos "${EPREFIX}"/usr "")
 		-DWITH_KRB5_LIBS=$(usex kerberos "${EPREFIX}"/usr/$(get_libdir) "")
-		-DWITH_KRB5=$(usex kerberos)
-		-DWITH_LIBDB=$(usex berkdb "${EPREFIX}"/usr OFF)
 		-DWITH_OPENLDAP=$(usex ldap)
 		-DWITH_PHONENUMBER=OFF
-		-DWITH_PRIVATE_DOCS=$(usex api-doc-extras)
+		-DENABLE_SMIME=ON
+		-DENABLE_GTK=$(usex gtk)
+		-DENABLE_OAUTH2=${google_auth_enable}
+		-DENABLE_EXAMPLES=OFF
+		-DENABLE_GOA=$(usex gnome-online-accounts)
+		-DENABLE_UOA=OFF
+		-DWITH_LIBDB=$(usex berkdb "${EPREFIX}"/usr OFF)
+		# ENABLE_BACKTRACES requires libdwarf ?
+		-DENABLE_BACKTRACES=OFF
+		-DENABLE_IPV6=$(usex ipv6)
+		-DENABLE_WEATHER=$(usex weather)
+		-DENABLE_GOOGLE=$(usex google)
+		-DENABLE_LARGEFILE=ON
+		-DENABLE_VALA_BINDINGS=$(usex vala)
+		-DENABLE_CANBERRA=$(usex sound)
 	)
 
 	cmake-utils_src_configure
