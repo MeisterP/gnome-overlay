@@ -1,8 +1,8 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
-inherit gnome-meson virtualx
+inherit gnome.org gnome2-utils meson virtualx xdg
 
 DESCRIPTION="Color profile manager for the GNOME desktop"
 HOMEPAGE="https://git.gnome.org/browse/gnome-color-manager"
@@ -24,8 +24,6 @@ RDEPEND="
 	>=x11-misc/colord-1.3.1:0=
 	>=x11-libs/colord-gtk-0.1.20
 
-	x11-libs/vte:2.91
-
 	packagekit? ( app-admin/packagekit-base )
 	raw? ( media-gfx/exiv2:0= )
 "
@@ -38,11 +36,13 @@ DEPEND="${RDEPEND}
 
 src_configure() {
 	# Always enable tests since they are check_PROGRAMS anyway
-	# appstream does not want to be relax by default !
-	gnome-meson_src_configure \
-		-Dtests=true \
-		$(meson_use raw exiv) \
+	local emesonargs=(
+		$(meson_use raw exiv)
 		$(meson_use packagekit)
+		-Dtests=true
+	)
+	meson_src_configure
+
 }
 
 src_test() {
@@ -50,10 +50,16 @@ src_test() {
 }
 
 pkg_postinst() {
-	gnome-meson_pkg_postinst
+	xdg_pkg_postinst
+	gnome2_icon_cache_update
 
 	if ! has_version media-gfx/argyllcms ; then
 		elog "If you want to do display or scanner calibration, you will need to"
 		elog "install media-gfx/argyllcms"
 	fi
+}
+
+pkg_postrm() {
+	xdg_pkg_postrm
+	gnome2_icon_cache_update
 }
