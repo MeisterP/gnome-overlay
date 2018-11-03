@@ -5,14 +5,14 @@ EAPI=6
 GNOME2_LA_PUNT="yes"
 GNOME2_EAUTORECONF="yes"
 
-inherit gnome-meson
+inherit gnome.org gnome2-utils meson xdg
 
 DESCRIPTION="GNOME's main interface to configure various aspects of the desktop"
 HOMEPAGE="https://git.gnome.org/browse/gnome-control-center/"
 
 LICENSE="GPL-2+"
 SLOT="2"
-IUSE="+bluetooth +cups debug +ibus input_devices_wacom networkmanager +v4l wayland"
+IUSE="+bluetooth +cups debug +ibus input_devices_wacom networkmanager v4l wayland"
 KEYWORDS="~amd64 ~x86"
 
 # gnome-session-2.91.6-r1 is needed so that 10-user-dirs-update is run at login
@@ -106,6 +106,7 @@ DEPEND="${COMMON_DEPEND}
 
 	dev-libs/libxml2:2
 	dev-libs/libxslt
+	dev-util/glib-utils
 	>=dev-util/intltool-0.40.1
 	>=sys-devel/gettext-0.17
 	virtual/pkgconfig
@@ -127,13 +128,27 @@ PATCHES=(
 )
 
 src_configure() {
-	gnome-meson_src_configure \
-		-Ddocumentation=true \
-		-Dtracing=false \
-		$(meson_use bluetooth) \
-		$(meson_use ibus) \
-		$(meson_use input_devices_wacom wacom) \
-		$(meson_use networkmanager network) \
-		$(meson_use v4l cheese) \
+	local emesonargs=(
+		-Ddocumentation=true
+		-Dtracing=false
+		$(meson_use bluetooth)
+		$(meson_use ibus)
+		$(meson_use input_devices_wacom wacom)
+		$(meson_use networkmanager network)
+		$(meson_use v4l cheese)
 		$(meson_use wayland)
+	)
+	meson_src_configure
+}
+
+pkg_postinst() {
+	xdg_pkg_postinst
+	gnome2_icon_cache_update
+	gnome2_schemas_update
+}
+
+pkg_postrm() {
+	gnome2_icon_cache_update
+	xdg_pkg_postrm
+	gnome2_schemas_update
 }
