@@ -4,7 +4,7 @@
 EAPI=6
 GNOME2_LA_PUNT="yes" # Needed with USE 'sendto'
 
-inherit gnome-meson readme.gentoo-r1 virtualx
+inherit gnome.org gnome2-utils meson readme.gentoo-r1 virtualx xdg
 
 DESCRIPTION="A file manager for the GNOME desktop"
 HOMEPAGE="https://wiki.gnome.org/Apps/Nautilus"
@@ -70,17 +70,19 @@ src_prepare() {
 			To activate the previewer, select a file and press space; to
 			close the previewer, press space again."
 	fi
-	gnome-meson_src_prepare
+	xdg_src_prepare
 }
 
 src_configure() {
 	# FIXME no doc useflag??
-	gnome-meson_src_configure \
-		-Ddocs=true \
-		-Dprofiling=false \
-		$(meson_use extensions) \
-		$(meson_use packagekit) \
+	local emesonargs=(
+		-Ddocs=true
+		-Dprofiling=false
+		$(meson_use extensions)
+		$(meson_use packagekit)
 		$(meson_use selinux)
+	)
+	meson_src_configure
 }
 
 src_test() {
@@ -89,15 +91,23 @@ src_test() {
 
 src_install() {
 	use previewer && readme.gentoo_create_doc
-	gnome-meson_src_install
+	meson_src_install
 }
 
 pkg_postinst() {
-	gnome-meson_pkg_postinst
+	xdg_pkg_postinst
+	gnome2_icon_cache_update
+	gnome2_schemas_update
 
 	if use previewer; then
 		readme.gentoo_print_elog
 	else
 		elog "To preview media files, emerge nautilus with USE=previewer"
 	fi
+}
+
+pkg_postrm() {
+	gnome2_icon_cache_update
+	xdg_pkg_postrm
+	gnome2_schemas_update
 }
