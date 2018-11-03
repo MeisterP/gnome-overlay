@@ -1,8 +1,8 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
-inherit gnome-meson
+inherit gnome.org gnome2-utils meson virtualx xdg
 
 DESCRIPTION="Manage your online calendars with simple and modern interface"
 HOMEPAGE="https://wiki.gnome.org/Apps/Calendar"
@@ -12,6 +12,8 @@ SLOT="0"
 KEYWORDS="~amd64" #libdazzle is only ~amd64
 IUSE=""
 
+# >=libical-1.0.1 for https://bugzilla.gnome.org/show_bug.cgi?id=751244
+# FIXME add docs
 RDEPEND="
 	>=app-misc/geoclue-2.4.0:2.0
 	>=dev-libs/glib-2.43.4:2
@@ -33,7 +35,25 @@ DEPEND="${RDEPEND}
 "
 
 src_configure() {
-	gnome-meson_src_configure \
-		-Ddocumentation=true \
+	local emesonargs=(
+		-Ddocumentation=true
 		-Dtracing=false
+	)
+	meson_src_configure
+}
+
+src_test() {
+	virtx meson_src_test
+}
+
+pkg_postinst() {
+	xdg_pkg_postinst
+	gnome2_icon_cache_update
+	gnome2_schemas_update
+}
+
+pkg_postrm() {
+	xdg_pkg_postrm
+	gnome2_icon_cache_update
+	gnome2_schemas_update
 }
