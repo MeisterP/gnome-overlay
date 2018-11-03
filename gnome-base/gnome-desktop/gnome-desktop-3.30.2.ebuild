@@ -42,9 +42,9 @@ DEPEND="${COMMON_DEPEND}
 	virtual/pkgconfig
 "
 
-# Includes X11/Xatom.h in libgnome-desktop/gnome-bg.c which comes from xproto
+PATCHES=( "${FILESDIR}"/3.30.2-fix-bubblewrap.patch )
 
-PATCHES=( "${FILESDIR}/3.28.0-disable-bubblewrap.patch")
+# Includes X11/Xatom.h in libgnome-desktop/gnome-bg.c which comes from xproto
 
 src_configure() {
 	gnome2_src_configure \
