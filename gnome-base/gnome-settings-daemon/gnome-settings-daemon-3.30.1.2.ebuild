@@ -2,19 +2,19 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
-GNOME2_LA_PUNT="yes"
 #PYTHON_COMPAT=( python{2_7,3_4,3_5,3_6} ) # https://bugzilla.gnome.org/show_bug.cgi?id=783186
 PYTHON_COMPAT=( python2_7 )
 
-inherit gnome-meson python-any-r1 systemd udev virtualx
+inherit gnome.org gnome2-utils meson python-any-r1 systemd udev virtualx
 
 DESCRIPTION="Gnome Settings Daemon"
 HOMEPAGE="https://git.gnome.org/browse/gnome-settings-daemon"
 
 LICENSE="GPL-2+"
 SLOT="0"
-IUSE="+colord +cups debug input_devices_wacom -openrc-force networkmanager policykit smartcard test +udev wayland"
+IUSE="+colord +cups debug elogind input_devices_wacom networkmanager policykit smartcard systemd test +udev wayland"
 REQUIRED_USE="
+	^^ ( elogind systemd )
 	input_devices_wacom? ( udev )
 	smartcard? ( udev )
 	wayland? ( udev )
@@ -22,7 +22,7 @@ REQUIRED_USE="
 KEYWORDS="~amd64 ~x86"
 
 COMMON_DEPEND="
-	>=dev-libs/glib-2.53.0:2[dbus]
+	>=dev-libs/glib-2.53.0:2
 	>=x11-libs/gtk+-3.15.3:3[X,wayland?]
 	>=gnome-base/gnome-desktop-3.11.1:3=
 	>=gnome-base/gsettings-desktop-schemas-3.27.90
@@ -64,34 +64,29 @@ COMMON_DEPEND="
 	udev? ( virtual/libgudev:= )
 	wayland? ( dev-libs/wayland )
 "
-# Themes needed by g-s-d, gnome-shell, gtk+:3 apps to work properly
-# <gnome-color-manager-3.1.1 has file collisions with g-s-d-3.1.x
-# <gnome-power-manager-3.1.3 has file collisions with g-s-d-3.1.x
-# systemd needed for power and session management, bug #464944
+# logind needed for power and session management, bug #464944
+# gnome-session-3.25.4 adapts to Orientation and XRANDR components removal (moved to mutter)
 RDEPEND="${COMMON_DEPEND}
 	gnome-base/dconf
-	!openrc-force? ( sys-apps/systemd )
-	!<gnome-base/gnome-control-center-2.22
-	!<gnome-extra/gnome-color-manager-3.1.1
-	!<gnome-extra/gnome-power-manager-3.1.3
-	!<gnome-base/gnome-session-3.25
+	elogind? ( sys-auth/elogind )
+	systemd? ( sys-apps/systemd )
+	!<gnome-base/gnome-session-3.25.4
 "
-# xproto-7.0.15 needed for power plugin
 DEPEND="${COMMON_DEPEND}
-	cups? ( sys-apps/sed )
 	test? (
 		${PYTHON_DEPS}
 		$(python_gen_any_dep 'dev-python/pygobject:3[${PYTHON_USEDEP}]')
 		$(python_gen_any_dep 'dev-python/dbusmock[${PYTHON_USEDEP}]')
 		gnome-base/gnome-session )
 	dev-libs/libxml2:2
+	dev-util/glib-utils
 	sys-devel/gettext
 	>=dev-util/intltool-0.40
 	virtual/pkgconfig
 	x11-base/xorg-proto
 "
 
-# TypeErrors with python3; weird test errors with python2; all in power component that was made required now
+# Tests go a bit better in 3.26, but still fail some for me; revisit with 3.28+
 RESTRICT="!test? ( test )"
 
 PATCHES=(
@@ -113,20 +108,22 @@ pkg_setup() {
 }
 
 src_configure() {
-	gnome-meson_src_configure \
-		-Dexperimental_suspend_then_hibernate=false \
-		$(meson_use colord) \
-		$(meson_use cups) \
-		$(meson_use input_devices_wacom wacom) \
-		$(meson_use networkmanager network_manager) \
-		$(meson_use smartcard) \
-		$(meson_use udev gudev) \
+	local emesonargs=(
+		-Dexperimental_suspend_then_hibernate=false
+		$(meson_use colord)
+		$(meson_use cups)
+		$(meson_use input_devices_wacom wacom)
+		$(meson_use networkmanager network_manager)
+		$(meson_use smartcard)
+		$(meson_use udev gudev)
 		$(meson_use wayland)
+	)
+	meson_src_configure
 
 }
 
 pkg_postinst() {
-	gnome-meson_pkg_postinst
+	#????gnome-meson_pkg_postinst
 
 	if ! systemd_is_booted; then
 		ewarn "${PN} needs Systemd to be *running* for working"
@@ -141,4 +138,16 @@ pkg_postinst() {
 		ewarn "you will need to disable this USE flag system wide and retest before"
 		ewarn "opening any bug report."
 	fi
+}
+
+pkg_postinst() {
+	gnome2_schemas_update
+}
+
+pkg_postrm() {
+	gnome2_schemas_update
+}
+
+src_test() {
+	virtx meson_src_test
 }
