@@ -1,13 +1,13 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
-inherit gnome-meson
+inherit gnome.org gnome2-utils meson xdg
 
 DESCRIPTION="The Gnome System Monitor"
 HOMEPAGE="https://help.gnome.org/users/gnome-system-monitor/"
 
-LICENSE="GPL-2"
+LICENSE="GPL-2+"
 SLOT="0"
 IUSE="systemd X"
 KEYWORDS="~amd64 ~x86"
@@ -30,7 +30,21 @@ DEPEND="${RDEPEND}
 "
 
 src_configure() {
-	gnome-meson_src_configure \
-		$(meson_use X wnck) \
+	local emesonargs=(
+		$(meson_use X wnck)
 		$(meson_use systemd)
+	)
+	meson_src_configure
+}
+
+pkg_postinst() {
+	xdg_pkg_postinst
+	gnome2_icon_cache_update
+	gnome2_schemas_update
+}
+
+pkg_postrm() {
+	xdg_pkg_postrm
+	gnome2_icon_cache_update
+	gnome2_schemas_update
 }
