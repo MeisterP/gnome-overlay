@@ -1,10 +1,10 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
 VALA_MIN_API_VERSION="0.40"
 
-inherit gnome-meson vala
+inherit gnome.org gnome2-utils meson vala xdg
 
 DESCRIPTION="Graphical tool for editing the dconf configuration database"
 HOMEPAGE="https://git.gnome.org/browse/dconf-editor"
@@ -21,9 +21,8 @@ COMMON_DEPEND="
 	>=x11-libs/gtk+-3.22.27:3
 "
 DEPEND="${COMMON_DEPEND}
-	>=dev-lang/vala-0.36.11
 	>=dev-util/intltool-0.50
-	sys-devel/gettext
+	>=sys-devel/gettext-0.19.7
 	virtual/pkgconfig
 "
 RDEPEND="${COMMON_DEPEND}
@@ -31,6 +30,18 @@ RDEPEND="${COMMON_DEPEND}
 "
 
 src_prepare() {
+	default
 	vala_src_prepare
-	gnome-meson_src_prepare
+}
+
+pkg_postinst() {
+	xdg_pkg_postinst
+	gnome2_icon_cache_update
+	gnome2_schemas_update
+}
+
+pkg_postrm() {
+	gnome2_icon_cache_update
+	xdg_pkg_postrm
+	gnome2_schemas_update
 }
