@@ -80,7 +80,6 @@ DEPEND="${RDEPEND}
 	wayland? ( >=sys-kernel/linux-headers-4.4 )
 "
 
-
 src_prepare() {
 	# Disable building of noinst_PROGRAM for tests
 	if ! use test; then
