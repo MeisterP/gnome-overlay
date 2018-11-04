@@ -27,7 +27,7 @@ DEPEND="${RDEPEND}
 
 src_configure() {
 	local emesonargs=(
-		-Dman=true 
+		-Dman=true
 		$(meson_use test tests)
 	)
 	meson_src_configure
