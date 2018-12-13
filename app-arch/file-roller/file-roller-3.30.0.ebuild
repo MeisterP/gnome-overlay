@@ -1,10 +1,10 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
 GNOME2_LA_PUNT="yes"
 
-inherit gnome-meson readme.gentoo-r1
+inherit gnome.org gnome2-utils meson readme.gentoo-r1 xdg
 
 DESCRIPTION="Archive manager for GNOME"
 HOMEPAGE="https://wiki.gnome.org/Apps/FileRoller"
@@ -60,26 +60,38 @@ zoo     - app-arch/zoo"
 src_prepare() {
 	# File providing Gentoo package names for various archivers
 	cp -f "${FILESDIR}"/3.22-packages.match data/packages.match || die
-	gnome-meson_src_prepare
+
+	default
 }
 
 src_configure() {
-	gnome-meson_src_configure \
-		-Drun-in-place=false \
-		-Dlibarchive=true \
-		-Dmagic=true \
-		-Dcpio="${EPREFIX%/}/bin/cpio" \
-		$(meson_use nautilus nautilus-actions) \
-		$(meson_use libnotify notification) \
+	local emesonargs=(
+		-Drun-in-place=false
+		-Dlibarchive=true
+		-Dmagic=true
+		-Dcpio="${EPREFIX%/}/bin/cpio"
+		$(meson_use nautilus nautilus-actions)
+		$(meson_use libnotify notification)
 		$(meson_use packagekit)
+	)
+	meson_src_configure
 }
 
 src_install() {
-	gnome-meson_src_install
+	meson_src_install
 	readme.gentoo_create_doc
 }
 
 pkg_postinst() {
-	gnome-meson_pkg_postinst
 	readme.gentoo_print_elog
+
+	gnome2_icon_cache_update
+	gnome2_schemas_update
+	xdg_pkg_postinst
+}
+
+pkg_postrm() {
+	gnome2_icon_cache_update
+	gnome2_schemas_update
+	xdg_pkg_postrm
 }
