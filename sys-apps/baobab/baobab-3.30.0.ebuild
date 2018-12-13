@@ -1,8 +1,8 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
-inherit gnome-meson vala
+inherit gnome.org gnome2-utils meson vala xdg
 
 DESCRIPTION="Disk usage browser for GNOME"
 HOMEPAGE="https://wiki.gnome.org/Apps/DiskUsageAnalyzer"
@@ -30,6 +30,18 @@ DEPEND="${COMMON_DEPEND}
 "
 
 src_prepare() {
-	gnome-meson_src_prepare
+	default
 	vala_src_prepare
+}
+
+pkg_postinst() {
+	gnome2_icon_cache_update
+	gnome2_schemas_update
+	xdg_pkg_postinst
+}
+
+pkg_postrm() {
+	gnome2_icon_cache_update
+	gnome2_schemas_update
+	xdg_pkg_postrm
 }
