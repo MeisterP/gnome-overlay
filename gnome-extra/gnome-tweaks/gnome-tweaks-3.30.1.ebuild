@@ -1,11 +1,11 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
 GNOME2_LA_PUNT="yes"
 PYTHON_COMPAT=( python3_{4,5,6} )
 
-inherit gnome-meson python-r1
+inherit gnome.org gnome2-utils meson python-r1 xdg
 
 DESCRIPTION="Tool to customize GNOME 3 options"
 HOMEPAGE="https://wiki.gnome.org/Apps/Tweaks"
@@ -41,7 +41,12 @@ DEPEND="${COMMON_DEPEND}
 	virtual/pkgconfig
 "
 
-src_prepare() {
-	gnome-meson_src_prepare
-	python_copy_sources
+pkg_postinst() {
+	gnome2_icon_cache_update
+	xdg_pkg_postinst
+}
+
+pkg_postrm() {
+	gnome2_icon_cache_update
+	xdg_pkg_postrm
 }
