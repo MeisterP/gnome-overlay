@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
-inherit gnome-meson vala
+inherit gnome.org gnome2-utils meson vala xdg
 
 DESCRIPTION="A GNOME application for managing encryption keys"
 HOMEPAGE="https://wiki.gnome.org/Apps/Seahorse"
@@ -35,18 +35,32 @@ DEPEND="${RDEPEND}
 "
 
 src_prepare() {
-	gnome-meson_src_prepare
+	default
 	vala_src_prepare
 }
 
 src_configure() {
-	gnome-meson_src_configure \
-		-Dhelp=true \
-		-Dpgp-support=true \
-		-Dcheck-compatible-gpg=true \
-		-Dpkcs11-support=true \
-		-Dkeyservers-support=true \
-		-Dhkp-support=true \
-		$(meson_use ldap ldap-support) \
+	local emesonargs=(
+		-Dhelp=true
+		-Dpgp-support=true
+		-Dcheck-compatible-gpg=true
+		-Dpkcs11-support=true
+		-Dkeyservers-support=true
+		-Dhkp-support=true
+		$(meson_use ldap ldap-support)
 		$(meson_use zeroconf key-sharing)
+	)
+	meson_src_configure
+}
+
+pkg_postinst() {
+	gnome2_icon_cache_update
+	gnome2_schemas_update
+	xdg_pkg_postinst
+}
+
+pkg_postrm() {
+	gnome2_icon_cache_update
+	gnome2_schemas_update
+	xdg_pkg_postrm
 }
