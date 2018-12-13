@@ -1,4 +1,4 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI="6"
@@ -25,7 +25,7 @@ COMMON_DEPEND="
 	gnome-base/gsettings-desktop-schemas
 	>=x11-libs/tepl-3.99.1
 	>=x11-libs/gtk+-3.20:3
-	>=x11-libs/gtksourceview-3.99.6:4.0=[vala]
+	>=x11-libs/gtksourceview-3.99.6:4=[vala]
 	x11-libs/gdk-pixbuf:2
 	x11-libs/pango
 
