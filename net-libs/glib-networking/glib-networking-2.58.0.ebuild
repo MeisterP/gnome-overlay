@@ -1,10 +1,10 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
 GNOME2_LA_PUNT="yes"
 
-inherit gnome-meson multilib-minimal virtualx
+inherit gnome.org gnome2-utils meson multilib-minimal virtualx
 
 DESCRIPTION="Network-related giomodules for glib"
 HOMEPAGE="https://git.gnome.org/browse/glib-networking/"
@@ -38,15 +38,17 @@ src_prepare() {
 }
 
 multilib_src_configure() {
-	gnome-meson_src_configure \
+	local emesonargs=(
 		-Dstatic_modules=false \
-		$(meson_use gnome gnome_proxy_support) \
-		$(meson_use libproxy libproxy_support) \
+		$(meson_use gnome gnome_proxy_support)
+		$(meson_use libproxy libproxy_support)
 		$(meson_use smartcard pkcs11_support)
+	)
+	meson_src_configure
 }
 
 multilib_src_compile() {
-	gnome-meson_src_compile
+	meson_src_compile
 }
 
 multilib_src_test() {
@@ -58,12 +60,10 @@ multilib_src_test() {
 }
 
 multilib_src_install() {
-	gnome-meson_src_install
+	meson_src_install
 }
 
 pkg_postinst() {
-	gnome-meson_pkg_postinst
-
 	multilib_pkg_postinst() {
 		gnome2_giomodule_cache_update \
 			|| die "Update GIO modules cache failed (for ${ABI})"
@@ -72,8 +72,6 @@ pkg_postinst() {
 }
 
 pkg_postrm() {
-	gnome-meson_pkg_postrm
-
 	multilib_pkg_postrm() {
 		gnome2_giomodule_cache_update \
 			|| die "Update GIO modules cache failed (for ${ABI})"
