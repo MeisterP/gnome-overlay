@@ -123,8 +123,6 @@ src_configure() {
 }
 
 pkg_postinst() {
-	#????gnome-meson_pkg_postinst
-
 	if ! systemd_is_booted; then
 		ewarn "${PN} needs Systemd to be *running* for working"
 		ewarn "properly. Please follow the this guide to migrate:"
