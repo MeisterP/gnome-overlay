@@ -1,10 +1,10 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
 PYTHON_COMPAT=( python2_7 python3_{4,5,6,7} pypy )
 
-inherit eutils gnome-meson python-r1 virtualx
+inherit gnome.org meson python-r1
 
 DESCRIPTION="GLib's GObject library bindings for Python"
 HOMEPAGE="https://wiki.gnome.org/Projects/PyGObject"
@@ -38,20 +38,22 @@ RDEPEND="${COMMON_DEPEND}
 
 src_configure() {
 	configuring() {
-		gnome-meson_src_configure \
-			-Dpython=${EPYTHON} \
+		local emesonargs=(
+			-Dpython=${EPYTHON}
 			$(meson_use cairo pycairo)
+		)
+		meson_src_configure
 	}
 
 	python_foreach_impl run_in_build_dir configuring
 }
 
 src_compile() {
-	python_foreach_impl run_in_build_dir gnome-meson_src_compile
+	python_foreach_impl run_in_build_dir meson_src_compile
 }
 
 src_install() {
-	python_foreach_impl run_in_build_dir gnome-meson_src_install
+	python_foreach_impl run_in_build_dir meson_src_install
 
 	dodoc -r examples
 }
