@@ -52,7 +52,7 @@ src_configure() {
 	local emesonargs=(
 		$(meson_use doc gtk_doc)
 		$(meson_use glade glade_catalog)
-		$(meson_use vala)
+		$(meson_use vala enable_vala)
 	)
 	meson_src_configure
 }
