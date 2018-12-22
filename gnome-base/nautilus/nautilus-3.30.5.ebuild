@@ -11,7 +11,7 @@ HOMEPAGE="https://wiki.gnome.org/Apps/Nautilus"
 
 LICENSE="GPL-2+ LGPL-2+ FDL-1.1"
 SLOT="0"
-IUSE="exif gnome +introspection packagekit +previewer selinux extensions xmp"
+IUSE="exif gnome gtk-doc +introspection packagekit +previewer selinux extensions xmp"
 
 KEYWORDS="~amd64 ~x86"
 
@@ -45,6 +45,8 @@ DEPEND="${COMMON_DEPEND}
 	>=sys-devel/gettext-0.19.7
 	virtual/pkgconfig
 	x11-base/xorg-proto
+
+	gtk-doc? ( dev-util/gtk-doc )
 "
 RDEPEND="${COMMON_DEPEND}
 	gnome-base/dconf
@@ -58,10 +60,12 @@ PDEPEND="
 	>=gnome-base/gvfs-1.34
 "
 
-# see https://gitlab.gnome.org/GNOME/nautilus/issues/398
 PATCHES=(
-	"${FILESDIR}"/3.30.2-fix-bubblewrap.patch
+	# https://gitlab.gnome.org/GNOME/nautilus/issues/398
 	"${FILESDIR}"/3.30.0-show-thumbnails.patch
+
+	# https://gitlab.gnome.org/GNOME/gnome-desktop/issues/81
+	"${FILESDIR}"/3.30.2-fix-bubblewrap.patch
 )
 
 src_prepare() {
@@ -74,13 +78,15 @@ src_prepare() {
 }
 
 src_configure() {
-	# FIXME no doc useflag??
 	local emesonargs=(
-		-Ddocs=true
 		-Dprofiling=false
+		-Dtests=none
+		$(meson_use gtk-doc docs)
 		$(meson_use extensions)
+		$(meson_use introspection)
 		$(meson_use packagekit)
 		$(meson_use selinux)
+
 	)
 	meson_src_configure
 }
@@ -107,7 +113,7 @@ pkg_postinst() {
 }
 
 pkg_postrm() {
-	gnome2_icon_cache_update
 	xdg_pkg_postrm
+	gnome2_icon_cache_update
 	gnome2_schemas_update
 }
