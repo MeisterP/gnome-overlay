@@ -2,7 +2,6 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
-GNOME2_LA_PUNT="yes"
 
 inherit gnome.org gnome2-utils meson readme.gentoo-r1 xdg
 
@@ -18,7 +17,6 @@ KEYWORDS="~amd64 ~x86"
 # cairo used in eggtreemultidnd.c
 # pango used in fr-window
 RDEPEND="
-	app-arch/cpio
 	>=app-arch/libarchive-3:=
 	>=dev-libs/glib-2.36:2
 	>=dev-libs/json-glib-0.14
@@ -31,10 +29,11 @@ RDEPEND="
 	nautilus? ( >=gnome-base/nautilus-2.22.2 )
 	packagekit? ( app-admin/packagekit-base )
 "
+# libxml2 required for glib-compile-resources
 DEPEND="${RDEPEND}
-	>=dev-util/intltool-0.50.1
+	dev-libs/libxml2:2
 	dev-util/itstool
-	sys-devel/gettext
+	>=sys-devel/gettext-0.19.8
 	virtual/pkgconfig
 "
 
@@ -46,6 +45,7 @@ and install the relevant package. For example:
 7-zip   - app-arch/p7zip
 ace     - app-arch/unace
 arj     - app-arch/arj
+cpio    - app-arch/cpio
 deb     - app-arch/dpkg
 iso     - app-cdr/cdrtools
 jar,zip - app-arch/zip and app-arch/unzip
@@ -59,20 +59,19 @@ zoo     - app-arch/zoo"
 
 src_prepare() {
 	# File providing Gentoo package names for various archivers
-	cp -f "${FILESDIR}"/3.22-packages.match data/packages.match || die
+	cp -v "${FILESDIR}"/3.22-packages.match data/packages.match || die
 
-	default
+	xdg_src_prepare
 }
 
 src_configure() {
 	local emesonargs=(
 		-Drun-in-place=false
-		-Dlibarchive=true
-		-Dmagic=true
-		-Dcpio="${EPREFIX%/}/bin/cpio"
 		$(meson_use nautilus nautilus-actions)
 		$(meson_use libnotify notification)
 		$(meson_use packagekit)
+		-Dlibarchive=true
+		-Dmagic=true
 	)
 	meson_src_configure
 }
@@ -83,15 +82,14 @@ src_install() {
 }
 
 pkg_postinst() {
-	readme.gentoo_print_elog
-
+	xdg_pkg_postinst
 	gnome2_icon_cache_update
 	gnome2_schemas_update
-	xdg_pkg_postinst
+	readme.gentoo_print_elog
 }
 
 pkg_postrm() {
+	xdg_pkg_postrm
 	gnome2_icon_cache_update
 	gnome2_schemas_update
-	xdg_pkg_postrm
 }
