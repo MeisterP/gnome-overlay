@@ -1,4 +1,4 @@
-# Copyright 1999-2018 Gentoo Authors
+# Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -16,12 +16,13 @@ IUSE="+introspection test"
 RDEPEND="
 	>=dev-libs/glib-2.52:2
 	>=x11-libs/gtk+-3.22
-	>=x11-libs/gtksourceview-3.99.7:4
+	x11-libs/gtksourceview:4
 	>=dev-libs/libxml2-2.5
 	app-i18n/uchardet
 	introspection? ( >=dev-libs/gobject-introspection-1.42:= )
+	x11-libs/amtk
 "
-DEPEND="${RDEPEND}
+DEPEND="${DEPEND}
 	test? ( dev-util/valgrind )
 	>=sys-devel/gettext-0.19.4
 	>=dev-util/gtk-doc-am-1.25
