@@ -1,4 +1,4 @@
-# Copyright 1999-2018 Gentoo Authors
+# Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -10,10 +10,9 @@ HOMEPAGE="https://wiki.gnome.org/Apps/Calendar"
 LICENSE="GPL-3+"
 SLOT="0"
 KEYWORDS="~amd64" #libdazzle is only ~amd64
-IUSE=""
+IUSE="gtk-doc"
 
 # >=libical-1.0.1 for https://bugzilla.gnome.org/show_bug.cgi?id=751244
-# FIXME add docs
 RDEPEND="
 	>=app-misc/geoclue-2.4.0:2.0
 	>=dev-libs/glib-2.43.4:2
@@ -32,11 +31,12 @@ DEPEND="${RDEPEND}
 	>=dev-libs/libdazzle-3.28.0
 	sys-devel/gettext
 	virtual/pkgconfig
+	gtk-doc? ( dev-util/gtk-doc )
 "
 
 src_configure() {
 	local emesonargs=(
-		-Ddocumentation=true
+		$(meson_use gtk-doc documentation)
 		-Dtracing=false
 	)
 	meson_src_configure
