@@ -2,9 +2,11 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI="6"
+VALA_MIN_API_VERSION="0.34"
+VALA_USE_DEPEND="vapigen"
 GNOME2_EAUTORECONF="yes"
 
-inherit gnome2
+inherit gnome2 vala
 
 DESCRIPTION="Integrated LaTeX environment for GNOME"
 HOMEPAGE="https://wiki.gnome.org/Apps/GNOME-LaTeX"
@@ -15,6 +17,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE="+introspection +latexmk rubber"
 
 COMMON_DEPEND="
+	$(vala_depend)
 	app-text/enchant
 	>=app-text/gspell-1.0:0=
 	>=dev-libs/glib-2.50:2[dbus]
@@ -48,6 +51,7 @@ PATCHES=( ${FILESDIR}/0001-Restore-GSPELL_REQUIRED_VERSION-1.0.patch
 
 src_prepare() {
 	gnome2_src_prepare
+	vala_src_prepare
 }
 
 src_configure() {
