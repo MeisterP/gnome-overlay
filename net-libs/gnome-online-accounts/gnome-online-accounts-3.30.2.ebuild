@@ -1,4 +1,4 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -14,7 +14,7 @@ LICENSE="LGPL-2+"
 SLOT="0/1"
 KEYWORDS="~amd64 ~x86"
 
-IUSE="debug gnome +introspection kerberos vala" # telepathy"
+IUSE="debug gnome +introspection kerberos +vala" # telepathy"
 REQUIRED_USE="vala? ( introspection )"
 
 # pango used in goaeditablelabel
@@ -52,8 +52,8 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig
 
 	dev-libs/gobject-introspection-common
+	gnome-base/gnome-common
 "
-# eautoreconf needs gobject-introspection-common, gnome-common
 
 # Due to sub-configure
 QA_CONFIGURE_OPTIONS=".*"
@@ -65,7 +65,7 @@ src_prepare() {
 
 src_configure() {
 	# TODO: Give users a way to set the G/FB/Windows Live secrets
-	# telepathy optional support is really a badly one, bug #494456
+	# telepathy optional support is really a badly one, bug #494456 - now default disabled upstream - revisit soon
 	gnome2_src_configure \
 		--disable-static \
 		--enable-backend \
