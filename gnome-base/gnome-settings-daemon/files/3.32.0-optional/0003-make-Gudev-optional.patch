@@ -1,27 +1,14 @@
-From 2c1803ba81c7b33e0dc24213b9b608308a7f3c62 Mon Sep 17 00:00:00 2001
+From 7a53626799db935481da4811eb2ce90c07cb8657 Mon Sep 17 00:00:00 2001
 From: Poncho <poncho@spahan.ch>
 Date: Sat, 17 Mar 2018 10:41:17 +0100
 Subject: [PATCH 3/4] make Gudev optional
 
 ---
- meson.build       | 1 -
  meson_options.txt | 2 +-
- 2 files changed, 1 insertion(+), 2 deletions(-)
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/meson.build b/meson.build
-index d77f0b26..4bada1da 100644
---- a/meson.build
-+++ b/meson.build
-@@ -124,7 +124,6 @@ config_h.set10('USE_SUSPEND_THEN_HIBERNATE', use_suspend_then_hibernate)
- # GUdev integration (default enabled)
- enable_gudev = get_option('gudev')
- if enable_gudev
--  assert(enable_gudev, 'GUdev is not optional on Linux platforms')
-   gudev_dep = dependency('gudev-1.0')
- endif
- config_h.set10('HAVE_GUDEV', enable_gudev)
 diff --git a/meson_options.txt b/meson_options.txt
-index c3bbd03d..61df45b9 100644
+index 48e0f432..966add7c 100644
 --- a/meson_options.txt
 +++ b/meson_options.txt
 @@ -2,7 +2,7 @@ option('nssdb_dir', type: 'string', value: '', description: 'Absolute path to th
@@ -34,5 +21,5 @@ index c3bbd03d..61df45b9 100644
  option('network_manager', type: 'boolean', value: true, description: 'build with NetworkManager support')
  option('rfkill', type: 'boolean', value: true, description: 'build with rfkill support (not optional on Linux platforms)')
 -- 
-2.18.0
+2.19.2
 
