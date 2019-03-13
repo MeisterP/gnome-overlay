@@ -1,0 +1,28 @@
+From 2ac7f7f1e5bf6381430d0224e7ee51c701664a69 Mon Sep 17 00:00:00 2001
+From: Tom Briden <tom@decompile.me.uk>
+Date: Mon, 11 Mar 2019 19:49:41 +0000
+Subject: [PATCH] build: Make libsystemd an optional dependency
+
+Otherwise it errors out before checking for elogind instead
+
+https://gitlab.gnome.org/GNOME/mutter/merge_requests/491
+---
+ meson.build | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/meson.build b/meson.build
+index dc210e6fe..6ce9e59f2 100644
+--- a/meson.build
++++ b/meson.build
+@@ -178,7 +178,7 @@ if have_native_backend
+   libgbm_dep = dependency('gbm', version: gbm_req)
+   libinput_dep = dependency('libinput', version: libinput_req)
+ 
+-  libsystemd_dep = dependency('libsystemd')
++  libsystemd_dep = dependency('libsystemd', required: false)
+   if libsystemd_dep.found()
+     logind_provider_dep = libsystemd_dep
+   else
+-- 
+2.18.1
+
