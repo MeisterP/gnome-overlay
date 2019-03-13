@@ -47,8 +47,10 @@ DEPEND="${COMMON_DEPEND}
 	virtual/pkgconfig
 "
 
-PATCHES=( ${FILESDIR}/0001-Restore-GSPELL_REQUIRED_VERSION-1.0.patch
-	${FILESDIR}/xelatex-parse.patch )
+PATCHES=(
+	"${FILESDIR}"/0001-Restore-GSPELL_REQUIRED_VERSION-1.0.patch
+	"${FILESDIR}"/xelatex-parse.patch
+	)
 
 src_prepare() {
 	gnome2_src_prepare
