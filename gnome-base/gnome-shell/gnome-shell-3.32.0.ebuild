@@ -1,4 +1,4 @@
-# Copyright 1999-2018 Gentoo Authors
+# Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -11,7 +11,7 @@ HOMEPAGE="https://wiki.gnome.org/Projects/GnomeShell"
 
 LICENSE="GPL-2+ LGPL-2+"
 SLOT="0"
-IUSE="+bluetooth +browser-extension elogind +networkmanager nsplugin systemd telepathy"
+IUSE="+bluetooth +browser-extension elogind gtk-doc +networkmanager systemd telepathy"
 REQUIRED_USE="${PYTHON_REQUIRED_USE}
 	?? ( elogind systemd )"
 
@@ -25,19 +25,17 @@ COMMON_DEPEND="
 	>=gnome-extra/evolution-data-server-3.17.2:=
 	>=app-crypt/gcr-3.7.5[introspection]
 	>=gnome-base/gnome-desktop-3.7.90:3=[introspection]
-	>=dev-libs/glib-2.53:2
+	>=dev-libs/glib-2.56.0:2
 	>=dev-libs/gobject-introspection-1.49.1:=
-	>=dev-libs/gjs-1.47.0
+	>=dev-libs/gjs-1.54.0
 	>=x11-libs/gtk+-3.15.0:3[introspection]
-	nsplugin? ( >=dev-libs/json-glib-0.13.2 )
-	>=x11-wm/mutter-3.30.1:0/0[introspection]
+	>=x11-wm/mutter-3.32.0:0/4[introspection]
 	>=sys-auth/polkit-0.100[introspection]
 	>=gnome-base/gsettings-desktop-schemas-3.27.90
 	>=x11-libs/startup-notification-0.11
 	bluetooth? ( >=net-wireless/gnome-bluetooth-3.9[introspection] )
 	>=media-libs/gstreamer-0.11.92:1.0
 	networkmanager? (
-		>=gnome-extra/nm-applet-0.9.8[introspection]
 		>=net-misc/networkmanager-1.10.4:=[introspection]
 		>=app-crypt/libsecret-0.18
 		dev-libs/dbus-glib )
@@ -45,7 +43,6 @@ COMMON_DEPEND="
 	elogind? ( >=sys-auth/elogind-237 )
 
 	>=app-accessibility/at-spi2-atk-2.5.3
-	media-libs/libcanberra[gtk3]
 	x11-libs/gdk-pixbuf:2[introspection]
 	dev-libs/libxml2:2
 	>=net-libs/libsoup-2.40:2.4[introspection]
@@ -77,7 +74,6 @@ COMMON_DEPEND="
 RDEPEND="${COMMON_DEPEND}
 	>=sys-apps/accountsservice-0.6.14[introspection]
 	app-accessibility/at-spi2-core:2[introspection]
-	>=app-accessibility/caribou-0.4.8
 	app-misc/geoclue[introspection]
 	>=dev-libs/libgweather-3.26:2[introspection]
 	>=sys-power/upower-0.99:=[introspection]
@@ -89,7 +85,7 @@ RDEPEND="${COMMON_DEPEND}
 
 	x11-misc/xdg-utils
 
-	>=x11-themes/adwaita-icon-theme-3.19.90
+	>=x11-themes/adwaita-icon-theme-3.26
 
 	networkmanager? (
 		net-misc/mobile-broadband-provider-info
@@ -98,11 +94,12 @@ RDEPEND="${COMMON_DEPEND}
 	telepathy? (
 		>=net-im/telepathy-logger-0.2.4[introspection]
 		>=net-libs/telepathy-glib-0.19[introspection] )
+	media-fonts/cantarell
 "
 # avoid circular dependency, see bug #546134
 PDEPEND="
 	>=gnome-base/gdm-3.5[introspection]
-	>=gnome-base/gnome-control-center-3.8.3[bluetooth(+)?,networkmanager(+)?]
+	>=gnome-base/gnome-control-center-3.26[bluetooth(+)?,networkmanager(+)?]
 	browser-extension? ( gnome-extra/chrome-gnome-shell )
 "
 DEPEND="${COMMON_DEPEND}
@@ -110,14 +107,16 @@ DEPEND="${COMMON_DEPEND}
 	dev-libs/libxslt
 	>=dev-util/gdbus-codegen-2.45.3
 	dev-util/glib-utils
-	>=dev-util/meson-0.47.0
-	>=sys-devel/gettext-0.19.6
+	gtk-doc? ( >=dev-util/gtk-doc-1.17 )
+	>=sys-devel/gettext-0.19.8
 	virtual/pkgconfig
 "
 
 PATCHES=(
 	# Change favorites defaults, bug #479918
-	"${FILESDIR}"/${PN}-3.22.0-defaults.patch
+	"${FILESDIR}"/3.28.3-defaults.patch
+	# Fix automagic gnome-bluetooth dep, bug #398145
+	"${FILESDIR}"/${PV}-optional-bluetooth.patch
 )
 
 src_prepare() {
@@ -130,11 +129,10 @@ src_prepare() {
 
 src_configure() {
 	local emesonargs=(
+		$(meson_use gtk-doc gtk_doc)
 		-Dman=true
-		-Dgtk_doc=false
-		-Dsystemd=$(usex systemd true false)
 		$(meson_use networkmanager)
-		$(meson_use nsplugin browser_plugin)
+		-Dsystemd=$(usex systemd true false)
 	)
 	meson_src_configure
 }
