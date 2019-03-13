@@ -1,8 +1,7 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI="6"
-GNOME2_LA_PUNT="yes" # plugins are dlopened
 PYTHON_COMPAT=( python3_{4,5,6} )
 PYTHON_REQ_USE="xml"
 VALA_MIN_API_VERSION="0.28"
@@ -31,7 +30,7 @@ RDEPEND="
 	>=dev-libs/glib-2.32:2
 	>=dev-libs/libpeas-1.7.0[gtk]
 	>=x11-libs/gtk+-3.9:3
-	>=x11-libs/gtksourceview-3.21.3:3.0
+	>=x11-libs/gtksourceview-4.0.2:4
 	python? (
 		${PYTHON_DEPS}
 		>=app-editors/gedit-3.16[introspection,python,${PYTHON_USEDEP}]
@@ -50,8 +49,7 @@ RDEPEND="
 	vala? ( $(vala_depend) )
 "
 DEPEND="${RDEPEND}
-	app-text/yelp-tools
-	>=dev-util/intltool-0.40.0
+	dev-util/itstool
 	>=sys-devel/gettext-0.17
 	virtual/pkgconfig
 "
@@ -67,7 +65,6 @@ src_prepare() {
 
 src_configure() {
 	gnome2_src_configure \
-		--disable-zeitgeist \
 		$(use_enable python) \
 		$(use_enable vala)
 }
