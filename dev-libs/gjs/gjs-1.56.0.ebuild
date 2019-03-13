@@ -18,7 +18,7 @@ RDEPEND="
 
 	sys-libs/readline:0=
 	~dev-lang/spidermonkey-60.1.0:60
-	virtual/libffi
+	virtual/libffi:=
 	cairo? ( x11-libs/cairo[X] )
 	gtk? ( >=x11-libs/gtk+-3.20:3 )
 "
@@ -36,9 +36,8 @@ src_configure() {
 	gnome2_src_configure \
 		--disable-systemtap \
 		--disable-dtrace \
+		--enable-profiler \
 		--disable-code-coverage \
-		--disable-profiler \
-		--enable-readline \
 		$(use_with cairo cairo) \
 		$(use_with gtk) \
 		$(use_with test dbus-tests) \
