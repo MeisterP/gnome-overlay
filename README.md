@@ -3,7 +3,7 @@ Unofficial GNOME overlay [![pipeline status](https://0xacab.org/Poncho/gnome-ove
 
 Version
 --------
- - GNOME `3.30`
+ - GNOME `3.32`
 
 
 Information
