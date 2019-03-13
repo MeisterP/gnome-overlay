@@ -1,20 +1,20 @@
-From 156ad9b41220c99e485b6abf3e6b76dca4abc931 Mon Sep 17 00:00:00 2001
+From 8b310a0b0bc4ac096d8b5899390725cb735a79e6 Mon Sep 17 00:00:00 2001
 From: Poncho <poncho@spahan.ch>
 Date: Fri, 16 Mar 2018 19:16:17 +0100
-Subject: [PATCH 1/3] make wacom optional
+Subject: [PATCH 1/7] make wacom optional
 
 ---
- meson.build        | 25 +++++++++++++++----------
+ meson.build        | 22 ++++++++++++++--------
  meson_options.txt  |  3 ++-
  panels/meson.build |  5 ++++-
  shell/meson.build  |  2 +-
- 4 files changed, 22 insertions(+), 13 deletions(-)
+ 4 files changed, 21 insertions(+), 11 deletions(-)
 
 diff --git a/meson.build b/meson.build
-index 1dd93bf7f..c4cfed5fb 100644
+index e89ea5247..9fe1f5ccb 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -197,8 +197,18 @@ config_h.set('HAVE_NETWORK_MANAGER', host_is_linux,
+@@ -215,7 +215,18 @@ config_h.set('HAVE_NETWORK_MANAGER', host_is_linux,
  if host_is_linux_not_s390
    # gnome-bluetooth
    gnome_bluetooth_dep = dependency('gnome-bluetooth-1.0', version: '>= 3.18.2')
@@ -25,16 +25,15 @@ index 1dd93bf7f..c4cfed5fb 100644
 +             description: 'Define to 1 to build the Bluetooth panel')
 +config_h.set('HAVE_BLUETOOTH', host_is_linux_not_s390,
 +             description: 'Define to 1 if bluetooth support is available')
-+
  
--  # Wacom
 +# Wacom panel
 +enable_wacom = get_option('wacom')
 +if enable_wacom
-   assert(clutter_gtk_dep.found(), 'clutter-gtk library is required for wacom support, but is not available.')
- 
++  assert(clutter_gtk_dep.found(), 'clutter-gtk library is required for wacom support, but is not available.')
    libwacom_dep = dependency('libwacom', version: '>= 0.7')
-@@ -212,15 +222,10 @@ if host_is_linux_not_s390
+ 
+   wacom_deps = [
+@@ -225,15 +236,10 @@ if host_is_linux_not_s390
                 description: 'Define to 1 if libwacom provides definition for 3D styli')
  else
    message('Bluetooth and Wacom panels will not be built (no USB support on this platform)')
@@ -52,7 +51,7 @@ index 1dd93bf7f..c4cfed5fb 100644
               description: 'Define to 1 if Wacom is supportted')
  config_h.set('BUILD_THUNDERBOLT', host_is_linux_not_s390,
               description: 'Define to 1 to build the Thunderbolt panel')
-@@ -279,7 +284,7 @@ output += '     GNOME Bluetooth (Bluetooth panel) .......... ' + host_is_linux_n
+@@ -292,7 +298,7 @@ output += '     GNOME Bluetooth (Bluetooth panel) .......... ' + host_is_linux_n
  output += '     Cheese (Users panel webcam support) ........ ' + enable_cheese.to_string() + '\n'
  output += '     IBus (Region panel IBus support) ........... ' + enable_ibus.to_string() + '\n'
  output += '     NetworkManager (Network panel) ............. ' + host_is_linux.to_string() + '\n'
@@ -60,9 +59,7 @@ index 1dd93bf7f..c4cfed5fb 100644
 +output += '     Wacom (Wacom tablet panel) ................. ' + enable_wacom.to_string() + '\n'
  output += '     Wayland .................................... ' + enable_wayland.to_string() + '\n'
  
--message(output)
-\ No newline at end of file
-+message(output)
+ message(output)
 diff --git a/meson_options.txt b/meson_options.txt
 index a347168b7..28e214c36 100644
 --- a/meson_options.txt
@@ -76,10 +73,10 @@ index a347168b7..28e214c36 100644
 +option('wayland', type: 'boolean', value: true, description: 'build with Wayland support')
 +option('wacom', type: 'boolean', value: true, description: 'build with wacom support')
 diff --git a/panels/meson.build b/panels/meson.build
-index 37a343642..8e71f3c44 100644
+index 95a44bb9d..c5ca625b5 100644
 --- a/panels/meson.build
 +++ b/panels/meson.build
-@@ -21,6 +21,10 @@ panels = [
+@@ -22,6 +22,10 @@ panels = [
    'user-accounts'
  ]
  
@@ -90,7 +87,7 @@ index 37a343642..8e71f3c44 100644
  if host_is_linux
    panels += ['network']
  endif
-@@ -29,7 +33,6 @@ if host_is_linux_not_s390
+@@ -30,7 +34,6 @@ if host_is_linux_not_s390
    panels += [
      'bluetooth',
      'thunderbolt',
@@ -99,10 +96,10 @@ index 37a343642..8e71f3c44 100644
  endif
  
 diff --git a/shell/meson.build b/shell/meson.build
-index 0b2ebeca8..f806eee1e 100644
+index 1dc181f02..6b831cc36 100644
 --- a/shell/meson.build
 +++ b/shell/meson.build
-@@ -81,7 +81,7 @@ if enable_cheese
+@@ -115,7 +115,7 @@ if enable_cheese
    shell_deps += cheese_deps
  endif
  
@@ -112,5 +109,5 @@ index 0b2ebeca8..f806eee1e 100644
  endif
  
 -- 
-2.16.4
+2.19.2
 

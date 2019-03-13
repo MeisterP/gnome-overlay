@@ -1,7 +1,7 @@
-From 963d112773950d30ed4c39d60ae8ba7df05ca772 Mon Sep 17 00:00:00 2001
+From 66dc4a75641910d2c59422586613d8f1201c491e Mon Sep 17 00:00:00 2001
 From: Poncho <poncho@spahan.ch>
 Date: Sat, 17 Mar 2018 12:58:21 +0100
-Subject: [PATCH 3/3] make networkmanager optional
+Subject: [PATCH 3/7] make networkmanager optional
 
 ---
  meson.build              | 11 ++++++-----
@@ -11,12 +11,12 @@ Subject: [PATCH 3/3] make networkmanager optional
  4 files changed, 9 insertions(+), 7 deletions(-)
 
 diff --git a/meson.build b/meson.build
-index c1fa21dd8..c10869d3f 100644
+index 8335246bf..b285198fb 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -181,17 +181,18 @@ endif
- config_h.set('HAVE_WAYLAND', enable_wayland,
-              description: 'Define to 1 if Wayland is enabled')
+@@ -199,17 +199,18 @@ config_h.set10('HAVE_FN_EXPLICIT_BZERO',
+                cc.has_function('explicit_bzero', prefix: '''#include <string.h>'''),
+                description: 'Define if explicit_bzero is available')
  
 -if host_is_linux
 -  # network manager
@@ -37,7 +37,7 @@ index c1fa21dd8..c10869d3f 100644
               description: 'Define to 1 if NetworkManager is available')
  
  # gnome-bluetooth
-@@ -282,7 +283,7 @@ output += ' Panels \n'
+@@ -296,7 +297,7 @@ output += ' Panels \n'
  output += '     GNOME Bluetooth (Bluetooth panel) .......... ' + enable_bluetooth.to_string() + '\n'
  output += '     Cheese (Users panel webcam support) ........ ' + enable_cheese.to_string() + '\n'
  output += '     IBus (Region panel IBus support) ........... ' + enable_ibus.to_string() + '\n'
@@ -56,10 +56,10 @@ index f80edddd7..ac5186228 100644
  option('bluetooth', type: 'boolean', value: true, description: 'build with gnome-bluetooth support')
 +option('network', type: 'boolean', value: true, description: 'build with networkmanager support')
 diff --git a/panels/meson.build b/panels/meson.build
-index 7ecab5abe..5cf6b1640 100644
+index 7f1a6256a..9a0dc0d1f 100644
 --- a/panels/meson.build
 +++ b/panels/meson.build
-@@ -25,7 +25,7 @@ if enable_wacom
+@@ -26,7 +26,7 @@ if enable_wacom
    panels += ['wacom']
  endif
  
@@ -69,7 +69,7 @@ index 7ecab5abe..5cf6b1640 100644
  endif
  
 diff --git a/panels/power/meson.build b/panels/power/meson.build
-index edc088e05..659e02257 100644
+index c07a0234d..94cfdfce9 100644
 --- a/panels/power/meson.build
 +++ b/panels/power/meson.build
 @@ -36,7 +36,7 @@ deps = common_deps + [
@@ -82,5 +82,5 @@ index edc088e05..659e02257 100644
  endif
  
 -- 
-2.16.4
+2.19.2
 

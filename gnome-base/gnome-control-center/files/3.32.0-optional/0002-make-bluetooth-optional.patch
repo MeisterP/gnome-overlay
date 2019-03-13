@@ -1,7 +1,7 @@
-From b4c9c97ab5309812ab91171c84a3e59bb78f133d Mon Sep 17 00:00:00 2001
+From ba0d9365e3a877540c84b64505154a6f7d462b7d Mon Sep 17 00:00:00 2001
 From: Poncho <poncho@spahan.ch>
 Date: Sat, 17 Mar 2018 12:45:39 +0100
-Subject: [PATCH 2/3] make bluetooth optional
+Subject: [PATCH 2/7] make bluetooth optional
 
 ---
  meson.build              | 13 ++++++-------
@@ -11,10 +11,10 @@ Subject: [PATCH 2/3] make bluetooth optional
  4 files changed, 13 insertions(+), 12 deletions(-)
 
 diff --git a/meson.build b/meson.build
-index c4cfed5fb..c1fa21dd8 100644
+index 9fe1f5ccb..8335246bf 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -194,15 +194,14 @@ config_h.set('BUILD_NETWORK', host_is_linux,
+@@ -212,15 +212,14 @@ config_h.set('BUILD_NETWORK', host_is_linux,
  config_h.set('HAVE_NETWORK_MANAGER', host_is_linux,
               description: 'Define to 1 if NetworkManager is available')
  
@@ -34,8 +34,8 @@ index c4cfed5fb..c1fa21dd8 100644
 +config_h.set('HAVE_BLUETOOTH', enable_bluetooth,
               description: 'Define to 1 if bluetooth support is available')
  
- 
-@@ -280,7 +279,7 @@ output += '     Tracing .................................... ' + enable_tracing.
+ # Wacom panel
+@@ -294,7 +293,7 @@ output += '     Tracing .................................... ' + enable_tracing.
  output += '     gnome-session libexecdir ................... ' + gnome_session_libexecdir + '\n'
  output += '     Optimized .................................. ' + control_center_optimized.to_string() + '\n'
  output += ' Panels \n'
@@ -54,10 +54,10 @@ index 28e214c36..f80edddd7 100644
  option('wacom', type: 'boolean', value: true, description: 'build with wacom support')
 +option('bluetooth', type: 'boolean', value: true, description: 'build with gnome-bluetooth support')
 diff --git a/panels/meson.build b/panels/meson.build
-index 8e71f3c44..7ecab5abe 100644
+index c5ca625b5..7f1a6256a 100644
 --- a/panels/meson.build
 +++ b/panels/meson.build
-@@ -30,10 +30,11 @@ if host_is_linux
+@@ -31,10 +31,11 @@ if host_is_linux
  endif
  
  if host_is_linux_not_s390
@@ -74,7 +74,7 @@ index 8e71f3c44..7ecab5abe 100644
  
  panels_list = []
 diff --git a/panels/power/meson.build b/panels/power/meson.build
-index d4091eaa1..edc088e05 100644
+index 736222613..c07a0234d 100644
 --- a/panels/power/meson.build
 +++ b/panels/power/meson.build
 @@ -40,7 +40,7 @@ if host_is_linux
@@ -87,5 +87,5 @@ index d4091eaa1..edc088e05 100644
  endif
  
 -- 
-2.16.4
+2.19.2
 
