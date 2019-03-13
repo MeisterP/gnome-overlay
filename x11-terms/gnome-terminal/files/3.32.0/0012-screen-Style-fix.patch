@@ -1,0 +1,29 @@
+From cf2762354183fffca17cc25f2149bf1e44e8fd04 Mon Sep 17 00:00:00 2001
+From: Debarshi Ray <debarshir@gnome.org>
+Date: Thu, 30 Jun 2016 18:14:36 +0200
+Subject: [PATCH 12/13] screen: Style fix
+
+This brings the code in line with how it was before
+de0dc7c2649c42e2aa02a66e4be27d262b34452d
+
+https://bugzilla.redhat.com/show_bug.cgi?id=1296110
+---
+ src/terminal-screen.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/terminal-screen.c b/src/terminal-screen.c
+index bf3618cb..6caa002d 100644
+--- a/src/terminal-screen.c
++++ b/src/terminal-screen.c
+@@ -693,7 +693,7 @@ terminal_screen_new (GSettings       *profile,
+   /* If given an initial title, strip it of control characters and
+    * feed it to the terminal.
+    */
+-  if (title != NULL) {
++  if (title) {
+     GString *seq;
+     const char *p;
+ 
+-- 
+2.19.2
+

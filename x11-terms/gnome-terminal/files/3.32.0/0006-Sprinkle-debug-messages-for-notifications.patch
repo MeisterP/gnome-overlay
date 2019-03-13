@@ -1,0 +1,82 @@
+From 0ad57ac5054a77200ef3e2883847c13a5cba6973 Mon Sep 17 00:00:00 2001
+From: Debarshi Ray <debarshir@gnome.org>
+Date: Thu, 29 Jan 2015 11:47:21 +0100
+Subject: [PATCH 06/13] Sprinkle debug messages for notifications
+
+This can be useful for finding out whether the escape sequence wasn't
+emitted or the filtering was faulty.
+
+https://bugzilla.gnome.org/show_bug.cgi?id=711059
+---
+ src/terminal-debug.c  | 1 +
+ src/terminal-debug.h  | 3 ++-
+ src/terminal-screen.c | 6 ++++++
+ 3 files changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/src/terminal-debug.c b/src/terminal-debug.c
+index d08829e9..3748e7ed 100644
+--- a/src/terminal-debug.c
++++ b/src/terminal-debug.c
+@@ -38,6 +38,7 @@ _terminal_debug_init(void)
+     { "profile",       TERMINAL_DEBUG_PROFILE       },
+     { "settings-list", TERMINAL_DEBUG_SETTINGS_LIST },
+     { "search",        TERMINAL_DEBUG_SEARCH        },
++    { "notifications", TERMINAL_DEBUG_NOTIFICATIONS },
+   };
+ 
+   _terminal_debug_flags = g_parse_debug_string (g_getenv ("GNOME_TERMINAL_DEBUG"),
+diff --git a/src/terminal-debug.h b/src/terminal-debug.h
+index 0fafcc3a..af135868 100644
+--- a/src/terminal-debug.h
++++ b/src/terminal-debug.h
+@@ -34,7 +34,8 @@ typedef enum {
+   TERMINAL_DEBUG_PROCESSES     = 1 << 6,
+   TERMINAL_DEBUG_PROFILE       = 1 << 7,
+   TERMINAL_DEBUG_SETTINGS_LIST = 1 << 8,
+-  TERMINAL_DEBUG_SEARCH        = 1 << 9
++  TERMINAL_DEBUG_SEARCH        = 1 << 9,
++  TERMINAL_DEBUG_NOTIFICATIONS = 1 << 10
+ } TerminalDebugFlags;
+ 
+ void _terminal_debug_init(void);
+diff --git a/src/terminal-screen.c b/src/terminal-screen.c
+index ced2cdfe..36a9afa3 100644
+--- a/src/terminal-screen.c
++++ b/src/terminal-screen.c
+@@ -1685,6 +1685,8 @@ terminal_screen_focus_in (GtkWidget     *widget,
+   TerminalApp *app;
+   TerminalWindow *window;
+ 
++  _terminal_debug_print (TERMINAL_DEBUG_NOTIFICATIONS, "Notification withdrawn\n");
++
+   window = terminal_screen_get_window (screen);
+   if (window != NULL)
+     {
+@@ -1819,6 +1821,8 @@ terminal_screen_notification_received (VteTerminal *terminal,
+   TerminalScreenPrivate *priv = screen->priv;
+   TerminalWindow *window;
+ 
++  _terminal_debug_print (TERMINAL_DEBUG_NOTIFICATIONS, "Notification received: [%s]: %s\n", summary, body);
++
+   if (G_UNLIKELY (!priv->shell_prompt_shown))
+     {
+       priv->shell_prompt_shown = TRUE;
+@@ -1850,6 +1854,7 @@ terminal_screen_notification_received (VteTerminal *terminal,
+           tab_label = gtk_notebook_get_tab_label (GTK_NOTEBOOK (mdi_container), GTK_WIDGET (screen_container));
+           terminal_tab_label_set_bold (TERMINAL_TAB_LABEL (tab_label), TRUE);
+           terminal_tab_label_set_icon (TERMINAL_TAB_LABEL (tab_label), "dialog-information-symbolic", summary);
++          _terminal_debug_print (TERMINAL_DEBUG_NOTIFICATIONS, "Notify tab\n");
+         }
+     }
+   else
+@@ -1865,6 +1870,7 @@ terminal_screen_notification_received (VteTerminal *terminal,
+ 
+       app = terminal_app_get ();
+       g_application_send_notification (G_APPLICATION (app), priv->uuid, notification);
++      _terminal_debug_print (TERMINAL_DEBUG_NOTIFICATIONS, "Notify desktop\n");
+     }
+ }
+ 
+-- 
+2.19.2
+
