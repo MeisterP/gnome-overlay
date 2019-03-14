@@ -1,4 +1,4 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -28,7 +28,7 @@ RDEPEND=">=dev-libs/nspr-4.13.1
 	virtual/libffi
 	sys-libs/readline:0=
 	>=sys-libs/zlib-1.2.3
-	system-icu? ( >=dev-libs/icu-58.1:= )"
+	system-icu? ( >=dev-libs/icu-59.1:= )"
 DEPEND="${RDEPEND}"
 
 pkg_setup(){
