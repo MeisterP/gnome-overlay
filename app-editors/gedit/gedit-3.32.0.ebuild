@@ -26,6 +26,7 @@ COMMON_DEPEND="
 	>=x11-libs/gtk+-3.22.0:3[introspection?]
 	>=x11-libs/gtksourceview-4.0.2:4[introspection?]
 	>=dev-libs/libpeas-1.14.1[gtk]
+	>=net-libs/libsoup-2.60.0
 
 	gnome-base/gsettings-desktop-schemas
 	gnome-base/gvfs
