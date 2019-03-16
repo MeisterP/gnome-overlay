@@ -1,0 +1,25 @@
+From 867cbbb201252122d85f01ed4dd006152291d722 Mon Sep 17 00:00:00 2001
+From: Alberto Fanjul <albertofanjul@gmail.com>
+Date: Sun, 4 Nov 2018 03:33:21 +0100
+Subject: [PATCH] meson: Bump libgit2-glib dependency
+
+---
+ meson.build | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/meson.build b/meson.build
+index 44a6e40f..33b82fa8 100644
+--- a/meson.build
++++ b/meson.build
+@@ -130,7 +130,7 @@ gsettings_desktop_schemas_dep = dependency('gsettings-desktop-schemas')
+ gtk_dep = dependency('gtk+-3.0', version: '>= 3.20.0')
+ gtkspell_dep = dependency('gtkspell3-3.0')
+ gtksourceview_dep = dependency('gtksourceview-3.0', version: '>= 3.10')
+-libgit2_glib_dep = dependency('libgit2-glib-1.0', version: ['>= 0.25.0', '< 0.27.0'])
++libgit2_glib_dep = dependency('libgit2-glib-1.0', version: ['>= 0.27.7'])
+ libpeas_dep = dependency('libpeas-1.0')
+ libsecret_dep = dependency('libsecret-1')
+ libsoup_dep = dependency('libsoup-2.4')
+-- 
+2.18.1
+
