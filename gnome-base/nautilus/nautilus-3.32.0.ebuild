@@ -55,6 +55,7 @@ PDEPEND="
 PATCHES=(
 	"${FILESDIR}"/3.30.5-docs-build.patch # Always install pregenerated manpage, keeping docs option for gtk-doc
 	"${FILESDIR}"/3.30.5-thumbnailer-updates2.patch # syncs with gnome-desktop; fixes the ld.so.cache for us
+	"${FILESDIR}"/0.32-Revert-files-view-Use-tracked-directories-for-star.patch # issue #947
 )
 
 src_prepare() {
