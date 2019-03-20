@@ -1,0 +1,23 @@
+From 5e9525c41272e850cbba0f65ce5809e5167880f2 Mon Sep 17 00:00:00 2001
+From: kitone <kitone@free.fr>
+Date: Tue, 31 Jul 2018 19:37:01 +0200
+Subject: [PATCH] Fix #13: Compiling - enchant dependency not met when
+ enchant-2 is installed
+
+---
+ configure.ac | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index e97288c..bfe30a3 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -74,7 +74,7 @@ AC_SUBST(GTKMM_LIBS)
+ # =========================================================================
+ # check enchant
+ 
+-PKG_CHECK_MODULES(ENCHANT, enchant >= 1.4.0)
++PKG_CHECK_MODULES(ENCHANT, enchant-2 >= 2.2.0)
+ 
+ AC_SUBST(ENCHANT_CFLAGS)
+ AC_SUBST(ENCHANT_LIBS)

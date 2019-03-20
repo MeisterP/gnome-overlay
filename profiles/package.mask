@@ -1,3 +1,5 @@
 # Poncho <poncho@spahan.ch> (20 March 2019)
 # Keep repoman happy
+# Depends on masked app-text/enchant version
 =app-editors/gnome-latex-3.32.0
+=media-video/subtitleeditor-0.54.0-r1
