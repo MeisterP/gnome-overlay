@@ -18,7 +18,7 @@ IUSE="+introspection +latexmk rubber"
 
 COMMON_DEPEND="
 	app-text/enchant
-	>=app-text/gspell-1.0:0=
+	>=app-text/gspell-1.8:0=
 	>=dev-libs/glib-2.56:2[dbus]
 	>=dev-libs/libgee-0.10:0.8=
 	gnome-base/gsettings-desktop-schemas
@@ -48,7 +48,7 @@ DEPEND="${COMMON_DEPEND}
 "
 
 PATCHES=(
-	"${FILESDIR}"/0001-Restore-GSPELL_REQUIRED_VERSION-1.0.patch
+	# https://gitlab.gnome.org/GNOME/gnome-latex/merge_requests/16
 	"${FILESDIR}"/xelatex-parse.patch
 	)
 
