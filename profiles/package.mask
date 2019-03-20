@@ -3,3 +3,4 @@
 # Depends on masked app-text/enchant version
 =app-editors/gnome-latex-3.32.0
 =media-video/subtitleeditor-0.54.0-r1
+=net-im/empathy-3.12.14-r1
