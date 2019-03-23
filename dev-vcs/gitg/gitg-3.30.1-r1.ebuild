@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
-PYTHON_COMPAT=( python3_{4,5,6,7} )
+PYTHON_COMPAT=( python3_{5,6,7} )
 VALA_MIN_API_VERSION="0.32" # Needed when gtk+-3.20 is found
 
 inherit gnome.org gnome2-utils meson python-r1 vala xdg-utils

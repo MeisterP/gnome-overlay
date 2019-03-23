@@ -42,7 +42,7 @@ DEPEND="${COMMON_DEPEND}
 	x11-base/xorg-proto
 	virtual/pkgconfig
 	media-libs/fontconfig
-" 
+"
 # Includes X11/Xatom.h in libgnome-desktop/gnome-bg.c which comes from xorg-proto
 
 meson_feature() {
