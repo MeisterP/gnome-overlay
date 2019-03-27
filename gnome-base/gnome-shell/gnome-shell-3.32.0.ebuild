@@ -117,6 +117,8 @@ PATCHES=(
 	"${FILESDIR}"/3.28.3-defaults.patch
 	# Fix automagic gnome-bluetooth dep, bug #398145
 	"${FILESDIR}"/${PV}-optional-bluetooth.patch
+	# https://gitlab.gnome.org/GNOME/gnome-shell/issues/1116
+	"${FILESDIR}"/${PV}-Revert-shell-global-Use-MetaLaunchContext-instead-of.patch
 )
 
 src_prepare() {
