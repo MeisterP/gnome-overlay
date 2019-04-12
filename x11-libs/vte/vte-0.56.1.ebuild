@@ -47,7 +47,7 @@ src_prepare() {
 	if ! use vanilla; then
 		# First half of http://pkgs.fedoraproject.org/cgit/rpms/vte291.git/tree/vte291-command-notify-scroll-speed.patch
 		# Adds OSC 777 support for desktop notifications in gnome-terminal or elsewhere
-		eapply "${FILESDIR}"/${PV}/*.patch
+		eapply "${FILESDIR}"/0.56.0/*.patch
 	fi
 
 	use vala && vala_src_prepare
