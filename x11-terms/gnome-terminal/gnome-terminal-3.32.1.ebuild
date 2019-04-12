@@ -54,7 +54,7 @@ src_prepare() {
 		# Restore "Set title" support
 		# http://pkgs.fedoraproject.org/cgit/rpms/gnome-terminal.git/plain/gnome-terminal-notify-open-title-transparency.patch
 		# Depends on vte[-vanilla] for OSC 777 patch in VTE
-		eapply "${FILESDIR}"/${PV}/*.patch
+		eapply "${FILESDIR}"/3.32.0/*.patch
 	fi
 	gnome2_src_prepare
 }
