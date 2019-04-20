@@ -81,14 +81,6 @@ DEPEND="${RDEPEND}
 	wayland? ( >=sys-kernel/linux-headers-4.4 )
 "
 
-PATCHES=(
-	# https://gitlab.gnome.org/GNOME/mutter/merge_requests/491
-	"${FILESDIR}"/${PV}-systemd-elogind.patch
-
-	# https://gitlab.gnome.org/GNOME/mutter/issues/505
-	"${FILESDIR}"/9d49e8abd077941b126685dde3b64753cc4fc916.patch
-)
-
 src_prepare() {
 	default
 	sed -i -e "/'-Werror=empty-body',/d" meson.build || die
