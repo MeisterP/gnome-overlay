@@ -116,7 +116,7 @@ PATCHES=(
 	# Change favorites defaults, bug #479918
 	"${FILESDIR}"/3.28.3-defaults.patch
 	# Fix automagic gnome-bluetooth dep, bug #398145
-	"${FILESDIR}"/${PV}-optional-bluetooth.patch
+	"${FILESDIR}"/3.32.0-optional-bluetooth.patch
 )
 
 src_prepare() {
