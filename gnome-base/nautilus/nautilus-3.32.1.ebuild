@@ -53,9 +53,9 @@ PDEPEND="
 " # Need gvfs[gtk] for recent:/// support; always built (without USE=gtk) since gvfs-1.34
 
 PATCHES=(
-	"${FILESDIR}"/3.30.5-docs-build.patch # Always install pregenerated manpage, keeping docs option for gtk-doc
-	"${FILESDIR}"/3.30.5-thumbnailer-updates2.patch # syncs with gnome-desktop; fixes the ld.so.cache for us
-	"${FILESDIR}"/0.32-Revert-files-view-Use-tracked-directories-for-star.patch # issue #947
+	"${FILESDIR}"/0.32.1-docs-build.patch # Always install pregenerated manpage, keeping docs option for gtk-doc
+	"${FILESDIR}"/0.32.1-thumbnailer-updates2.patch # syncs with gnome-desktop; fixes the ld.so.cache for us
+	"${FILESDIR}"/0.32.1-Revert-files-view-Use-tracked-directories-for-star.patch # issue #947
 )
 
 src_prepare() {

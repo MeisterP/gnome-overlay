@@ -1,7 +1,7 @@
-From a62478c8e55bc6b1cd685f0c8c2094e1ed244c69 Mon Sep 17 00:00:00 2001
+From 4c84251e17fe65bca6352bcabcd261a1ae93f339 Mon Sep 17 00:00:00 2001
 From: Mart Raudsepp <leio@gentoo.org>
 Date: Mon, 11 Mar 2019 20:52:53 +0200
-Subject: [PATCH] build: Always install man page
+Subject: [PATCH 2/3] build: Always install man page
 
 It's already generated and shouldn't be thrown in the same pot as
 full gtk-doc generation. It should be either a separate `man` option,
@@ -23,10 +23,10 @@ index b039cb631..2b1800be6 100644
 +  subdir('reference')
 +endif
 diff --git a/meson.build b/meson.build
-index 996360a62..50479f5f0 100644
+index b7c7731dc..f2a94b623 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -222,9 +222,7 @@ subdirs = [
+@@ -237,9 +237,7 @@ subdirs = [
  # Conditional building #
  ########################
  
@@ -38,5 +38,5 @@ index 996360a62..50479f5f0 100644
    subdirs += 'test'
  endif
 -- 
-2.17.0
+2.21.0
 

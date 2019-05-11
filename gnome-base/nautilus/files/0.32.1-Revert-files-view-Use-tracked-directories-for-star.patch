@@ -1,7 +1,7 @@
-From 8216d122a95ce64fd9bf11a20dadac21f13edd90 Mon Sep 17 00:00:00 2001
+From cb2ad48c28ea9d8c0dad50c0dc84969c8bdd41d1 Mon Sep 17 00:00:00 2001
 From: Poncho <poncho@spahan.ch>
-Date: Sun, 17 Mar 2019 18:47:47 +0100
-Subject: [PATCH] Revert "files-view: Use tracked directories for star"
+Date: Sat, 11 May 2019 09:33:24 +0200
+Subject: [PATCH 1/3] Revert "files-view: Use tracked directories for star"
 
 This reverts commit 7f19a036491cb27579daa674aaf7f5353d910709.
 ---
@@ -17,10 +17,10 @@ This reverts commit 7f19a036491cb27579daa674aaf7f5353d910709.
  delete mode 100644 src/nautilus-tracker-utilities.h
 
 diff --git a/src/meson.build b/src/meson.build
-index 5aea6d251..a87c51414 100644
+index 91c0a00c8..b1db47d94 100644
 --- a/src/meson.build
 +++ b/src/meson.build
-@@ -267,9 +267,7 @@ libnautilus_sources = [
+@@ -266,9 +266,7 @@ libnautilus_sources = [
    'nautilus-starred-directory.c',
    'nautilus-starred-directory.h',
    'nautilus-enums.h',
@@ -32,7 +32,7 @@ index 5aea6d251..a87c51414 100644
  
  nautilus_deps = [
 diff --git a/src/nautilus-files-view.c b/src/nautilus-files-view.c
-index 591d87b52..20a5c03d2 100644
+index c28441435..90805672b 100644
 --- a/src/nautilus-files-view.c
 +++ b/src/nautilus-files-view.c
 @@ -88,7 +88,6 @@
@@ -43,7 +43,7 @@ index 591d87b52..20a5c03d2 100644
  
  /* Minimum starting update inverval */
  #define UPDATE_INTERVAL_MIN 100
-@@ -7303,7 +7302,7 @@ real_update_actions_state (NautilusFilesView *view)
+@@ -7310,7 +7309,7 @@ real_update_actions_state (NautilusFilesView *view)
      GDriveStartStopType start_stop_type;
      g_autoptr (GFile) current_location = NULL;
      g_autofree gchar *current_uri = NULL;
@@ -52,7 +52,7 @@ index 591d87b52..20a5c03d2 100644
      gboolean show_star;
      gboolean show_unstar;
      gchar *uri;
-@@ -7639,12 +7638,12 @@ real_update_actions_state (NautilusFilesView *view)
+@@ -7646,12 +7645,12 @@ real_update_actions_state (NautilusFilesView *view)
       */
      current_location = nautilus_file_get_location (nautilus_files_view_get_directory_as_file (view));
      current_uri = g_file_get_uri (current_location);
@@ -294,5 +294,5 @@ index f509c3005..000000000
 -
 -gboolean nautilus_tracker_directory_is_tracked (GFile *directory);
 -- 
-2.19.2
+2.21.0
 
