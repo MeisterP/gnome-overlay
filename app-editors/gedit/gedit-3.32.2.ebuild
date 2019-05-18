@@ -2,11 +2,12 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI="6"
+GNOME2_LA_PUNT="yes" # plugins are dlopened
 PYTHON_COMPAT=( python3_{5,6} )
 VALA_MIN_API_VERSION="0.26"
 VALA_USE_DEPEND="vapigen"
 
-inherit eutils gnome2 multilib python-single-r1 vala virtualx meson
+inherit eutils gnome.org gnome2-utils meson multilib python-single-r1 vala virtualx xdg
 
 DESCRIPTION="A text editor for the GNOME desktop"
 HOMEPAGE="https://wiki.gnome.org/Apps/Gedit"
@@ -14,7 +15,7 @@ HOMEPAGE="https://wiki.gnome.org/Apps/Gedit"
 LICENSE="GPL-2+ CC-BY-SA-3.0"
 SLOT="0"
 
-IUSE="gtk-doc +introspection +python vala"
+IUSE="+introspection +python gtk-doc vala"
 REQUIRED_USE="python? ( introspection ${PYTHON_REQUIRED_USE} )"
 
 KEYWORDS="~amd64 ~x86"
@@ -26,7 +27,7 @@ COMMON_DEPEND="
 	>=x11-libs/gtk+-3.22.0:3[introspection?]
 	>=x11-libs/gtksourceview-4.0.2:4[introspection?]
 	>=dev-libs/libpeas-1.14.1[gtk]
-	>=net-libs/libsoup-2.60.0
+	>=net-libs/libsoup-2.60:2.4
 
 	gnome-base/gsettings-desktop-schemas
 	gnome-base/gvfs
@@ -46,11 +47,9 @@ RDEPEND="${COMMON_DEPEND}
 "
 DEPEND="${COMMON_DEPEND}
 	${vala_depend}
-	gtk-doc? (
-		>=dev-util/gtk-doc-am-1
-		app-text/docbook-xml-dtd:4.1.2 )
+	app-text/docbook-xml-dtd:4.1.2
 	dev-util/glib-utils
-	>=dev-util/intltool-0.50.1
+	gtk-doc? ( >=dev-util/gtk-doc-1 )
 	dev-util/itstool
 	>=sys-devel/gettext-0.18
 	virtual/pkgconfig
@@ -62,20 +61,31 @@ pkg_setup() {
 
 src_prepare() {
 	vala_src_prepare
-	gnome2_src_prepare
+	xdg_src_prepare
 }
 
 src_configure() {
 	local emesonargs=(
-		$(meson_use introspection)
-		-Dplugins=true
-		$(meson_use vala vapi)
 		$(meson_use gtk-doc documentation)
+		$(meson_use introspection)
+		$(meson_use python plugins)
+		$(meson_use vala vapi)
 	)
 	meson_src_configure
 }
 
-src_test() {
-	"${EROOT}${GLIB_COMPILE_SCHEMAS}" --allow-any-name "${S}/data" || die
-	GSETTINGS_SCHEMA_DIR="${S}/data" virtx emake check
+src_test() { :; }
+
+src_install() {
+	meson_src_install
+}
+
+pkg_postinst() {
+	xdg_pkg_postinst
+	gnome2_schemas_update
+}
+
+pkg_postrm() {
+	xdg_pkg_postrm
+	gnome2_schemas_update
 }
