@@ -28,6 +28,7 @@ COMMON_DEPEND="
 	x11-libs/libX11
 	>=dev-libs/libxml2-2.7.8:2
 	introspection? ( >=dev-libs/gobject-introspection-1.54:= )
+	gnome-base/gnome-desktop:3
 "
 DEPEND="${COMMON_DEPEND}
 	>=dev-util/gdbus-codegen-2.51.2
@@ -54,8 +55,10 @@ PDEPEND="
 
 PATCHES=(
 	"${FILESDIR}"/0.32.1-docs-build.patch # Always install pregenerated manpage, keeping docs option for gtk-doc
-	"${FILESDIR}"/0.32.1-thumbnailer-updates2.patch # syncs with gnome-desktop; fixes the ld.so.cache for us
-	"${FILESDIR}"/0.32.1-Revert-files-view-Use-tracked-directories-for-star.patch # issue #947
+	"${FILESDIR}"/0001-tracker-utilities-Acknowledge-recursive-indexing.patch
+	"${FILESDIR}"/0002-tracker-utilities-Acknowledge-non-recursive-indexing.patch
+	"${FILESDIR}"/0003-tracker-utilities-Ignore-XDG-use-dirs-set-to-HOME.patch
+	"${FILESDIR}"/0004-general-Drop-in-tree-copy-of-gnome-desktop.patch
 )
 
 src_prepare() {

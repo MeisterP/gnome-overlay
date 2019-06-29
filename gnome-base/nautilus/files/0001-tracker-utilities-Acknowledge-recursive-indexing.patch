@@ -1,0 +1,36 @@
+From 556db3c7a379303165c02ffcdb8919464e8ae26f Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Ant=C3=B3nio=20Fernandes?= <antoniof@gnome.org>
+Date: Tue, 9 Apr 2019 20:04:45 +0100
+Subject: [PATCH 1/4] tracker-utilities: Acknowledge recursive indexing
+
+We report directories listed in the "index-recursive-directories" key
+as indexed, but we fail to report their subfolders are indexed.
+
+This causes starring to be disabled in subfolders that are actually
+indexed.
+
+So, report directories as indexed if any of their ascendants is listed
+in that key.
+
+Fixes https://gitlab.gnome.org/GNOME/nautilus/issues/947
+---
+ src/nautilus-tracker-utilities.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/nautilus-tracker-utilities.c b/src/nautilus-tracker-utilities.c
+index 2e9af932d..cd6fcfce8 100644
+--- a/src/nautilus-tracker-utilities.c
++++ b/src/nautilus-tracker-utilities.c
+@@ -102,7 +102,8 @@ nautilus_tracker_directory_is_tracked (GFile *directory)
+     locations = get_tracker_locations ();
+     for (l = locations; l != NULL; l = l->next)
+     {
+-        if (g_file_equal (directory, G_FILE (l->data)))
++        if (g_file_equal (directory, G_FILE (l->data)) ||
++            g_file_has_prefix (directory, G_FILE (l->data)))
+         {
+             return TRUE;
+         }
+-- 
+2.21.0
+
