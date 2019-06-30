@@ -68,6 +68,10 @@ src_prepare() {
 			close the previewer, press space again."
 	fi
 	xdg_src_prepare
+
+	# part of 0004-general-Drop-in-tree-copy-of-gnome-desktop.patch
+	# done here to keep patch size down and repoman happy
+	rm -v src/gnome-desktop/gnome-desktop-thumbnail{-script.c,-script.h,.c}
 }
 
 src_configure() {
