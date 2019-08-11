@@ -55,9 +55,6 @@ PDEPEND="
 
 PATCHES=(
 	"${FILESDIR}"/0.32.1-docs-build.patch # Always install pregenerated manpage, keeping docs option for gtk-doc
-	"${FILESDIR}"/0001-tracker-utilities-Acknowledge-recursive-indexing.patch
-	"${FILESDIR}"/0002-tracker-utilities-Acknowledge-non-recursive-indexing.patch
-	"${FILESDIR}"/0003-tracker-utilities-Ignore-XDG-use-dirs-set-to-HOME.patch
 	"${FILESDIR}"/0004-general-Drop-in-tree-copy-of-gnome-desktop.patch
 )
 
