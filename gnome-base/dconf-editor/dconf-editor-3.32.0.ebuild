@@ -15,7 +15,7 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 
 RDEPEND="
-	>=gnome-base/dconf-0.26.1[vala]
+	>=gnome-base/dconf-0.26.1
 	>=dev-libs/glib-2.55.1:2
 	>=x11-libs/gtk+-3.22.27:3
 "
