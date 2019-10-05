@@ -44,6 +44,11 @@ RDEPEND="${RDEPEND}
 	!x11-libs/vte:2.90[glade]
 "
 
+src_unpack() {
+	default
+	unpack "${FILESDIR}"/vte291-cntnr-precmd-preexec-scroll.tar.xz
+}
+
 src_prepare() {
 	default
 
@@ -51,7 +56,7 @@ src_prepare() {
 		# Part of https://src.fedoraproject.org/rpms/vte291/blob/f30/f/vte291-cntr-ntfy-scroll.patch
 		# Patch distfile for 0.54 series is re-used, as only git hashes and co changed in patchset.
 		# Adds OSC 777 support for desktop notifications in gnome-terminal or elsewhere
-		eapply "${FILESDIR}"/vte291-cntnr-precmd-preexec-scroll.patch
+		eapply "${WORKDIR}"/vte291-cntnr-precmd-preexec-scroll.patch
 	fi
 
 	use vala && vala_src_prepare
