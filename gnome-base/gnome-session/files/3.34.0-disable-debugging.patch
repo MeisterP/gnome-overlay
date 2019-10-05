@@ -1,0 +1,31 @@
+From adfdf7f64f08fc07325f9332e9eba46974cc30ee Mon Sep 17 00:00:00 2001
+From: Benjamin Berg <bberg@redhat.com>
+Date: Wed, 4 Sep 2019 10:43:04 +0200
+Subject: [PATCH] data: Don't start gnome-session-binary with debugging on
+ systemd
+
+For debugging reason, --debug was passed to gnome-session-binary in the
+systemd service file. This is not necessariy and just causes a lot of
+debug spew to be logged on systems.
+
+Simply remove it again.
+
+Fixes: #31
+---
+ data/gnome-session-manager@.service.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/data/gnome-session-manager@.service.in b/data/gnome-session-manager@.service.in
+index dd10cc9b..b06dbeb3 100644
+--- a/data/gnome-session-manager@.service.in
++++ b/data/gnome-session-manager@.service.in
+@@ -15,5 +15,5 @@ Before=gnome-session-manager.target
+ 
+ [Service]
+ Type=notify
+-ExecStart=@libexecdir@/gnome-session-binary --debug --systemd-service --session=%i
++ExecStart=@libexecdir@/gnome-session-binary --systemd-service --session=%i
+ ExecStopPost=-@libexecdir@/gnome-session-ctl --shutdown
+-- 
+2.22.0
+
