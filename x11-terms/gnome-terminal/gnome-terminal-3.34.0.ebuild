@@ -44,6 +44,11 @@ DOC_CONTENTS="To get previous working directory inherited in new opened tab, or
 	to add the following line to your ~/.bashrc:\n
 	. /etc/profile.d/vte-2.91.sh"
 
+src_unpack() {
+	default
+	unpack "${FILESDIR}"/gnome-terminal-cntr-ntfy-autottl-ts.tar.xz
+}
+
 src_prepare() {
 	if ! use vanilla; then
 		# https://bugzilla.gnome.org/show_bug.cgi?id=695371
@@ -53,7 +58,7 @@ src_prepare() {
 		# Restore "Set title" support
 		# http://pkgs.fedoraproject.org/cgit/rpms/gnome-terminal.git/plain/gnome-terminal-notify-open-title-transparency.patch
 		# Depends on vte[-vanilla] for OSC 777 patch in VTE
-		eapply "${FILESDIR}"/gnome-terminal-cntr-ntfy-autottl-ts.patch
+		eapply "${WORKDIR}"/gnome-terminal-cntr-ntfy-autottl-ts.patch
 	fi
 	gnome2_src_prepare
 }
