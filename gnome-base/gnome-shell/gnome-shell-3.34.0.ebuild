@@ -114,6 +114,10 @@ BDEPEND="
 	virtual/pkgconfig
 "
 
+PATCHES=(
+	"${FILESDIR}"/fix-fading-out-desktop-icons.patch
+)
+
 src_prepare() {
 	xdg_src_prepare
 	# Hack in correct python shebang
