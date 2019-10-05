@@ -60,6 +60,7 @@ PDEPEND="
 PATCHES=(
 	"${FILESDIR}"/3.30.5-docs-build.patch # Always install pregenerated manpage, keeping docs option for gtk-doc
 	"${FILESDIR}"/3.32.3-optional-gstreamer.patch # Allow controlling audio-video-properties build
+	"${FILESDIR}"/3.34.0-sushi.patch
 )
 
 src_prepare() {
