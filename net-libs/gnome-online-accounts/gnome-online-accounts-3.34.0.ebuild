@@ -80,10 +80,10 @@ src_configure() {
 		--enable-owncloud \
 		--enable-pocket \
 		--enable-telepathy \
-		--enable-todoist \
 		--enable-windows-live \
 		$(usex debug --enable-debug=yes ' ') \
 		$(use_enable kerberos) \
+		$(use_enable kerberos fedora) \
 		$(use_enable introspection) \
 		$(use_enable vala)
 		#$(use_enable telepathy)
