@@ -11,7 +11,8 @@ HOMEPAGE="https://wiki.gnome.org/Apps/Disks"
 
 LICENSE="GPL-2+"
 SLOT="0"
-IUSE="fat gnome systemd"
+IUSE="fat gnome elogind systemd"
+REQUIRED_USE="^^ ( elogind systemd )"
 KEYWORDS="~amd64 ~x86"
 
 COMMON_DEPEND="
@@ -25,6 +26,7 @@ COMMON_DEPEND="
 	>=x11-libs/libnotify-0.7:=
 	>=app-arch/xz-utils-5.0.5
 	systemd? ( >=sys-apps/systemd-209:0= )
+	elogind? ( sys-auth/elogind )
 "
 RDEPEND="${COMMON_DEPEND}
 	x11-themes/adwaita-icon-theme
@@ -44,8 +46,9 @@ DEPEND="${COMMON_DEPEND}
 
 src_configure() {
 	local emesonargs=(
+		-Dman=true
 		$(meson_use gnome gsd_plugin)
-		$(meson_use systemd libsystemd)
+		-Dlogind=$(usex systemd libsystemd libelogind)
 	)
 	meson_src_configure
 }
