@@ -1,20 +1,20 @@
 # Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
+EAPI=7
 
-inherit gnome2 virtualx
+inherit gnome.org gnome2-utils meson vala xdg
 
 DESCRIPTION="A cheesy program to take pictures and videos from your webcam"
 HOMEPAGE="https://wiki.gnome.org/Apps/Cheese"
 
 LICENSE="GPL-2+"
 SLOT="0/8" # subslot = libcheese soname version
-IUSE="+introspection"
+IUSE="+introspection gtk-doc"
 KEYWORDS="~amd64 ~x86"
 
 COMMON_DEPEND="
-	>=dev-libs/glib-2.39.90:2
+	>=dev-libs/glib-2.38.0:2
 	>=x11-libs/gtk+-3.13.4:3[introspection?]
 	>=gnome-base/gnome-desktop-2.91.6:3=
 	>=media-libs/libcanberra-0.26[gtk3]
@@ -22,6 +22,7 @@ COMMON_DEPEND="
 	>=media-libs/clutter-gtk-0.91.8:1.0
 	media-libs/clutter-gst:3.0
 	media-libs/cogl:1.0=[introspection?]
+	gnome-base/gnome-desktop:3
 
 	media-video/gnome-video-effects
 	x11-libs/gdk-pixbuf:2[jpeg,introspection?]
@@ -41,7 +42,7 @@ RDEPEND="${COMMON_DEPEND}
 	>=media-plugins/gst-plugins-v4l2-1.4:1.0
 	>=media-plugins/gst-plugins-vpx-1.4:1.0
 "
-# libxml2+gdk-pixbuf required for glib-compile-resources
+
 DEPEND="${COMMON_DEPEND}
 	app-text/docbook-xml-dtd:4.3
 	dev-libs/appstream-glib
@@ -54,19 +55,35 @@ DEPEND="${COMMON_DEPEND}
 	virtual/pkgconfig
 	x11-base/xorg-proto
 "
-# eautoreconf needs yelp-tools
 
-src_configure() {
-	gnome2_src_configure \
-		GST_INSPECT=$(type -P true) \
-		GTESTER_REPORT=$(type -P true) \
-		VALAC=$(type -P true) \
-		$(use_enable introspection) \
-		--disable-lcov \
-		--disable-static
+src_prepare() {
+	default
+	vala_src_prepare
+	xdg_src_prepare
 }
 
-src_test() {
-	"${EROOT}${GLIB_COMPILE_SCHEMAS}" --allow-any-name "${S}/data" || die
-	GSETTINGS_SCHEMA_DIR="${S}/data" virtx emake check
+src_configure() {
+	local emesonargs=(
+		-Dtests=false
+		$(meson_use introspection)
+		$(meson_use gtk-doc gtk_doc)
+		-Dman=false
+	)
+	meson_src_configure
+}
+
+src_install() {
+	meson_src_install
+}
+
+pkg_postinst() {
+	xdg_pkg_postinst
+	gnome2_icon_cache_update
+	gnome2_schemas_update
+}
+
+pkg_postrm() {
+	xdg_pkg_postrm
+	gnome2_icon_cache_update
+	gnome2_schemas_update
 }
