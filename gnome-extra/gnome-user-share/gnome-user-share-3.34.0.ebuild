@@ -1,10 +1,10 @@
 # Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
+EAPI=7
 GNOME2_LA_PUNT="yes"
 
-inherit gnome2 multilib systemd
+inherit gnome.org meson multilib systemd
 
 DESCRIPTION="Personal file sharing for the GNOME desktop"
 HOMEPAGE="https://git.gnome.org/browse/gnome-user-share"
@@ -41,8 +41,11 @@ PATCHES=(
 )
 
 src_configure() {
-	gnome2_src_configure \
-		--with-httpd=apache2 \
-		--with-modules-path=/usr/$(get_libdir)/apache2/modules/ \
-		--with-systemduserunitdir="$(systemd_get_userunitdir)"
+	local emesonargs=(
+		-Dsystemduserunitdir=$(systemd_get_userunitdir)
+		-Dnautilus_extension=false
+		-Dhttpd=apache2
+		-Dmodules_path=/usr/$(get_libdir)/apache2/modules/
+	)
+	meson_src_configure
 }
