@@ -68,9 +68,9 @@ src_configure() {
 		-Dgtk4=false
 		-Diconv=true
 		-Dfribidi=true
-		-Ddebugg=$(usex debug true false)
-		-Dgnutls=$(usex crypt true false)
-		-Dvapi=$(usex vala true false)
+		$(meson_use debug debugg)
+		$(meson_use crypt gnutls)
+		$(meson_use vala vapi)
 	)
 	meson_src_configure
 }
