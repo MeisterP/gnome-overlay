@@ -1,0 +1,47 @@
+From 92c0171aeb38e4ada0e32c948d074908c8d119f2 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Marco=20Trevisan=20=28Trevi=C3=B1o=29?= <mail@3v1n0.net>
+Date: Thu, 3 Oct 2019 15:13:21 +0200
+Subject: [PATCH] lightbox: Show the actor before easing it
+
+As per clutter optimizations in should_skip_implicit_transition() any
+transition will be ignored if applied to an actor with unmapped clones.
+
+Since we initialize the lightbox as hidden, when we use it standalone (as it
+happens for the long fade in screenShield) the transition will be ignored.
+This causes the lockscreen fade-out after the idle delay not to work, but
+instead to have an apparently locked system that is instead not locked at
+all.
+
+So, just ensure that the lightbox actor is visible before applying to it any
+transition.
+
+Fixes https://gitlab.gnome.org/GNOME/gnome-shell/issues/1683
+---
+ js/ui/lightbox.js | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/js/ui/lightbox.js b/js/ui/lightbox.js
+index 20092cc049..ecd6304eae 100644
+--- a/js/ui/lightbox.js
++++ b/js/ui/lightbox.js
+@@ -185,6 +185,8 @@ var Lightbox = class Lightbox {
+             this.emit('shown');
+         };
+ 
++        this.actor.show();
++
+         if (this._radialEffect) {
+             this.actor.ease_property(
+                 '@effects.radial.brightness', VIGNETTE_BRIGHTNESS, easeProps);
+@@ -197,8 +199,6 @@ var Lightbox = class Lightbox {
+                 onComplete
+             }));
+         }
+-
+-        this.actor.show();
+     }
+ 
+     hide(fadeOutTime) {
+-- 
+2.22.0
+

@@ -116,6 +116,7 @@ BDEPEND="
 
 PATCHES=(
 	"${FILESDIR}"/fix-fading-out-desktop-icons.patch
+	"${FILESDIR}"/lightbox_show_the_actor_before_easing_it.patch
 )
 
 src_prepare() {
