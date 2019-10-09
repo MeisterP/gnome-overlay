@@ -60,11 +60,6 @@ BDEPEND="
 		app-text/docbook-xml-dtd:4.1.2 )
 "
 
-PATCHES=(
-	"${FILESDIR}"/3.34.0-disable-debugging.patch
-	"${FILESDIR}"/3.34.0-unset-environment.patch
-)
-
 src_prepare() {
 	xdg_src_prepare
 	# Install USE=doc in $PF if enabled
