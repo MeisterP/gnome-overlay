@@ -114,11 +114,6 @@ BDEPEND="
 	virtual/pkgconfig
 "
 
-PATCHES=(
-	"${FILESDIR}"/fix-fading-out-desktop-icons.patch
-	"${FILESDIR}"/lightbox_show_the_actor_before_easing_it.patch
-)
-
 src_prepare() {
 	xdg_src_prepare
 	# Hack in correct python shebang
