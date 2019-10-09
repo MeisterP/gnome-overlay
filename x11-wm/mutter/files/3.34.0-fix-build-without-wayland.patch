@@ -1,68 +1,19 @@
-From 006eb6d81e1f95cd05b8168276ad6440a7735de5 Mon Sep 17 00:00:00 2001
-From: Ting-Wei Lan <lantw@src.gnome.org>
-Date: Sat, 28 Sep 2019 16:26:21 +0800
-Subject: [PATCH] build: Fix build when wayland is disabled
-
-https://gitlab.gnome.org/GNOME/mutter/merge_requests/817
----
- src/compositor/compositor.c        | 5 +++++
- src/compositor/meta-window-actor.c | 1 +
- src/meson.build                    | 4 ++--
- 3 files changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/src/compositor/compositor.c b/src/compositor/compositor.c
-index c2e2e1923..d4b6d14c3 100644
---- a/src/compositor/compositor.c
-+++ b/src/compositor/compositor.c
-@@ -595,9 +595,14 @@ meta_compositor_add_window (MetaCompositor    *compositor,
-       window_actor_type = META_TYPE_WINDOW_ACTOR_X11;
-       break;
- 
-+#ifdef HAVE_WAYLAND
-     case META_WINDOW_CLIENT_TYPE_WAYLAND:
-       window_actor_type = META_TYPE_WINDOW_ACTOR_WAYLAND;
-       break;
-+#endif
-+
-+    default:
-+      g_return_if_reached ();
-     }
- 
-   window_actor = g_object_new (window_actor_type,
-diff --git a/src/compositor/meta-window-actor.c b/src/compositor/meta-window-actor.c
-index 0f80cfaf4..db9ccec62 100644
---- a/src/compositor/meta-window-actor.c
-+++ b/src/compositor/meta-window-actor.c
-@@ -29,6 +29,7 @@
- #include "core/frame.h"
- #include "compositor/compositor-private.h"
- #include "compositor/meta-cullable.h"
-+#include "compositor/meta-shaped-texture-private.h"
- #include "compositor/meta-surface-actor-x11.h"
- #include "compositor/meta-surface-actor.h"
+diff --unified --new-file --recursive --show-c-function mutter-3.34.0/src/compositor/compositor.c mutter-3.34.0-fix/src/compositor/compositor.c
+--- mutter-3.34.0/src/compositor/compositor.c	2019-10-05 09:39:37.210269887 +0200
++++ mutter-3.34.0-fix/src/compositor/compositor.c	2019-10-05 09:47:11.710916909 +0200
+@@ -63,7 +63,6 @@
+ #include "clutter/clutter-mutter.h"
+ #include "cogl/cogl-trace.h"
+ #include "compositor/meta-window-actor-x11.h"
+-#include "compositor/meta-window-actor-wayland.h"
  #include "compositor/meta-window-actor-private.h"
-diff --git a/src/meson.build b/src/meson.build
-index 182f7f5f5..90d80734f 100644
---- a/src/meson.build
-+++ b/src/meson.build
-@@ -317,8 +317,6 @@ mutter_sources = [
-   'compositor/meta-texture-tower.h',
-   'compositor/meta-window-actor.c',
-   'compositor/meta-window-actor-private.h',
--  'compositor/meta-window-actor-wayland.c',
--  'compositor/meta-window-actor-wayland.h',
-   'compositor/meta-window-actor-x11.c',
-   'compositor/meta-window-actor-x11.h',
-   'compositor/meta-window-group.c',
-@@ -475,6 +473,8 @@ if have_wayland
-   mutter_sources += [
-     'compositor/meta-surface-actor-wayland.c',
-     'compositor/meta-surface-actor-wayland.h',
-+    'compositor/meta-window-actor-wayland.c',
-+    'compositor/meta-window-actor-wayland.h',
-     'compositor/meta-compositor-server.c',
-     'compositor/meta-compositor-server.h',
-     'wayland/meta-cursor-sprite-wayland.c',
--- 
-2.22.0
-
+ #include "compositor/meta-window-group-private.h"
+ #include "core/core.h"
+@@ -84,6 +83,7 @@
+ 
+ #ifdef HAVE_WAYLAND
+ #include "wayland/meta-wayland-private.h"
++#include "compositor/meta-window-actor-wayland.h"
+ #endif
+ 
+ enum

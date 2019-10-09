@@ -96,9 +96,7 @@ PATCHES=(
 	# Allow building USE=wayland without cogl-gles2 from USE=gles2
 	"${FILESDIR}"/3.32.2-no-cogl-gles2.patch
 
-	# https://gitlab.gnome.org/GNOME/mutter/merge_requests/817
 	"${FILESDIR}"/3.34.0-fix-build-without-wayland.patch
-	"${FILESDIR}"/3.34.0-fix-build-without-wayland-part2.patch
 )
 
 src_configure() {
