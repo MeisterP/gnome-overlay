@@ -10,4 +10,4 @@ Information
 -----------
  - Official gnome overlay: https://gitweb.gentoo.org/proj/gnome.git/
  - This overlay is currently NOT available via `layman`
- - Most commits come from [Heather](https://github.com/Heather/gentoo-gnome) and [Thankjura](https://github.com/thankjura/gentoo-gnome)
+ - See also: [Heather](https://github.com/Heather/gentoo-gnome), [Thankjura](https://github.com/thankjura/gentoo-gnome) and [GNOME Overlay](https://gitweb.gentoo.org/proj/gnome.git/)
