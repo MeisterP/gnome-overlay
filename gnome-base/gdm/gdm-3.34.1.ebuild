@@ -3,6 +3,7 @@
 
 EAPI=6
 GNOME2_LA_PUNT="yes"
+GNOME2_EAUTORECONF="yes"
 
 inherit eutils gnome2 pam readme.gentoo-r1 systemd udev user
 
@@ -20,7 +21,7 @@ LICENSE="
 
 SLOT="0"
 
-IUSE="accessibility audit branding fprint +introspection ipv6 plymouth selinux smartcard tcpd test wayland xinerama"
+IUSE="accessibility audit bluetooth-sound branding fprint +introspection ipv6 plymouth selinux smartcard tcpd test wayland xinerama"
 
 KEYWORDS="~amd64 ~x86"
 
@@ -31,6 +32,7 @@ KEYWORDS="~amd64 ~x86"
 COMMON_DEPEND="
 	app-text/iso-codes
 	>=dev-libs/glib-2.44:2
+	dev-libs/libgudev
 	>=x11-libs/gtk+-2.91.1:3
 	>=gnome-base/dconf-0.20
 	>=gnome-base/gnome-settings-daemon-3.1.4
@@ -48,7 +50,7 @@ COMMON_DEPEND="
 	x11-libs/libxcb
 	>=x11-misc/xdg-utils-1.0.2-r3
 
-	virtual/pam
+	sys-libs/pam
 	>=sys-apps/systemd-186:0=[pam]
 
 	sys-auth/pambase[systemd]
@@ -124,6 +126,9 @@ src_prepare() {
 	# Gentoo does not have a fingerprint-auth pam stack
 	eapply "${FILESDIR}/${PN}-3.8.4-fingerprint-auth.patch"
 
+	# Wait 10 seconds for a DRM master with systemd. Workaround for gdm not waiting for CanGraphical=yes property on the seat. Bug #613222
+	eapply "${FILESDIR}/gdm-CanGraphical-wait.patch" # needs eautoreconf
+
 	# Show logo when branding is enabled
 	use branding && eapply "${FILESDIR}/${PN}-3.30.3-logo.patch"
 
@@ -185,6 +190,13 @@ src_install() {
 	keepdir /var/lib/gdm
 	fowners gdm:gdm /var/lib/gdm
 
+	if ! use bluetooth-sound ; then
+		# Workaround https://gitlab.freedesktop.org/pulseaudio/pulseaudio/merge_requests/10
+		# bug #679526
+		insinto /var/lib/gdm/.config/pulse
+		doins "${FILESDIR}"/default.pa
+	fi
+
 	# install XDG_DATA_DIRS gdm changes
 	echo 'XDG_DATA_DIRS="/usr/share/gdm"' > 99xdg-gdm
 	doenvd 99xdg-gdm
@@ -196,6 +208,17 @@ src_install() {
 
 pkg_postinst() {
 	gnome2_pkg_postinst
+	local d ret
+
+	# bug #669146; gdm may crash if /var/lib/gdm subdirs are not owned by gdm:gdm
+	ret=0
+	ebegin "Fixing "${EROOT}"var/lib/gdm ownership"
+	chown --no-dereference gdm:gdm "${EROOT}var/lib/gdm" || ret=1
+	for d in "${EROOT}var/lib/gdm/"{.cache,.color,.config,.dbus,.local}; do
+		[[ ! -e "${d}" ]] || chown --no-dereference -R gdm:gdm "${d}" || ret=1
+	done
+	eend ${ret}
+
 	systemd_reenable gdm.service
 	readme.gentoo_print_elog
 }
