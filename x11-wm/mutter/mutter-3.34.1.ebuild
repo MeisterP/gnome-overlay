@@ -97,6 +97,10 @@ PATCHES=(
 	"${FILESDIR}"/3.32.2-no-cogl-gles2.patch
 
 	"${FILESDIR}"/3.34.0-fix-build-without-wayland.patch
+
+	# https://gitlab.gnome.org/GNOME/gnome-shell/issues/1704
+	"${FILESDIR}"/3.34.1-01-clutter-actor-fix.patch
+	"${FILESDIR}"/3.34.1-02-clutter-actor-fix.patch
 )
 
 src_configure() {
