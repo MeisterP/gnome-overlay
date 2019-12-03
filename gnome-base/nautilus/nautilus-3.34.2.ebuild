@@ -23,7 +23,7 @@ COMMON_DEPEND="
 	gnome-base/gsettings-desktop-schemas
 	>=x11-libs/gtk+-3.22.27:3[X,introspection?]
 	seccomp? ( sys-libs/libseccomp )
-	>=x11-libs/pango-1.28.3
+	<=x11-libs/pango-1.44
 	selinux? ( >=sys-libs/libselinux-2.0 )
 	>=app-misc/tracker-2.0:=
 	x11-libs/libX11
@@ -60,6 +60,7 @@ PDEPEND="
 PATCHES=(
 	"${FILESDIR}"/3.30.5-docs-build.patch # Always install pregenerated manpage, keeping docs option for gtk-doc
 	"${FILESDIR}"/3.32.3-optional-gstreamer.patch # Allow controlling audio-video-properties build
+	"${FILESDIR}"/3.34.2-pango.patch # build with <pango-1.44
 )
 
 src_prepare() {
