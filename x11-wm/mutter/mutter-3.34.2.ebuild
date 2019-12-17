@@ -97,6 +97,9 @@ PATCHES=(
 	"${FILESDIR}"/3.32.2-no-cogl-gles2.patch
 
 	"${FILESDIR}"/3.34.0-fix-build-without-wayland.patch
+
+	# https://gitlab.gnome.org/GNOME/mutter/issues/961
+	"${FILESDIR}"/0001-Revert-x11-Update-X11-focus-before-updating-MetaDisp.patch
 )
 
 src_configure() {
