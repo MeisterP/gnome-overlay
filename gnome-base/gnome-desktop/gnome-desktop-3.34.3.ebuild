@@ -9,7 +9,7 @@ HOMEPAGE="https://gitlab.gnome.org/GNOME/gnome-desktop/"
 
 LICENSE="GPL-2+ LGPL-2+ FDL-1.1+"
 SLOT="3/18" # subslot = libgnome-desktop-3 soname version
-IUSE="debug gtk-doc +introspection seccomp udev"
+IUSE="debug gtk-doc +introspection seccomp udev systemd"
 KEYWORDS="~amd64 ~x86"
 
 # cairo[X] needed for gnome-bg
@@ -64,6 +64,7 @@ src_configure() {
 		$(meson_use debug debug_tools)
 		$(meson_use introspection)
 		$(meson_feature udev)
+		$(meson_feature systemd)
 		$(meson_use gtk-doc gtk_doc)
 		-Dinstalled_tests=false
 	)
