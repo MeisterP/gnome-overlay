@@ -1,4 +1,4 @@
-# Copyright 1999-2019 Gentoo Authors
+# Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -34,7 +34,6 @@ DEPEND="${RDEPEND}
 	dev-util/glib-utils
 	>=dev-util/gtk-doc-am-1.13
 	>=virtual/pkgconfig-0-r1[${MULTILIB_USEDEP}]
-	virtual/cargo
 	gtk-doc? ( >=dev-util/gtk-doc-1.13 )
 	vala? ( $(vala_depend) )
 "
