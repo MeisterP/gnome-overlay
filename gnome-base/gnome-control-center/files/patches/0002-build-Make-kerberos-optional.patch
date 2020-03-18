@@ -1,0 +1,121 @@
+From 4b42fc75f6059cffc8d71655d861f51d3744fc0c Mon Sep 17 00:00:00 2001
+From: Mart Raudsepp <leio@gentoo.org>
+Date: Mon, 4 Mar 2019 00:49:18 +0200
+Subject: [PATCH 2/5] build: Make kerberos optional
+
+---
+ meson.build                             | 12 +++++++++++-
+ meson_options.txt                       |  1 +
+ panels/user-accounts/cc-realm-manager.c |  9 +++++++++
+ panels/user-accounts/meson.build        |  4 ----
+ 4 files changed, 21 insertions(+), 5 deletions(-)
+
+diff --git a/meson.build b/meson.build
+index 7c134683b..4e8ae62e2 100644
+--- a/meson.build
++++ b/meson.build
+@@ -252,6 +252,17 @@ config_h.set('HAVE_WACOM', enable_wacom,
+ config_h.set('BUILD_THUNDERBOLT', host_is_linux_not_s390,
+              description: 'Define to 1 to build the Thunderbolt panel')
+ 
++# Kerberos support
++krb_dep = dependency('krb5', required: get_option('kerberos'))
++config_h.set('HAVE_KERBEROS', krb_dep.found(),
++             description: 'Define to 1 if kerberos support is available')
++
++# Check for info panel
++gnome_session_libexecdir = get_option('gnome_session_libexecdir')
++if gnome_session_libexecdir == ''
++  gnome_session_libexecdir = control_center_libexecdir
++endif
++
+ gnome = import('gnome')
+ i18n = import('i18n')
+ pkg = import('pkgconfig')
+@@ -302,7 +313,6 @@ output += ' Panels \n'
+ output += '     GNOME Bluetooth (Bluetooth panel) .......... ' + enable_bluetooth.to_string() + '\n'
+ output += '     Cheese (Users panel webcam support) ........ ' + enable_cheese.to_string() + '\n'
+ output += '     IBus (Region panel IBus support) ........... ' + enable_ibus.to_string() + '\n'
+-<<<<<<< HEAD
+ output += '     NetworkManager (Network panel) ............. ' + enable_network_manager.to_string() + '\n'
+ output += '     Wacom (Wacom tablet panel) ................. ' + enable_wacom.to_string() + '\n'
+ output += '     Snap support ............................... ' + enable_snap.to_string() + '\n'
+diff --git a/meson_options.txt b/meson_options.txt
+index 937c91687..8b0291c18 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -5,6 +5,7 @@ option('ibus', type: 'boolean', value: true, description: 'build with IBus suppo
+ option('privileged_group', type: 'string', value: 'wheel', description: 'name of group that has elevated permissions')
+ option('snap', type: 'boolean', value: false, description: 'build with Snap support')
+ option('tests', type: 'boolean', value: true, description: 'build tests')
++option('kerberos', type: 'feature', value: 'auto', description: 'build with kerberos support')
+ option('network_manager', type: 'boolean', value: true, description: 'build with NetworkManager support')
+ option('tracing', type: 'boolean', value: false, description: 'add extra debugging information')
+ option('wacom', type: 'boolean', value: true, description: 'build with Wacom support')
+diff --git a/panels/user-accounts/cc-realm-manager.c b/panels/user-accounts/cc-realm-manager.c
+index dd61c1312..78703c80d 100644
+--- a/panels/user-accounts/cc-realm-manager.c
++++ b/panels/user-accounts/cc-realm-manager.c
+@@ -22,7 +22,9 @@
+ 
+ #include "cc-realm-manager.h"
+ 
++#ifdef HAVE_KERBEROS
+ #include <krb5/krb5.h>
++#endif
+ 
+ #include <glib.h>
+ #include <glib/gi18n.h>
+@@ -613,6 +615,7 @@ login_closure_free (gpointer data)
+         g_slice_free (LoginClosure, login);
+ }
+ 
++#ifdef HAVE_KERBEROS
+ static krb5_error_code
+ login_perform_kinit (krb5_context k5,
+                      const gchar *realm,
+@@ -676,6 +679,7 @@ login_perform_kinit (krb5_context k5,
+ 
+         return code;
+ }
++#endif
+ 
+ static void
+ kinit_thread_func (GTask *task,
+@@ -683,6 +687,7 @@ kinit_thread_func (GTask *task,
+                    gpointer task_data,
+                    GCancellable *cancellable)
+ {
++#ifdef HAVE_KERBEROS
+         LoginClosure *login = task_data;
+         krb5_context k5 = NULL;
+         krb5_error_code code;
+@@ -763,6 +768,10 @@ kinit_thread_func (GTask *task,
+                 krb5_free_context (k5);
+ 
+         g_object_unref (task);
++#else
++        g_task_return_new_error (task, CC_REALM_ERROR, CC_REALM_ERROR_GENERIC,
++                                 _("gnome-control-center was built without kerberos support"));
++#endif
+ }
+ 
+ void
+diff --git a/panels/user-accounts/meson.build b/panels/user-accounts/meson.build
+index b1c322a6b..b5d0bc9e5 100644
+--- a/panels/user-accounts/meson.build
++++ b/panels/user-accounts/meson.build
+@@ -156,10 +156,6 @@ sources = common_sources + files(
+   'um-fingerprint-dialog.c',
+ )
+ 
+-# Kerberos support
+-krb_dep = dependency('krb5', required: false)
+-assert(krb_dep.found(), 'kerberos libraries not found in your path')
+-
+ deps = common_deps + [
+   accounts_dep,
+   gdk_pixbuf_dep,
+-- 
+2.24.1
+
