@@ -1,4 +1,4 @@
-# Copyright 1999-2019 Gentoo Authors
+# Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI="6"
@@ -19,7 +19,7 @@ KEYWORDS="~amd64 ~x86"
 RDEPEND="
 	>=dev-libs/glib-2.50:2
 	>=x11-libs/gtk+-3.20:3
-	>=x11-libs/vte-0.58.1:2.91[!vanilla?]
+	>=x11-libs/vte-0.59.92:2.91[!vanilla?]
 	>=dev-libs/libpcre2-10
 	>=gnome-base/dconf-0.14
 	>=gnome-base/gsettings-desktop-schemas-0.1.0
@@ -33,7 +33,6 @@ DEPEND="${RDEPEND}
 	dev-libs/libxml2:2
 	dev-util/gdbus-codegen
 	dev-util/glib-utils
-	>=dev-util/intltool-0.50
 	dev-util/itstool
 	sys-devel/gettext
 	virtual/pkgconfig
