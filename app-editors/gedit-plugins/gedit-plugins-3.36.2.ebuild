@@ -10,6 +10,7 @@ inherit eutils gnome.org meson python-single-r1 vala
 
 DESCRIPTION="Official plugins for gedit"
 HOMEPAGE="https://wiki.gnome.org/Apps/Gedit/ShippedPlugins"
+SCR_URI="https://gitlab.gnome.org/GNOME/gedit-plugins/-/archive/${PV}/${P}.tar.gz"
 
 LICENSE="GPL-2+"
 KEYWORDS="~amd64 ~x86"
@@ -26,7 +27,7 @@ REQUIRED_USE="
 "
 
 RDEPEND="
-	>=app-editors/gedit-3.16
+	>=app-editors/gedit-3.32
 	>=dev-libs/glib-2.32:2
 	>=dev-libs/libpeas-1.14.1[gtk]
 	>=x11-libs/gtk+-3.9:3
@@ -34,7 +35,7 @@ RDEPEND="
 	python? (
 		${PYTHON_DEPS}
 		$(python_gen_cond_dep '
-			>=app-editors/gedit-3.16[introspection,python,${PYTHON_SINGLE_USEDEP}]
+			>=app-editors/gedit-3.16[introspection,${PYTHON_SINGLE_USEDEP}]
 			dev-libs/libpeas[python,${PYTHON_SINGLE_USEDEP}]
 			>=dev-python/dbus-python-0.82[${PYTHON_MULTI_USEDEP}]
 			dev-python/pycairo[${PYTHON_MULTI_USEDEP}]
@@ -76,7 +77,6 @@ src_configure() {
 		-Dplugin_bookmarks=true
 		-Dplugin_drawspaces=true
 		-Dplugin_wordcompletion=true
-		-Dplugin_zeitgeist=false
 
 		$(meson_use python plugin_bracketcompletion)
 		$(meson_use python plugin_charmap)
