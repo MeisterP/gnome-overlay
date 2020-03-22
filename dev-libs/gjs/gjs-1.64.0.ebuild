@@ -1,8 +1,8 @@
 # Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
-inherit gnome2 pax-utils virtualx autotools
+EAPI=7
+inherit gnome.org gnome2-utils meson pax-utils virtualx
 
 DESCRIPTION="Javascript bindings for GNOME"
 HOMEPAGE="https://wiki.gnome.org/Projects/Gjs"
@@ -17,7 +17,7 @@ RDEPEND="
 	>=dev-libs/gobject-introspection-1.61.2:=
 
 	readline? ( sys-libs/readline:0= )
-	dev-lang/spidermonkey:60
+	dev-lang/spidermonkey:68
 	dev-libs/libffi:=
 	cairo? ( x11-libs/cairo[X] )
 "
@@ -30,30 +30,23 @@ DEPEND="${RDEPEND}
 
 RESTRICT="!test? ( test )"
 
-src_prepare() {
-	eautoreconf
-	gnome2_src_prepare
-}
-
 src_configure() {
 	# FIXME: add systemtap/dtrace support, like in glib:2
-	# FIXME: --enable-systemtap installs files in ${D}/${D} for some reason
-	# XXX: Do NOT enable coverage, completely useless for portage installs
-	gnome2_src_configure \
-		--disable-systemtap \
-		--disable-dtrace \
-		--disable-code-coverage \
-		$(use_with cairo cairo) \
-		$(use_enable sysprof profiler) \
-		$(use_enable readline) \
-		$(use_with test dbus-tests) \
-		$(use_with test gtk-tests) \
-		--disable-installed-tests
+	local emesonargs=(
+		-Ddtrace=false
+		-Dsystemtap=false
+		$(meson_feature cairo)
+		$(meson_feature readline)
+		$(meson_feature sysprof profiler)
+		$(meson_use !test skip_dbus_tests)
+		$(meson_use !test skip_gtk_tests)
+		-Dinstalled_tests=false
+	)
+	meson_src_configure
 }
 
 src_install() {
-	# installation sometimes fails in parallel, bug #???
-	gnome2_src_install -j1
+	meson_src_install
 
 	if use examples; then
 		insinto /usr/share/doc/"${PF}"/examples
