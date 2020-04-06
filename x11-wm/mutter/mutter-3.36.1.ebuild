@@ -91,6 +91,9 @@ BDEPEND="
 		x11-base/xorg-server )
 "
 
+# https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1168
+PATCHES=( "${FILESDIR}/fix-libwacom-false.patch" )
+
 src_configure() {
 	# TODO: Replicate debug vs release meson build type behaviour under our buildtype=plain
 	local emesonargs=(
