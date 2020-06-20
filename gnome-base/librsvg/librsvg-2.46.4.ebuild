@@ -33,7 +33,7 @@ DEPEND="${RDEPEND}
 	dev-libs/vala-common
 	dev-util/glib-utils
 	>=dev-util/gtk-doc-am-1.13
-	>=virtual/pkgconfig-0-r1[${MULTILIB_USEDEP}]
+	virtual/pkgconfig
 	gtk-doc? ( >=dev-util/gtk-doc-1.13 )
 	vala? ( $(vala_depend) )
 "
