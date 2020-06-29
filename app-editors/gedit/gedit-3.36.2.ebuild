@@ -15,6 +15,7 @@ LICENSE="GPL-2+ CC-BY-SA-3.0"
 SLOT="0"
 
 IUSE="+introspection gtk-doc vala"
+REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 
 KEYWORDS="~amd64 ~x86"
 
