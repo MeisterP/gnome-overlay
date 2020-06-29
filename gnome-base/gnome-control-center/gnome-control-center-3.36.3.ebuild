@@ -52,7 +52,7 @@ DEPEND="
 		>=media-video/cheese-3.28.0 )
 	ibus? ( >=app-i18n/ibus-1.5.2 )
 	networkmanager? (
-		>=gnome-extra/nm-applet-1.8.0
+		>=net-libs/libnma-1.8.0
 		>=net-misc/networkmanager-1.12.0:=[modemmanager]
 		>=net-misc/modemmanager-0.7.990 )
 	bluetooth? ( >=net-wireless/gnome-bluetooth-3.18.2:= )
@@ -104,7 +104,8 @@ RDEPEND="${DEPEND}
 "
 # PDEPEND to avoid circular dependency; gnome-session-check-accelerated called by info panel
 # gnome-session-2.91.6-r1 also needed so that 10-user-dirs-update is run at login
-PDEPEND=">=gnome-base/gnome-session-2.91.6-r1"
+PDEPEND=">=gnome-base/gnome-session-2.91.6-r1
+	networkmanager? ( gnome-extra/nm-applet )" # networking panel can call into nm-connection-editor
 
 BDEPEND="
 	dev-libs/libxslt
