@@ -1,2 +1,0 @@
-# depends on masked gjs
->=gnome-base/gnome-shell-3.36.1
