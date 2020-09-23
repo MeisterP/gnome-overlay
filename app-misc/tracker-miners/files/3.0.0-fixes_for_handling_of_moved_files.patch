@@ -1,0 +1,357 @@
+From 82c728f878858611d2e3793dcecd5ac67d2ca0e9 Mon Sep 17 00:00:00 2001
+From: Carlos Garnacho <carlosg@gnome.org>
+Date: Tue, 15 Sep 2020 13:04:32 +0200
+Subject: [PATCH 1/4] tracker-miner-fs: Handle moving nfo:FileDataObject
+ information in data graphs
+
+If a file/dir is renamed, we handled both the nie:InformationElement in the
+data graphs, and the nfo:FileDataObject in the filesystem graph. This got
+broken when we started adding the nfo:FileDataObject shim information in the
+data graphs.
+
+Handle this, and split/comment the other queries so the role of each one is
+clearer.
+
+Fixes: https://gitlab.gnome.org/GNOME/tracker-miners/-/issues/136
+---
+ src/miners/fs/tracker-miner-files.c | 24 ++++++++++++++++++++++--
+ 1 file changed, 22 insertions(+), 2 deletions(-)
+
+diff --git a/src/miners/fs/tracker-miner-files.c b/src/miners/fs/tracker-miner-files.c
+index c8670c3ca..4b4c25a61 100644
+--- a/src/miners/fs/tracker-miner-files.c
++++ b/src/miners/fs/tracker-miner-files.c
+@@ -2467,6 +2467,7 @@ miner_files_move_file (TrackerMinerFS *fs,
+ 		g_free (new_parent_id);
+ 	}
+ 
++	/* Update nie:isStoredAs in the nie:InformationElement */
+ 	g_string_append_printf (sparql,
+ 	                        "DELETE { "
+ 	                        "  GRAPH ?g {"
+@@ -2480,7 +2481,10 @@ miner_files_move_file (TrackerMinerFS *fs,
+ 	                        "  GRAPH ?g {"
+ 	                        "    ?ie nie:isStoredAs <%s> "
+ 	                        "  }"
+-	                        "}; "
++	                        "}; ",
++	                        source_uri, uri, source_uri);
++	/* Update tracker:FileSystem nfo:FileDataObject information */
++	g_string_append_printf (sparql,
+ 	                        "WITH " DEFAULT_GRAPH " "
+ 	                        "DELETE { "
+ 	                        "  <%s> a rdfs:Resource . "
+@@ -2494,10 +2498,26 @@ miner_files_move_file (TrackerMinerFS *fs,
+ 	                        "  <%s> ?p ?o ; "
+ 	                        "  FILTER (?p != nfo:fileName && ?p != nie:url && ?p != nfo:belongsToContainer) . "
+ 	                        "} ",
+-	                        source_uri, uri, source_uri,
+ 	                        source_uri,
+ 	                        uri, display_name, uri, container_clause,
+ 	                        source_uri);
++	/* Update nfo:FileDataObject in data graphs */
++	g_string_append_printf (sparql,
++	                        "DELETE { "
++	                        "  GRAPH ?g {"
++	                        "    <%s> a rdfs:Resource "
++	                        "  }"
++	                        "} INSERT {"
++	                        "  GRAPH ?g {"
++	                        "    <%s> a nfo:FileDataObject ; "
++	                        "         ?p ?o "
++	                        "  }"
++	                        "} WHERE {"
++	                        "  GRAPH ?g {"
++	                        "    <%s> ?p ?o "
++	                        "  }"
++	                        "}",
++	                        source_uri, uri, source_uri);
+ 	g_free (container_clause);
+ 
+ 	if (recursive) {
+-- 
+GitLab
+
+
+From d68266cc4c7af9b135b74feb8fabae1445a39fdf Mon Sep 17 00:00:00 2001
+From: Carlos Garnacho <carlosg@gnome.org>
+Date: Tue, 15 Sep 2020 13:09:54 +0200
+Subject: [PATCH 2/4] tracker-miner-fs: Handle recursive updates on directory
+ rename ops differently
+
+This overly dense query did use to handle all-at-once the nfo:FileDataObject
+delete/create to match new URIs and rewiring the nie:isStoredAs relations
+so the nie:InformationElements are connected with the brand new
+nfo:FileDataObjects.
+
+This however got stuck with older assumptions: 1) It didn't observe the
+tracker:FileSystem graph, and 2) it didn't observe the nfo:FileDataObject
+shim data in the data graphs.
+
+Since it gets crazy to update and still do all at once, split into 3
+more readable queries that do the individual steps, matching also the steps
+taken in the non-recursive paths.
+
+Fixes: https://gitlab.gnome.org/GNOME/tracker-miners/-/issues/136
+---
+ src/miners/fs/tracker-miner-files.c | 64 +++++++++++++++++++++--------
+ 1 file changed, 46 insertions(+), 18 deletions(-)
+
+diff --git a/src/miners/fs/tracker-miner-files.c b/src/miners/fs/tracker-miner-files.c
+index 4b4c25a61..49171ffcd 100644
+--- a/src/miners/fs/tracker-miner-files.c
++++ b/src/miners/fs/tracker-miner-files.c
+@@ -2521,34 +2521,62 @@ miner_files_move_file (TrackerMinerFS *fs,
+ 	g_free (container_clause);
+ 
+ 	if (recursive) {
++		/* Update nie:isStoredAs in the nie:InformationElement */
+ 		g_string_append_printf (sparql,
+-		                        " DELETE { "
+-		                        "  ?u a rdfs:Resource . "
+-		                        "  ?ie1 nie:isStoredAs ?u "
++		                        "DELETE { "
+ 		                        "  GRAPH ?g {"
+-		                        "    ?ie2 nie:isStoredAs ?u "
++		                        "    ?ie nie:isStoredAs ?f "
+ 		                        "  }"
+-		                        "} INSERT { "
+-		                        "  ?new_url a nfo:FileDataObject ; "
+-		                        "           nie:url ?new_url ; "
+-		                        "           ?p ?o ."
+-		                        "  ?ie1 nie:isStoredAs ?new_url . "
++		                        "} INSERT {"
++		                        "  GRAPH ?g {"
++		                        "    ?ie nie:isStoredAs ?new_url "
++		                        "  }"
++		                        "} WHERE {"
+ 		                        "  GRAPH ?g {"
+-		                        "    ?ie2 nie:isStoredAs ?new_url . "
++		                        "    ?f a nfo:FileDataObject ."
++		                        "    ?ie nie:isStoredAs ?f ."
++		                        "    BIND (CONCAT (\"%s/\", SUBSTR (STR (?f), STRLEN (\"%s/\") + 1)) AS ?new_url) ."
++		                        "    FILTER (STRSTARTS (STR (?f), \"%s/\")) . "
+ 		                        "  }"
++		                        "}; ",
++		                        uri, source_uri, source_uri);
++		/* Update tracker:FileSystem nfo:FileDataObject information */
++		g_string_append_printf (sparql,
++		                        "WITH " DEFAULT_GRAPH " "
++		                        "DELETE { "
++		                        "  ?f a rdfs:Resource . "
++		                        "} INSERT { "
++		                        "  ?new_url a nfo:FileDataObject ; "
++		                        "       nie:url ?new_url ; "
++		                        "       ?p ?o . "
+ 		                        "} WHERE { "
+-		                        "  ?u a rdfs:Resource; "
+-		                        "     nie:url ?url ; "
++		                        "  ?f a nfo:FileDataObject ;"
+ 		                        "     ?p ?o . "
+-		                        "  OPTIONAL { ?u nie:interpretedAs ?ie1 } "
+-		                        "  OPTIONAL { GRAPH ?g {"
+-		                        "    ?u nie:interpretedAs ?ie2 "
+-		                        "  }}"
+-		                        "  BIND (CONCAT (\"%s/\", SUBSTR (?url, STRLEN (\"%s/\") + 1)) AS ?new_url) ."
+-		                        "  FILTER (STRSTARTS (?url, \"%s/\")) . "
++		                        "  BIND (CONCAT (\"%s/\", SUBSTR (STR (?f), STRLEN (\"%s/\") + 1)) AS ?new_url) ."
++		                        "  FILTER (STRSTARTS (STR (?f), \"%s/\")) . "
+ 		                        "  FILTER (?p != nie:url) . "
+ 		                        "} ",
+ 		                        uri, source_uri, source_uri);
++		/* Update nfo:FileDataObject in data graphs */
++		g_string_append_printf (sparql,
++		                        "DELETE { "
++		                        "  GRAPH ?g {"
++		                        "    ?f a rdfs:Resource "
++		                        "  }"
++		                        "} INSERT {"
++		                        "  GRAPH ?g {"
++		                        "    ?new_url a nfo:FileDataObject ; "
++		                        "             ?p ?o ."
++		                        "  }"
++		                        "} WHERE {"
++		                        "  GRAPH ?g {"
++		                        "    ?f a nfo:FileDataObject ;"
++		                        "       ?p ?o ."
++		                        "    BIND (CONCAT (\"%s/\", SUBSTR (STR (?f), STRLEN (\"%s/\") + 1)) AS ?new_url) ."
++		                        "    FILTER (STRSTARTS (STR (?f), \"%s/\")) . "
++		                        "  }"
++		                        "}",
++		                        uri, source_uri, source_uri);
+ 	}
+ 
+ 	g_free (uri);
+-- 
+GitLab
+
+
+From 4e649edead88b91292867f6bbd5c7fca59147669 Mon Sep 17 00:00:00 2001
+From: Carlos Garnacho <carlosg@gnome.org>
+Date: Tue, 15 Sep 2020 14:22:08 +0200
+Subject: [PATCH 3/4] tracker-extract: Delete nfo:FileDataObject on file access
+ errors
+
+This is a safety net, as usually tracker-miner-fs is responsible for
+managing the nfo:FileDataObject information. Should a bug happen, we
+don't want to have tracker-extract spin on these files, so trim this
+data away.
+
+Fixes: https://gitlab.gnome.org/GNOME/tracker-miners/-/issues/118
+---
+ .../tracker-extract-decorator.c               | 43 ++++++++++++-------
+ 1 file changed, 28 insertions(+), 15 deletions(-)
+
+diff --git a/src/tracker-extract/tracker-extract-decorator.c b/src/tracker-extract/tracker-extract-decorator.c
+index dfdd3e274..bc25ceb72 100644
+--- a/src/tracker-extract/tracker-extract-decorator.c
++++ b/src/tracker-extract/tracker-extract-decorator.c
+@@ -432,25 +432,38 @@ decorator_ignore_file (GFile    *file,
+ 	                          G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
+ 	                          G_FILE_QUERY_INFO_NOFOLLOW_SYMLINKS,
+ 	                          NULL, &error);
+-	if (!info) {
+-		g_warning ("Could not get mimetype: %s", error->message);
+-		g_error_free (error);
+-		return;
+-	}
+ 
+-	tracker_error_report (file, "Crash/hang handling file", NULL);
++	if (info) {
++		tracker_error_report (file, "Crash/hang handling file", NULL);
+ 
+-	mimetype = g_file_info_get_attribute_string (info,
+-	                                             G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE);
+-	hash = tracker_extract_module_manager_get_hash (mimetype);
+-	g_object_unref (info);
++		mimetype = g_file_info_get_attribute_string (info,
++		                                             G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE);
++		hash = tracker_extract_module_manager_get_hash (mimetype);
++		g_object_unref (info);
+ 
+-	conn = tracker_miner_get_connection (TRACKER_MINER (decorator));
+-	query = g_strdup_printf ("INSERT DATA { GRAPH tracker:FileSystem {"
+-	                         "  <%s> tracker:extractorHash \"%s\" ;"
+-	                         "}}",
+-	                         uri, hash);
++		query = g_strdup_printf ("INSERT DATA { GRAPH tracker:FileSystem {"
++		                         "  <%s> tracker:extractorHash \"%s\" ;"
++		                         "}}",
++		                         uri, hash);
++	} else {
++		g_debug ("Could not get mimetype: %s", error->message);
+ 
++		if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_NOT_FOUND))
++			tracker_error_report_delete (file);
++		else
++			tracker_error_report (file, error->message, NULL);
++
++		g_clear_error (&error);
++		query = g_strdup_printf ("DELETE {"
++		                         "  GRAPH ?g { <%s> a rdfs:Resource }"
++		                         "} WHERE {"
++		                         "  GRAPH ?g { <%s> a nfo:FileDataObject }"
++		                         "  FILTER (?g != tracker:FileSystem)"
++		                         "}",
++		                         uri, uri);
++	}
++
++	conn = tracker_miner_get_connection (TRACKER_MINER (decorator));
+ 	tracker_sparql_connection_update (conn, query, NULL, &error);
+ 
+ 	if (error) {
+-- 
+GitLab
+
+
+From 5f673c1eb9e4638e146ef3e037b925e7f64d618e Mon Sep 17 00:00:00 2001
+From: Carlos Garnacho <carlosg@gnome.org>
+Date: Tue, 15 Sep 2020 14:50:37 +0200
+Subject: [PATCH 4/4] tracker-extract: Use distinct error for extraction
+ failures
+
+We were inadvertently using the same error message for "tracker3 status"
+than we did for crashes/timeouts. Use the error message obtained in that
+case, instead of inventing it.
+---
+ .../tracker-extract-decorator.c               | 28 +++++++++++++------
+ 1 file changed, 20 insertions(+), 8 deletions(-)
+
+diff --git a/src/tracker-extract/tracker-extract-decorator.c b/src/tracker-extract/tracker-extract-decorator.c
+index bc25ceb72..c9356bd35 100644
+--- a/src/tracker-extract/tracker-extract-decorator.c
++++ b/src/tracker-extract/tracker-extract-decorator.c
+@@ -63,8 +63,9 @@ static GInitableIface *parent_initable_iface;
+ static void decorator_get_next_file (TrackerDecorator *decorator);
+ static void tracker_extract_decorator_initable_iface_init (GInitableIface *iface);
+ 
+-static void decorator_ignore_file (GFile    *file,
+-                                   gpointer  user_data);
++static void decorator_ignore_file (GFile                   *file,
++                                   TrackerExtractDecorator *decorator,
++                                   const gchar             *error_message);
+ 
+ G_DEFINE_TYPE_WITH_CODE (TrackerExtractDecorator, tracker_extract_decorator,
+                         TRACKER_TYPE_DECORATOR_FS,
+@@ -166,7 +167,9 @@ get_metadata_cb (TrackerExtract *extract,
+ 	}
+ 
+ 	if (error) {
+-		decorator_ignore_file (data->file, data->decorator);
++		decorator_ignore_file (data->file,
++		                       TRACKER_EXTRACT_DECORATOR (data->decorator),
++		                       error->message);
+ 		tracker_decorator_info_complete_error (data->decorator_info, error);
+ 	} else {
+ 		gchar *resource_sparql, *sparql;
+@@ -415,10 +418,10 @@ tracker_extract_decorator_class_init (TrackerExtractDecoratorClass *klass)
+ }
+ 
+ static void
+-decorator_ignore_file (GFile    *file,
+-                       gpointer  user_data)
++decorator_ignore_file (GFile                   *file,
++                       TrackerExtractDecorator *decorator,
++                       const gchar             *error_message)
+ {
+-	TrackerExtractDecorator *decorator = user_data;
+ 	TrackerSparqlConnection *conn;
+ 	GError *error = NULL;
+ 	gchar *uri, *query;
+@@ -434,7 +437,7 @@ decorator_ignore_file (GFile    *file,
+ 	                          NULL, &error);
+ 
+ 	if (info) {
+-		tracker_error_report (file, "Crash/hang handling file", NULL);
++		tracker_error_report (file, error_message, NULL);
+ 
+ 		mimetype = g_file_info_get_attribute_string (info,
+ 		                                             G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE);
+@@ -476,6 +479,15 @@ decorator_ignore_file (GFile    *file,
+ 	g_free (uri);
+ }
+ 
++static void
++persistence_ignore_file (GFile    *file,
++                         gpointer  user_data)
++{
++	TrackerExtractDecorator *decorator = user_data;
++
++	decorator_ignore_file (file, decorator, "Crash/hang handling file");
++}
++
+ static void
+ tracker_extract_decorator_init (TrackerExtractDecorator *decorator)
+ {
+@@ -549,7 +561,7 @@ tracker_extract_decorator_initable_init (GInitable     *initable,
+ 		ret = FALSE;
+ 	}
+ 
+-	priv->persistence = tracker_extract_persistence_initialize (decorator_ignore_file,
++	priv->persistence = tracker_extract_persistence_initialize (persistence_ignore_file,
+ 	                                                            decorator);
+ out:
+ 	g_clear_object (&conn);
+-- 
+GitLab
+
