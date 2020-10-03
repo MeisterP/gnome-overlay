@@ -70,8 +70,6 @@ BDEPEND="
 "
 # intltool-merge manually called in meson.build in 2.2.2; might be properly gone by 2.3
 
-PATCHES=( "${FILESDIR}/3.0.0-fixes_for_handling_of_moved_files.patch" )
-
 pkg_setup() {
 	use test && python-any-r1_pkg_setup
 }
