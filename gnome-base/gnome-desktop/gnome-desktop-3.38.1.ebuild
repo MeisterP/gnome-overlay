@@ -48,9 +48,6 @@ BDEPEND="
 
 PATCHES=(
 	"${FILESDIR}"/3.32.2-optional-introspection.patch # add introspection meson option
-
-	# https://gitlab.gnome.org/GNOME/gnome-desktop/-/issues/168
-	"${FILESDIR}"/65c0d7911bb19b0f0534b2845838b0cc87f39c59.patch
 )
 
 src_prepare() {
