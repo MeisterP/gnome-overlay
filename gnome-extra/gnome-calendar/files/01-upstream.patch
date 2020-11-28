@@ -1,0 +1,99 @@
+From 7877536e1eb18e54f4640eb52985185f72b93135 Mon Sep 17 00:00:00 2001
+From: Michael Catanzaro <mcatanzaro@gnome.org>
+Date: Tue, 13 Oct 2020 17:19:21 +0000
+Subject: [PATCH] gcal-timeline: never reset completed_calendars
+
+Since 78cb11c64d199b77761ba55bdd3d3e6b0dcb06af, GcalCalendarMonitor now
+notifies when a completed calendar transitions to incomplete, and
+GcalTimeline decrements its completed_calendars counter. But we forgot
+to remove the code that resets completed_calendars when previously
+needed. That's not required anymore, because we can trust
+GcalCalendarMonitor to do the right thing.
+
+In my case, I have 5 calendars enabled and 6 total. When starting
+gnome-calendar, all 5 are successively completed, and
+completed_calendars increments from 0 -> 1 -> 2 -> 3 -> 4 -> 5. Then,
+when transitioning month view from January 2020 to December 2019, we
+call reset_completed_calendars() and completed_calenders gets clobbered
+to 0. Then it decrements from 0 -> -1 -> -2 -> -3 -> -4 -> -5 as the
+GcalCalendarMonitors notify that they are no longer completed. Well,
+that is what would happen, if it didn't crash when decrementing to -1.
+We assert -1 <= 6 (the total number of calendars) and crash because -1
+gets promoted to a huge unsigned int, since we're comparing signed to
+unsigned. (That crash would have been avoided if we used
+-Wsign-compare, although that warning would not have caught the logic
+problem.)
+
+Anyway, since GcalMonitor now notifies when calendars are no longer
+complete, it is safe to simply remove reset_completed_calendars().
+GcalTimeline will still notify if it needs to change its own complete
+property (in on_calendar_monitor_completed_cb).
+
+Fixes #567
+Fixes #636
+Fixes #638
+Fixes #647
+Fixes #650
+
+
+(cherry picked from commit c2c89b667e99cc5248da9a632db534a9c94193e3)
+---
+ src/core/gcal-timeline.c | 20 +-------------------
+ 1 file changed, 1 insertion(+), 19 deletions(-)
+
+diff --git a/src/core/gcal-timeline.c b/src/core/gcal-timeline.c
+index 4a757af3..4e24842b 100644
+--- a/src/core/gcal-timeline.c
++++ b/src/core/gcal-timeline.c
+@@ -194,16 +194,6 @@ is_timeline_complete (GcalTimeline *self)
+   return self->completed_calendars == g_hash_table_size (self->calendars);
+ }
+ 
+-static void
+-reset_completed_calendars (GcalTimeline *self)
+-{
+-  gboolean was_complete = is_timeline_complete (self);
+-
+-  self->completed_calendars = 0;
+-  if (is_timeline_complete (self) != was_complete)
+-    g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_COMPLETE]);
+-}
+-
+ static void
+ add_event_to_subscriber (GcalTimelineSubscriber *subscriber,
+                          GcalEvent              *event)
+@@ -294,8 +284,6 @@ update_range (GcalTimeline *self)
+     {
+       GcalCalendarMonitor *monitor;
+ 
+-      reset_completed_calendars (self);
+-
+       g_hash_table_iter_init (&iter, self->calendars);
+       while (g_hash_table_iter_next (&iter, NULL, (gpointer*) &monitor))
+         gcal_calendar_monitor_set_range (monitor, self->range);
+@@ -480,8 +468,6 @@ update_calendar_monitor_filters (GcalTimeline *self)
+   GcalCalendarMonitor *monitor;
+   GHashTableIter iter;
+ 
+-  reset_completed_calendars (self);
+-
+   g_hash_table_iter_init (&iter, self->calendars);
+   while (g_hash_table_iter_next (&iter, NULL, (gpointer*) &monitor))
+     gcal_calendar_monitor_set_filter (monitor, self->filter);
+@@ -1027,12 +1013,8 @@ gcal_timeline_remove_subscriber (GcalTimeline           *self,
+   g_signal_handlers_disconnect_by_func (subscriber, on_subscriber_range_changed_cb, self);
+   g_hash_table_remove (self->subscribers, subscriber);
+ 
+-  /* If all subscribers were removed, reset the complete counter */
+   if (g_hash_table_size (self->subscribers) == 0)
+-    {
+-      g_queue_clear_full (self->event_queue, (GDestroyNotify) queue_data_free);
+-      reset_completed_calendars (self);
+-    }
++    g_queue_clear_full (self->event_queue, (GDestroyNotify) queue_data_free);
+ 
+   gcal_range_tree_remove_data (self->subscriber_ranges, subscriber);
+   update_range (self);
+-- 
+GitLab
+

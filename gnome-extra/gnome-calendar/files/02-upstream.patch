@@ -1,0 +1,36 @@
+From 23428825f20f9ded8eb464dc50d306830635ad88 Mon Sep 17 00:00:00 2001
+From: Michael Catanzaro <mcatanzaro@gnome.org>
+Date: Tue, 13 Oct 2020 17:05:28 +0000
+Subject: [PATCH] gcal-timeline: completed_calendars should be unsigned
+
+In on_calendar_monitor_completed_cb() we have this assert:
+
+g_assert (self->completed_calendars <= g_hash_table_size (self->calendars));
+
+That is comparing a signed integer to unsigned. This is dangerous. We
+could add casts to say that we really want to do it, but
+completed_calendars should never be negative, so might as well use
+unsigned.
+
+
+(cherry picked from commit 9ac1528e54531006c936b64d3a5f50214e91e33c)
+---
+ src/core/gcal-timeline.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/core/gcal-timeline.c b/src/core/gcal-timeline.c
+index 4e24842b..dcec4cb3 100644
+--- a/src/core/gcal-timeline.c
++++ b/src/core/gcal-timeline.c
+@@ -70,7 +70,7 @@ struct _GcalTimeline
+   gchar              *filter;
+ 
+   GHashTable         *calendars; /* GcalCalendar* -> GcalCalendarMonitor* */
+-  gint                completed_calendars;
++  guint               completed_calendars;
+ 
+   GHashTable         *subscribers; /* GcalTimelineSubscriber* -> SubscriberData* */
+   GcalRangeTree      *subscriber_ranges;
+-- 
+GitLab
+

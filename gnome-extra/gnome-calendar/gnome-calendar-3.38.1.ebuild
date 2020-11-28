@@ -37,6 +37,8 @@ BDEPEND="
 	virtual/pkgconfig
 "
 
+PATCHES=( ${FILESDIR}/01-upstream.patch ${FILESDIR}/02-upstream.patch )
+
 src_test() {
 	virtx meson_src_test
 }
