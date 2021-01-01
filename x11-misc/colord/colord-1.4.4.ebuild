@@ -1,4 +1,4 @@
-# Copyright 1999-2020 Gentoo Authors
+# Copyright 1999-2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
@@ -32,8 +32,8 @@ COMMON_DEPEND="
 		sys-apps/dbus )
 	systemd? ( >=sys-apps/systemd-44:0= )
 	udev? (
+		dev-libs/libgudev:=
 		virtual/udev
-		virtual/libgudev:=
 		virtual/libudev:=
 	)
 "
@@ -114,7 +114,7 @@ src_install() {
 
 	# Ensure config and profile directories exist and /var/lib/colord/*
 	# is writable by colord user
-	keepdir /var/lib/colord/icc
+	keepdir /var/lib/color{,d}/icc
 	fowners colord:colord /var/lib/colord{,/icc}
 
 	if use examples; then
