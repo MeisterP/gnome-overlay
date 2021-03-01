@@ -4,7 +4,7 @@
 EAPI=7
 inherit cmake
 
-MY_COMMIT=7790df2a9c537e77fe450c22d490a2260480ef87
+MY_COMMIT=0636d3740f21b70543dd0eb323c37d9dfd130711
 
 DESCRIPTION="A Qt Platform Theme aimed to accommodate GNOME settings"
 HOMEPAGE="https://github.com/FedoraQt/QGnomePlatform"
