@@ -1,11 +1,9 @@
 # Copyright 1999-2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
-GNOME2_LA_PUNT="yes"
-GNOME2_EAUTORECONF="yes"
+EAPI=7
 
-inherit eutils gnome2 pam readme.gentoo-r1 systemd udev user meson
+inherit gnome2 pam readme.gentoo-r1 systemd udev meson
 
 DESCRIPTION="GNOME Display Manager for managing graphical display servers and user logins"
 HOMEPAGE="https://wiki.gnome.org/Projects/GDM"
@@ -72,6 +70,8 @@ COMMON_DEPEND="
 # fprintd is used via dbus by gdm-fingerprint-extension
 # gnome-session-3.6 needed to avoid freezing with orca
 RDEPEND="${COMMON_DEPEND}
+	acct-group/gdm
+	acct-user/gdm
 	>=gnome-base/gnome-session-3.6
 	>=gnome-base/gnome-shell-3.1.90
 	x11-apps/xhost
@@ -79,18 +79,19 @@ RDEPEND="${COMMON_DEPEND}
 	accessibility? (
 		>=app-accessibility/orca-3.10
 		gnome-extra/mousetweaks )
-	fprint? (
-		sys-auth/fprintd
-		sys-auth/pam_fprint )
+	fprint? ( sys-auth/fprintd[pam] )
 "
 DEPEND="${COMMON_DEPEND}
+	x11-base/xorg-proto
+"
+BDEPEND="
 	app-text/docbook-xml-dtd:4.1.2
 	dev-util/gdbus-codegen
 	dev-util/glib-utils
 	dev-util/itstool
+	>=gnome-base/dconf-0.20
 	>=sys-devel/gettext-0.19.8
 	virtual/pkgconfig
-	x11-base/xorg-proto
 	test? ( >=dev-libs/check-0.9.4 )
 	app-text/yelp-tools
 " # yelp-tools needed for eautoreconf to not lose help docs (m4_ifdeffed YELP_HELP_INIT call and setup)
@@ -111,23 +112,6 @@ DOC_CONTENTS="
 	for smartcard support
 "
 
-pkg_setup() {
-	enewgroup gdm
-	enewgroup video # Just in case it hasn't been created yet
-	enewuser gdm -1 -1 /var/lib/gdm gdm,video
-
-	# For compatibility with certain versions of nvidia-drivers, etc., need to
-	# ensure that gdm user is in the video group
-	if ! egetent group video | grep -q gdm; then
-		# FIXME XXX: is this at all portable, ldap-safe, etc.?
-		# XXX: egetent does not have a 1-argument form, so we can't use it to
-		# get the list of gdm's groups
-		local g=$(groups gdm)
-		elog "Adding user gdm to video group"
-		usermod -G video,${g// /,} gdm || die "Adding user gdm to video group failed"
-	fi
-}
-
 src_prepare() {
 	# ssh-agent handling must be done at xinitrc.d, bug #220603
 	eapply "${FILESDIR}/${PN}-2.32.0-xinitrc-ssh-agent.patch"
@@ -142,8 +126,6 @@ src_prepare() {
 	use branding && eapply "${FILESDIR}/${PN}-3.30.3-logo.patch"
 
 	eapply_user
-
-	sed -i 's/XSession.in/Xsession.in/g' data/meson.build
 }
 
 src_configure() {
@@ -170,8 +152,8 @@ src_configure() {
 	if use elogind; then
 		emesonargs+=(
 			-Dinitial-vt=7 # TODO: Revisit together with startDM.sh and other xinit talks; also ignores plymouth possibility
-			SYSTEMD_CFLAGS=`pkg-config --cflags "libelogind" 2>/dev/null`
-			SYSTEMD_LIBS=`pkg-config --libs "libelogind" 2>/dev/null`
+			SYSTEMD_CFLAGS="$(${pkgconfig} --cflags "libelogind")"
+			SYSTEMD_LIBS="$(${pkgconfig} --libs "libelogind")"
 		)
 	fi
 
@@ -188,10 +170,6 @@ src_install() {
 	exeinto /etc/X11/xinit/xinitrc.d
 	newexe "${FILESDIR}/49-keychain-r1" 49-keychain
 	newexe "${FILESDIR}/50-ssh-agent-r1" 50-ssh-agent
-
-	# gdm user's home directory
-	keepdir /var/lib/gdm
-	fowners gdm:gdm /var/lib/gdm
 
 	if ! use bluetooth-sound ; then
 		# Workaround https://gitlab.freedesktop.org/pulseaudio/pulseaudio/merge_requests/10
@@ -215,9 +193,9 @@ pkg_postinst() {
 
 	# bug #669146; gdm may crash if /var/lib/gdm subdirs are not owned by gdm:gdm
 	ret=0
-	ebegin "Fixing "${EROOT}"var/lib/gdm ownership"
-	chown --no-dereference gdm:gdm "${EROOT}var/lib/gdm" || ret=1
-	for d in "${EROOT}var/lib/gdm/"{.cache,.color,.config,.dbus,.local}; do
+	ebegin "Fixing "${EROOT}"/var/lib/gdm ownership"
+	chown --no-dereference gdm:gdm "${EROOT}/var/lib/gdm" || ret=1
+	for d in "${EROOT}/var/lib/gdm/"{.cache,.color,.config,.dbus,.local}; do
 		[[ ! -e "${d}" ]] || chown --no-dereference -R gdm:gdm "${d}" || ret=1
 	done
 	eend ${ret}
