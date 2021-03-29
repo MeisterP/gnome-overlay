@@ -97,15 +97,14 @@ src_configure() {
 		-Dtracker_core=system
 
 		-Dman=false
-		-Ddocs=true
 		-Dextract=true
 		-Dfunctional_tests=false # currently broken, may fare better in 2.2.3 or 2.3; if re-enabled re-add dconf test dep
 		#$(meson_use test functional_tests)
 		-Dminer_fs=true
 		$(meson_use rss miner_rss)
 		-Dwriteback=true
+		$(meson_use seccomp)
 		-Dabiword=true
-		-Ddvi=true
 		-Dicon=true
 		-Dmp3=true
 		-Dps=true
@@ -114,7 +113,6 @@ src_configure() {
 
 		$(meson_feature cue)
 		$(meson_feature exif)
-		-Dflac=disabled # never use external flac extractor - gst-plugins-flac is for that; ffmpeg one is maybe worse, but that's non-default
 		$(meson_feature gif)
 		$(meson_feature gsf)
 		$(meson_feature iptc)
@@ -125,7 +123,6 @@ src_configure() {
 		-Dpng=enabled
 		$(meson_feature raw)
 		$(meson_feature tiff)
-		-Dvorbis=disabled # never use external vorbis extractor - gst-plugins-base[vorbis] is for that; ffmpeg one is maybe worse, but that's non-default
 		$(meson_feature xml)
 		$(meson_feature xmp)
 		$(meson_feature xps)
