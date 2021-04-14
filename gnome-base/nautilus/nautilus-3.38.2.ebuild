@@ -24,14 +24,14 @@ DEPEND="
 	>=x11-libs/gtk+-3.22.27:3[X,introspection?]
 	>=x11-libs/pango-1.28.3
 	selinux? ( >=sys-libs/libselinux-2.0 )
-	>=app-misc/tracker-3.0:=
+	>=app-misc/tracker-3.0:3=
 	>=dev-libs/libxml2-2.7.8:2
 	introspection? ( >=dev-libs/gobject-introspection-1.54:= )
 "
 RDEPEND="${DEPEND}
 	sendto? ( !<gnome-extra/nautilus-sendto-3.0.1 )
 	gstreamer? ( !<media-video/totem-3.31.91[nautilus] )
-	>=app-misc/tracker-miners-3.0:=
+	>=app-misc/tracker-miners-3.0:3=
 " # uses org.freedesktop.Tracker.Miner.Files gsettings schema from tracker-miners
 BDEPEND="
 	>=dev-util/gdbus-codegen-2.51.2
