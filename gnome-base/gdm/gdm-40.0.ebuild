@@ -33,7 +33,7 @@ KEYWORDS="~amd64 ~x86"
 # We need either systemd or >=openrc-0.12 to restart gdm properly, bug #463784
 COMMON_DEPEND="
 	app-text/iso-codes
-	>=dev-libs/glib-2.44:2
+	>=dev-libs/glib-2.56.0:2
 	dev-libs/libgudev
 	>=x11-libs/gtk+-2.91.1:3
 	>=gnome-base/dconf-0.20
