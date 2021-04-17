@@ -4,7 +4,7 @@
 EAPI=7
 VALA_USE_DEPEND="vapigen"
 
-inherit bash-completion-r1 check-reqs meson user systemd udev vala
+inherit bash-completion-r1 check-reqs meson systemd udev vala
 
 DESCRIPTION="System service to accurately color manage input and output devices"
 HOMEPAGE="https://www.freedesktop.org/software/colord/"
@@ -20,7 +20,7 @@ REQUIRED_USE="
 	vala? ( introspection )
 "
 
-COMMON_DEPEND="
+DEPEND="
 	dev-db/sqlite:3=
 	>=dev-libs/glib-2.44.0:2
 	>=media-libs/lcms-2.6:2=
@@ -37,11 +37,15 @@ COMMON_DEPEND="
 		virtual/libudev:=
 	)
 "
-RDEPEND="${COMMON_DEPEND}
-	!media-gfx/shared-color-profiles
+RDEPEND="${DEPEND}
+	acct-group/colord
+	acct-user/colord
 	!<=media-gfx/colorhug-client-0.1.13
+	!media-gfx/shared-color-profiles
 "
-DEPEND="${COMMON_DEPEND}
+BDEPEND="
+	acct-group/colord
+	acct-user/colord
 	dev-libs/libxslt
 	>=dev-util/gtk-doc-am-1.9
 	>=dev-util/intltool-0.35
@@ -49,6 +53,11 @@ DEPEND="${COMMON_DEPEND}
 	virtual/pkgconfig
 	extra-print-profiles? ( media-gfx/argyllcms )
 	vala? ( $(vala_depend) )
+"
+# These dependencies are required to build native build-time programs.
+BDEPEND="${BDEPEND}
+	dev-libs/glib:2
+	media-libs/lcms
 "
 
 # FIXME: needs pre-installed dbus service files
@@ -64,8 +73,6 @@ pkg_pretend() {
 
 pkg_setup() {
 	use extra-print-profiles && check-reqs_pkg_setup
-	enewgroup colord
-	enewuser colord -1 -1 /var/lib/colord colord
 }
 
 src_prepare() {
