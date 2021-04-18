@@ -1,8 +1,8 @@
-# Copyright 1999-2020 Gentoo Authors
+# Copyright 1999-2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
-PYTHON_COMPAT=( python3_{6,7,8} )
+PYTHON_COMPAT=( python3_8 )
 PYTHON_REQ_USE="sqlite"
 
 inherit gnome.org meson python-single-r1 virtualx xdg
@@ -50,7 +50,7 @@ RDEPEND="${COMMON_DEPEND}
 	>=media-libs/gsound-1.0
 
 	>=media-libs/gstreamer-editing-services-${GST_VER}:1.0[introspection]
-	>=media-libs/gst-plugins-base-${GST_VER}:1.0[introspection]
+	>=media-libs/gst-plugins-base-${GST_VER}:1.0[introspection,theora]
 	>=media-libs/gst-plugins-bad-${GST_VER}:1.0
 	>=media-plugins/gst-plugins-gtk-${GST_VER}:1.0
 	>=media-libs/gst-plugins-good-${GST_VER}:1.0
@@ -82,6 +82,9 @@ PATCHES=(
 	# https://gitlab.gnome.org/GNOME/pitivi/-/merge_requests/245
 	# support python 3.8
 	"${FILESDIR}"/${P}-python38.patch
+
+	# use /usr/share/metainfo
+	"${FILESDIR}"/${P}-metainfo.patch
 
 	# Make tests optional, bug #594096
 	# https://gitlab.gnome.org/GNOME/pitivi/issues/2303
