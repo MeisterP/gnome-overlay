@@ -1,0 +1,44 @@
+diff --git a/Cargo.lock b/Cargo.lock
+index 69b4cb2..907181d 100644
+--- a/Cargo.lock
++++ b/Cargo.lock
+@@ -630,8 +630,9 @@ dependencies = [
+ 
+ [[package]]
+ name = "gettext-rs"
+-version = "0.4.2"
+-source = "git+https://github.com/danigm/gettext-rs?branch=no-gettext#61938b9f5f1d3bdc31f9839f53fabe5ccf136a78"
++version = "0.4.4"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "df454a42d8a718280c78666efe0707c120873736961ae91ead898f17ac66ce7c"
+ dependencies = [
+  "gettext-sys",
+  "locale_config",
+@@ -640,7 +641,8 @@ dependencies = [
+ [[package]]
+ name = "gettext-sys"
+ version = "0.19.9"
+-source = "git+https://github.com/danigm/gettext-rs?branch=no-gettext#61938b9f5f1d3bdc31f9839f53fabe5ccf136a78"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "e034c4ba5bb796730a6cc5eb0d654c16885006a7c3d6c6603581ed809434f153"
+ dependencies = [
+  "cc",
+ ]
+diff --git a/podcasts-gtk/Cargo.toml b/podcasts-gtk/Cargo.toml
+index dd07d17..0813c6c 100644
+--- a/podcasts-gtk/Cargo.toml
++++ b/podcasts-gtk/Cargo.toml
+@@ -27,9 +27,10 @@ html2text = "0.1.12"
+ glib = "0.10"
+ 
+ [dependencies.gettext-rs]
+-git = "https://github.com/danigm/gettext-rs"
+-branch = "no-gettext"
+-features = ["gettext-system"]
++#git = "https://github.com/danigm/gettext-rs"
++#branch = "no-gettext"
++#features = ["gettext-system"]
++version = "0.4.4"
+ 
+ [dependencies.gio]
+ features = ["v2_50"]
