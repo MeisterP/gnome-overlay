@@ -16,6 +16,7 @@ KEYWORDS="~amd64 ~x86"
 
 IUSE="+introspection gtk-doc test"
 REQUIRED_USE="${PYTHON_REQUIRED_USE}"
+RESTRICT="!test? ( test )"
 
 RDEPEND="
 	${PYTHON_DEPS}
