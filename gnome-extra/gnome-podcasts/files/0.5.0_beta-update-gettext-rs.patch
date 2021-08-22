@@ -1,0 +1,104 @@
+diff --git a/Cargo.lock b/Cargo.lock
+index 493dd58..9bfffa5 100644
+--- a/Cargo.lock
++++ b/Cargo.lock
+@@ -638,8 +638,9 @@ dependencies = [
+ 
+ [[package]]
+ name = "gettext-rs"
+-version = "0.4.2"
+-source = "git+https://github.com/danigm/gettext-rs?branch=no-gettext#61938b9f5f1d3bdc31f9839f53fabe5ccf136a78"
++version = "0.4.4"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "df454a42d8a718280c78666efe0707c120873736961ae91ead898f17ac66ce7c"
+ dependencies = [
+  "gettext-sys",
+  "locale_config",
+@@ -648,7 +649,8 @@ dependencies = [
+ [[package]]
+ name = "gettext-sys"
+ version = "0.19.9"
+-source = "git+https://github.com/danigm/gettext-rs?branch=no-gettext#61938b9f5f1d3bdc31f9839f53fabe5ccf136a78"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "e034c4ba5bb796730a6cc5eb0d654c16885006a7c3d6c6603581ed809434f153"
+ dependencies = [
+  "cc",
+ ]
+@@ -980,9 +982,9 @@ dependencies = [
+ 
+ [[package]]
+ name = "h2"
+-version = "0.3.3"
++version = "0.3.4"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "825343c4eef0b63f541f8903f395dc5beb362a979b5799a84062527ef1e37726"
++checksum = "d7f3675cfef6a30c8031cf9e6493ebdc3bb3272a3fea3923c4210d1830e6a472"
+ dependencies = [
+  "bytes",
+  "fnv",
+@@ -1194,9 +1196,9 @@ dependencies = [
+ 
+ [[package]]
+ name = "itoa"
+-version = "0.4.7"
++version = "0.4.8"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "dd25036021b0de88a0aff6b850051563c6516d0bf53f8638938edbb9de732736"
++checksum = "b71991ff56294aa922b450139ee08b3bfc70982c6b2c7562771375cf73542dd4"
+ 
+ [[package]]
+ name = "js-sys"
+@@ -1215,9 +1217,9 @@ checksum = "e2abad23fbc42b3700f2f279844dc832adb2b2eb069b2df918f455c4e18cc646"
+ 
+ [[package]]
+ name = "libc"
+-version = "0.2.99"
++version = "0.2.100"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "a7f823d141fe0a24df1e23b4af4e3c7ba9e5966ec514ea068c93024aa7deb765"
++checksum = "a1fa8cddc8fbbee11227ef194b5317ed014b8acbf15139bd716a18ad3fe99ec5"
+ 
+ [[package]]
+ name = "libdbus-sys"
+@@ -2240,9 +2242,9 @@ dependencies = [
+ 
+ [[package]]
+ name = "serde"
+-version = "1.0.127"
++version = "1.0.128"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "f03b9878abf6d14e6779d3f24f07b2cfa90352cfec4acc5aab8f1ac7f146fae8"
++checksum = "1056a0db1978e9dbf0f6e4fca677f6f9143dc1c19de346f22cac23e422196834"
+ 
+ [[package]]
+ name = "serde_json"
+@@ -2364,9 +2366,9 @@ dependencies = [
+ 
+ [[package]]
+ name = "syn"
+-version = "1.0.74"
++version = "1.0.75"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "1873d832550d4588c3dbc20f01361ab00bfe741048f71e3fecf145a7cc18b29c"
++checksum = "b7f58f7e8eaa0009c5fec437aabf511bd9933e4b2d7407bd05273c01a8906ea7"
+ dependencies = [
+  "proc-macro2",
+  "quote",
+diff --git a/podcasts-gtk/Cargo.toml b/podcasts-gtk/Cargo.toml
+index 36a5d96..5c94726 100644
+--- a/podcasts-gtk/Cargo.toml
++++ b/podcasts-gtk/Cargo.toml
+@@ -28,9 +28,10 @@ glib = "0.14.2"
+ libhandy = "0.8.0"
+ 
+ [dependencies.gettext-rs]
+-git = "https://github.com/danigm/gettext-rs"
+-branch = "no-gettext"
+-features = ["gettext-system"]
++#git = "https://github.com/danigm/gettext-rs"
++#branch = "no-gettext"
++#features = ["gettext-system"]
++version = "0.4.4"
+ 
+ [dependencies.gio]
+ features = ["v2_50"]

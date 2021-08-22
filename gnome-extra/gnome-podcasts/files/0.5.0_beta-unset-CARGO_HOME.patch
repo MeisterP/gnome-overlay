@@ -1,0 +1,12 @@
+diff --git a/scripts/cargo.sh b/scripts/cargo.sh
+index 63030dd..ce2bb25 100755
+--- a/scripts/cargo.sh
++++ b/scripts/cargo.sh
+@@ -7,7 +7,6 @@ export MESON_SOURCE_ROOT="$2"
+ export OUTPUT="$3"
+ export PROFILE="$4"
+ export CARGO_TARGET_DIR="$MESON_BUILD_ROOT"/target
+-export CARGO_HOME="$MESON_BUILD_ROOT"/cargo-home
+ 
+ TARGET=debug
+ ARGS=()
