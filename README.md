@@ -3,7 +3,7 @@ Unofficial GNOME overlay [![pipeline status](https://0xacab.org/Poncho/gnome-ove
 
 Version
 --------
- - GNOME `40.0`
+ - GNOME `41.0`
 
 
 Information
