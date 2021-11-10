@@ -313,7 +313,8 @@ RDEPEND="${DEPEND}"
 BDEPEND=""
 
 PATCHES=( "${FILESDIR}/${PV}-update-gettext-rs.patch"
-	"${FILESDIR}/${PV}-unset-CARGO_HOME.patch" )
+	"${FILESDIR}/${PV}-unset-CARGO_HOME.patch"
+	"${FILESDIR}/${PV}-user-agent.patch" )
 
 S="${WORKDIR}/podcasts-${PV/_/-}"
 
