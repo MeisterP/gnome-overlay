@@ -1,11 +1,11 @@
 # Copyright 1999-2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=7
+EAPI=8
 PYTHON_COMPAT=( python3_{8..9} )
 PYTHON_REQ_USE="sqlite"
 
-inherit gnome.org meson python-single-r1 virtualx xdg
+inherit gnome.org meson python-single-r1 xdg
 
 DESCRIPTION="A non-linear video editor using the GStreamer multimedia framework"
 HOMEPAGE="http://www.pitivi.org"
@@ -64,11 +64,6 @@ BDEPEND="
 	dev-util/itstool
 	sys-devel/gettext
 	virtual/pkgconfig
-	test? (
-		$(python_gen_cond_dep '
-			dev-python/nose2[${PYTHON_USEDEP}]
-		')
-	)
 "
 
 src_configure() {
@@ -77,11 +72,6 @@ src_configure() {
 
 src_compile() {
 	meson_src_compile
-}
-
-src_test() {
-	export PITIVI_TOP_LEVEL_DIR="${S}"
-	virtx meson_src_test
 }
 
 src_install() {
