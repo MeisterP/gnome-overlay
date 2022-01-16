@@ -1,3 +1,12 @@
+From 1f4b149ebb7a893bf68f024cdf6c5a2532f7b328 Mon Sep 17 00:00:00 2001
+From: Poncho <poncho@spahan.ch>
+Date: Sun, 16 Jan 2022 13:06:29 +0100
+Subject: [PATCH 1/2] scripts/cargo.sh: unset CARGO_HOME
+
+---
+ scripts/cargo.sh | 1 -
+ 1 file changed, 1 deletion(-)
+
 diff --git a/scripts/cargo.sh b/scripts/cargo.sh
 index 63030dd..ce2bb25 100755
 --- a/scripts/cargo.sh
@@ -10,3 +19,6 @@ index 63030dd..ce2bb25 100755
  
  TARGET=debug
  ARGS=()
+-- 
+2.34.1
+

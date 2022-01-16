@@ -1,49 +1,57 @@
-# Copyright 2021 Gentoo Authors
+# Copyright 2022 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=7
+EAPI=8
 
 CRATES="
 	aho-corasick-0.7.18
 	ammonia-3.1.2
 	ansi_term-0.12.1
-	anyhow-1.0.43
+	anyhow-1.0.52
 	atk-0.14.0
 	atk-sys-0.14.0
-	atom_syndication-0.9.1
+	atom_syndication-0.11.0
 	atty-0.2.14
 	autocfg-1.0.1
 	base64-0.13.0
 	bitflags-1.3.2
-	bumpalo-3.7.0
+	bumpalo-3.8.0
 	byteorder-1.4.3
-	bytes-1.0.1
-	cairo-rs-0.14.1
-	cairo-sys-rs-0.14.0
-	cc-1.0.69
+	bytes-1.1.0
+	cairo-rs-0.14.9
+	cairo-sys-rs-0.14.9
+	cc-1.0.72
 	cfg-expr-0.8.1
 	cfg-if-1.0.0
 	chrono-0.4.19
-	core-foundation-0.9.1
-	core-foundation-sys-0.8.2
+	core-foundation-0.9.2
+	core-foundation-sys-0.8.3
 	crossbeam-channel-0.5.1
 	crossbeam-deque-0.8.1
 	crossbeam-epoch-0.9.5
 	crossbeam-utils-0.8.5
-	ctor-0.1.20
+	ctor-0.1.21
 	darling-0.10.2
+	darling-0.12.4
 	darling_core-0.10.2
+	darling_core-0.12.4
 	darling_macro-0.10.2
+	darling_macro-0.12.4
 	dbus-0.6.5
+	derive_builder-0.10.2
 	derive_builder-0.9.0
+	derive_builder_core-0.10.2
 	derive_builder_core-0.9.0
-	diesel-1.4.7
+	derive_builder_macro-0.10.2
+	diesel-1.4.8
 	diesel_derives-1.4.1
 	diesel_migrations-1.4.0
 	diff-0.1.12
-	diligent-date-parser-0.1.2
+	diligent-date-parser-0.1.3
+	dirs-3.0.2
+	dirs-sys-0.3.6
 	either-1.6.1
-	encoding_rs-0.8.28
+	encoding_rs-0.8.30
 	env_logger-0.7.1
 	field-offset-0.3.4
 	fnv-1.0.7
@@ -53,16 +61,16 @@ CRATES="
 	fragile-1.0.0
 	fuchsia-cprng-0.1.1
 	futf-0.1.4
-	futures-0.3.16
-	futures-channel-0.3.16
-	futures-core-0.3.16
-	futures-executor-0.3.16
-	futures-io-0.3.16
-	futures-macro-0.3.16
-	futures-sink-0.3.16
-	futures-task-0.3.16
-	futures-util-0.3.16
-	gdk-0.14.0
+	futures-0.3.19
+	futures-channel-0.3.19
+	futures-core-0.3.19
+	futures-executor-0.3.19
+	futures-io-0.3.19
+	futures-macro-0.3.19
+	futures-sink-0.3.19
+	futures-task-0.3.19
+	futures-util-0.3.19
+	gdk-0.14.3
 	gdk-pixbuf-0.14.0
 	gdk-pixbuf-sys-0.14.0
 	gdk-sys-0.14.0
@@ -70,10 +78,10 @@ CRATES="
 	getrandom-0.2.3
 	gettext-rs-0.4.4
 	gettext-sys-0.19.9
-	gio-0.14.0
+	gio-0.14.8
 	gio-sys-0.14.0
 	glib-0.10.3
-	glib-0.14.2
+	glib-0.14.8
 	glib-macros-0.10.1
 	glib-macros-0.14.1
 	glib-sys-0.10.1
@@ -81,48 +89,49 @@ CRATES="
 	glob-0.3.0
 	gobject-sys-0.10.0
 	gobject-sys-0.14.0
-	gstreamer-0.17.2
+	gstreamer-0.17.4
 	gstreamer-base-0.17.2
 	gstreamer-base-sys-0.17.0
 	gstreamer-player-0.17.0
 	gstreamer-player-sys-0.17.0
-	gstreamer-sys-0.17.0
+	gstreamer-sys-0.17.3
 	gstreamer-video-0.17.2
 	gstreamer-video-sys-0.17.0
-	gtk-0.14.0
-	gtk-sys-0.14.0
+	gtk-0.14.3
 	gtk3-macros-0.14.0
-	h2-0.3.4
+	gtk-sys-0.14.0
+	h2-0.3.9
 	hashbrown-0.11.2
 	heck-0.3.3
 	hermit-abi-0.1.19
 	html2text-0.2.1
 	html5ever-0.25.1
-	http-0.2.4
-	http-body-0.4.3
+	http-0.2.6
 	httparse-1.5.1
-	httpdate-1.0.1
+	http-body-0.4.4
+	httpdate-1.0.2
 	humansize-1.1.1
 	humantime-1.3.0
-	hyper-0.14.11
+	hyper-0.14.16
 	hyper-tls-0.5.0
 	ident_case-1.0.1
 	idna-0.2.3
 	indexmap-1.7.0
-	instant-0.1.10
+	instant-0.1.12
 	ipnet-2.3.1
+	itertools-0.10.3
 	itertools-0.9.0
-	itertools-0.10.1
 	itoa-0.4.8
-	js-sys-0.3.53
+	itoa-1.0.1
+	js-sys-0.3.55
 	lazy_static-1.4.0
-	libc-0.2.100
-	libdbus-sys-0.2.1
+	libc-0.2.112
+	libdbus-sys-0.2.2
 	libhandy-0.8.0
 	libhandy-sys-0.8.0
 	libsqlite3-sys-0.22.2
 	locale_config-0.2.3
-	lock_api-0.4.4
+	lock_api-0.4.5
 	log-0.4.14
 	mac-0.1.1
 	maplit-1.0.2
@@ -130,58 +139,57 @@ CRATES="
 	markup5ever_rcdom-0.1.0
 	matches-0.1.9
 	memchr-2.4.1
-	memoffset-0.6.4
+	memoffset-0.6.5
 	migrations_internals-1.4.1
 	migrations_macros-1.4.2
 	mime-0.3.16
 	mime_guess-2.0.3
-	mio-0.7.13
+	mio-0.7.14
 	miow-0.3.7
 	mpris-player-0.6.1
 	muldiv-1.0.0
 	native-tls-0.2.8
+	never-0.1.0
 	new_debug_unreachable-1.0.4
 	ntapi-0.3.6
+	num_cpus-1.13.1
 	num-integer-0.1.44
 	num-rational-0.4.0
 	num-traits-0.2.14
-	num_cpus-1.13.0
-	once_cell-1.8.0
-	open-2.0.1
-	openssl-0.10.36
+	once_cell-1.9.0
+	open-2.0.2
+	openssl-0.10.38
 	openssl-probe-0.1.4
-	openssl-sys-0.9.66
+	openssl-sys-0.9.72
 	output_vt100-0.1.2
-	pango-0.14.0
+	pango-0.14.8
 	pango-sys-0.14.0
-	parking_lot-0.11.1
-	parking_lot_core-0.8.3
-	paste-1.0.5
-	pathdiff-0.2.0
+	parking_lot-0.11.2
+	parking_lot_core-0.8.5
+	paste-1.0.6
+	pathdiff-0.2.1
 	percent-encoding-2.1.0
 	pest-2.1.3
 	phf-0.8.0
 	phf_codegen-0.8.0
 	phf_generator-0.8.0
 	phf_shared-0.8.0
-	pin-project-lite-0.2.7
+	pin-project-lite-0.2.8
 	pin-utils-0.1.0
-	pkg-config-0.3.19
-	ppv-lite86-0.2.10
+	pkg-config-0.3.24
+	ppv-lite86-0.2.16
 	precomputed-hash-0.1.1
-	pretty-hex-0.2.1
-	pretty_assertions-0.7.2
+	pretty_assertions-1.0.0
 	pretty_env_logger-0.4.0
+	pretty-hex-0.2.1
+	proc-macro2-1.0.36
 	proc-macro-crate-0.1.5
-	proc-macro-crate-1.0.0
+	proc-macro-crate-1.1.0
 	proc-macro-error-1.0.4
 	proc-macro-error-attr-1.0.4
-	proc-macro-hack-0.5.19
-	proc-macro-nested-0.1.7
-	proc-macro2-1.0.28
 	quick-error-1.2.3
-	quick-xml-0.20.0
-	quote-1.0.9
+	quick-xml-0.22.0
+	quote-1.0.14
 	r2d2-0.8.9
 	rand-0.4.6
 	rand-0.7.3
@@ -199,87 +207,89 @@ CRATES="
 	rayon-core-1.9.1
 	rdrand-0.4.0
 	redox_syscall-0.2.10
+	redox_users-0.4.0
 	regex-1.5.4
 	regex-syntax-0.6.25
 	remove_dir_all-0.5.3
-	reqwest-0.11.4
+	reqwest-0.11.8
 	rfc822_sanitizer-0.3.4
-	rss-1.10.0
+	rss-2.0.0
 	rustc_version-0.3.3
-	ryu-1.0.5
+	ryu-1.0.9
 	schannel-0.1.19
 	scheduled-thread-pool-0.2.5
 	scopeguard-1.1.0
-	security-framework-2.3.1
-	security-framework-sys-2.3.0
+	security-framework-2.4.2
+	security-framework-sys-2.4.2
 	semver-0.11.0
 	semver-parser-0.10.2
-	serde-1.0.128
-	serde_json-1.0.66
+	serde-1.0.133
+	serde_json-1.0.74
 	serde_urlencoded-0.7.0
-	siphasher-0.3.6
-	slab-0.4.4
-	smallvec-1.6.1
-	socket2-0.4.1
-	string_cache-0.8.1
+	siphasher-0.3.7
+	slab-0.4.5
+	smallvec-1.7.0
+	socket2-0.4.2
+	string_cache-0.8.2
 	string_cache_codegen-0.5.1
+	strsim-0.10.0
 	strsim-0.9.3
 	strum-0.18.0
 	strum-0.21.0
 	strum_macros-0.18.0
 	strum_macros-0.21.1
-	syn-1.0.75
+	syn-1.0.84
 	system-deps-1.3.2
 	system-deps-3.2.0
 	tempdir-0.3.7
 	tempfile-3.2.0
 	tendril-0.4.2
 	termcolor-1.1.2
-	thiserror-1.0.26
-	thiserror-impl-1.0.26
+	thiserror-1.0.30
+	thiserror-impl-1.0.30
 	time-0.1.43
-	tinyvec-1.3.1
+	tinyvec-1.5.1
 	tinyvec_macros-0.1.0
-	tokio-1.10.0
-	tokio-macros-1.3.0
+	tokio-1.15.0
+	tokio-macros-1.7.0
 	tokio-native-tls-0.3.0
-	tokio-util-0.6.7
+	tokio-util-0.6.9
 	toml-0.5.8
 	tower-service-0.3.1
-	tracing-0.1.26
-	tracing-core-0.1.19
+	tracing-0.1.29
+	tracing-core-0.1.21
 	try-lock-0.2.3
 	ucd-trie-0.1.3
 	unicase-2.6.0
-	unicode-bidi-0.3.6
+	unicode-bidi-0.3.7
 	unicode-normalization-0.1.19
 	unicode-segmentation-1.8.0
-	unicode-width-0.1.8
+	unicode-width-0.1.9
 	unicode-xid-0.2.2
 	url-2.2.2
 	utf-8-0.7.6
 	vcpkg-0.2.15
+	version_check-0.9.4
 	version-compare-0.0.10
 	version-compare-0.0.11
-	version_check-0.9.3
 	want-0.3.0
-	wasi-0.9.0+wasi-snapshot-preview1
 	wasi-0.10.2+wasi-snapshot-preview1
-	wasm-bindgen-0.2.76
-	wasm-bindgen-backend-0.2.76
-	wasm-bindgen-futures-0.4.26
-	wasm-bindgen-macro-0.2.76
-	wasm-bindgen-macro-support-0.2.76
-	wasm-bindgen-shared-0.2.76
-	web-sys-0.3.53
+	wasi-0.9.0+wasi-snapshot-preview1
+	wasm-bindgen-0.2.78
+	wasm-bindgen-backend-0.2.78
+	wasm-bindgen-futures-0.4.28
+	wasm-bindgen-macro-0.2.78
+	wasm-bindgen-macro-support-0.2.78
+	wasm-bindgen-shared-0.2.78
+	web-sys-0.3.55
 	winapi-0.3.9
 	winapi-i686-pc-windows-gnu-0.4.0
 	winapi-util-0.1.5
 	winapi-x86_64-pc-windows-gnu-0.4.0
 	winreg-0.7.0
-	xdg-2.2.0
+	xdg-2.4.0
+	xml5ever-0.16.2
 	xml-rs-0.8.4
-	xml5ever-0.16.1
 "
 
 inherit cargo meson gnome2-utils xdg
@@ -312,8 +322,8 @@ DEPEND="
 RDEPEND="${DEPEND}"
 BDEPEND=""
 
-PATCHES=( "${FILESDIR}/0.5.0_beta-update-gettext-rs.patch"
-	"${FILESDIR}/0.5.0_beta-unset-CARGO_HOME.patch" )
+PATCHES=( "${FILESDIR}/0001-scripts-cargo.sh-unset-CARGO_HOME.patch"
+	"${FILESDIR}/0002-podcasts-gtk-Cargo.toml-update-gettext-rs-to-release.patch" )
 
 S="${WORKDIR}/podcasts-${PV/_/-}"
 
