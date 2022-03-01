@@ -1,4 +1,4 @@
-# Copyright 1999-2021 Gentoo Authors
+# Copyright 1999-2022 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -65,6 +65,11 @@ BDEPEND="
 	sys-devel/gettext
 	virtual/pkgconfig
 "
+
+PATCHES=(
+	# https://gitlab.gnome.org/GNOME/pitivi/-/commit/ddf2369d1fc6fddd63f676cc905a8b8e96291a4c
+	"${FILESDIR}"/${P}-meson-compatibility.patch
+)
 
 src_configure() {
 	meson_src_configure
