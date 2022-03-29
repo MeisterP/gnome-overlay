@@ -1,0 +1,53 @@
+From 8b0fbacc369d6c1440a6b983d6f56ca4bcb7e737 Mon Sep 17 00:00:00 2001
+From: lassekongo83 <lassekongo83@users.noreply.github.com>
+Date: Tue, 29 Mar 2022 12:12:17 +0200
+Subject: [PATCH] Fix #72
+
+---
+ gtk/src/adw-gtk3/gtk-3.0/_apps.scss   | 5 +++++
+ gtk/src/adw-gtk3/gtk-3.0/gtk-dark.css | 2 ++
+ gtk/src/adw-gtk3/gtk-3.0/gtk.css      | 2 ++
+ 3 files changed, 9 insertions(+)
+
+diff --git a/gtk/src/adw-gtk3/gtk-3.0/_apps.scss b/gtk/src/adw-gtk3/gtk-3.0/_apps.scss
+index af8d18f..f0b056f 100644
+--- a/gtk/src/adw-gtk3/gtk-3.0/_apps.scss
++++ b/gtk/src/adw-gtk3/gtk-3.0/_apps.scss
+@@ -178,6 +178,11 @@ $disk_space_free: #eeeeec;
+     background-color: $backdrop_bg_color;
+     border-color: $backdrop_borders_color;
+   }
++
++  button {
++    padding-top: 7px;
++    padding-bottom: 7px;
++  }
+ }
+ 
+ .gedit-document-panel {
+diff --git a/gtk/src/adw-gtk3/gtk-3.0/gtk-dark.css b/gtk/src/adw-gtk3/gtk-3.0/gtk-dark.css
+index 8fd06be..d4a22b2 100644
+--- a/gtk/src/adw-gtk3/gtk-3.0/gtk-dark.css
++++ b/gtk/src/adw-gtk3/gtk-3.0/gtk-dark.css
+@@ -2826,6 +2826,8 @@ tabbar .tab-indicator:not(.clickable) { background: none; box-shadow: none; bord
+ 
+ .gedit-search-slider:backdrop { background-color: #242424; border-color: #494949; }
+ 
++.gedit-search-slider button { padding-top: 7px; padding-bottom: 7px; }
++
+ .gedit-document-panel { background-color: #242424; }
+ 
+ .gedit-document-panel row.activatable { padding: 6px; }
+diff --git a/gtk/src/adw-gtk3/gtk-3.0/gtk.css b/gtk/src/adw-gtk3/gtk-3.0/gtk.css
+index 7caa00d..062756a 100644
+--- a/gtk/src/adw-gtk3/gtk-3.0/gtk.css
++++ b/gtk/src/adw-gtk3/gtk-3.0/gtk.css
+@@ -2806,6 +2806,8 @@ tabbar .tab-indicator:not(.clickable) { background: none; box-shadow: none; bord
+ 
+ .gedit-search-slider:backdrop { background-color: #fafafa; border-color: #dddddd; }
+ 
++.gedit-search-slider button { padding-top: 7px; padding-bottom: 7px; }
++
+ .gedit-document-panel { background-color: #fafafa; }
+ 
+ .gedit-document-panel row.activatable { padding: 6px; }
