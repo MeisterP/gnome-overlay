@@ -16,5 +16,3 @@ KEYWORDS="~amd64"
 DEPEND=""
 RDEPEND="${DEPEND}"
 BDEPEND="dev-lang/sassc"
-
-PATCHES=( ${FILESDIR}/upstream-{1,2,3}.patch )
