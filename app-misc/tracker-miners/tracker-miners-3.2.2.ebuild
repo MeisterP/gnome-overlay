@@ -1,8 +1,8 @@
 # Copyright 1999-2022 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=7
-PYTHON_COMPAT=( python3_{8..10} )
+EAPI=8
+PYTHON_COMPAT=( python3_{8..11} )
 
 inherit flag-o-matic gnome.org gnome2-utils meson python-any-r1 systemd xdg
 
@@ -82,7 +82,9 @@ PATCHES=(
 )
 
 python_check_deps() {
-	has_version -b "dev-python/tappy[${PYTHON_USEDEP}]"
+	python_has_version -b \
+		"dev-python/pygobject[${PYTHON_USEDEP}]" \
+		"dev-python/tappy[${PYTHON_USEDEP}]"
 }
 
 pkg_setup() {
@@ -90,6 +92,7 @@ pkg_setup() {
 }
 
 src_prepare() {
+	default
 	# https://gitlab.gnome.org/GNOME/tracker-miners/-/merge_requests/323
 	sed -i -e 's:environtment:env:' tests/libtracker-extract/meson.build || die
 
@@ -99,7 +102,6 @@ src_prepare() {
 	else
 		sed -i -e 's:detect-h264-codec.sh:/bin/false:' tests/functional-tests/meson.build || die
 	fi
-	xdg_src_prepare
 	gnome2_environment_reset # sets gstreamer safety variables
 }
 
