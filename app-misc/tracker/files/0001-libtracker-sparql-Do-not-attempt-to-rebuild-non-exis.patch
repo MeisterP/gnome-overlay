@@ -1,0 +1,65 @@
+From 321b55f6ee7ce7ef5f3f81256f1383eff7f0fc75 Mon Sep 17 00:00:00 2001
+From: Carlos Garnacho <carlosg@gnome.org>
+Date: Sun, 5 Jun 2022 00:19:51 +0200
+Subject: [PATCH] libtracker-sparql: Do not attempt to rebuild non-existing FTS
+ tables
+
+If a database/ontology has no fulltext-indexed properties, we do not
+create a corresponding FTS table. Likewise, parser/locale updates
+should not attempt to update it, or we will get a "SQL logic error"
+poking non-existing tables.
+
+Closes: https://gitlab.gnome.org/GNOME/nautilus/-/issues/2278
+---
+ src/libtracker-data/tracker-data-manager.c | 28 ++++++++++++++++------
+ 1 file changed, 21 insertions(+), 7 deletions(-)
+
+diff --git a/src/libtracker-data/tracker-data-manager.c b/src/libtracker-data/tracker-data-manager.c
+index b7f855cdf..e18b2e2b6 100644
+--- a/src/libtracker-data/tracker-data-manager.c
++++ b/src/libtracker-data/tracker-data-manager.c
+@@ -3744,20 +3744,34 @@ rebuild_fts_tokens (TrackerDataManager  *manager,
+                     TrackerDBInterface  *iface,
+                     GError             **error)
+ {
++	TrackerProperty **properties;
+ 	GHashTableIter iter;
+ 	gchar *graph;
++	gboolean has_fts = FALSE;
++	guint len, i;
+ 
+-	g_debug ("Rebuilding FTS tokens, this may take a moment...");
+-	if (!tracker_db_interface_sqlite_fts_rebuild_tokens (iface, "main", error))
+-		return FALSE;
++	properties = tracker_ontologies_get_properties (manager->ontologies, &len);
+ 
+-	g_hash_table_iter_init (&iter, manager->graphs);
+-	while (g_hash_table_iter_next (&iter, (gpointer*) &graph, NULL)) {
+-		if (!tracker_db_interface_sqlite_fts_rebuild_tokens (iface, graph, error))
++	for (i = 0; i < len; i++) {
++		has_fts |= tracker_property_get_fulltext_indexed (properties[i]);
++		if (has_fts)
++			break;
++	}
++
++	if (has_fts) {
++		g_debug ("Rebuilding FTS tokens, this may take a moment...");
++		if (!tracker_db_interface_sqlite_fts_rebuild_tokens (iface, "main", error))
+ 			return FALSE;
++
++		g_hash_table_iter_init (&iter, manager->graphs);
++		while (g_hash_table_iter_next (&iter, (gpointer*) &graph, NULL)) {
++			if (!tracker_db_interface_sqlite_fts_rebuild_tokens (iface, graph, error))
++				return FALSE;
++		}
++
++		g_debug ("FTS tokens rebuilt");
+ 	}
+ 
+-	g_debug ("FTS tokens rebuilt");
+ 	/* Update the stamp file */
+ 	tracker_db_manager_tokenizer_update (manager->db_manager);
+ 
+-- 
+2.35.1
+

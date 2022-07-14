@@ -54,6 +54,7 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-3.1.1-Fix-asciidoc-manpage.xsl-location.patch
 	"${FILESDIR}"/${PN}-3.2.1-Add-config-options-for-libsoup.patch
 	"${FILESDIR}"/${PN}-3.2.1-build-Add-an-option-to-control-building-tests.patch
+	"${FILESDIR}"/0001-libtracker-sparql-Do-not-attempt-to-rebuild-non-exis.patch
 )
 
 function inotify_enabled() {
