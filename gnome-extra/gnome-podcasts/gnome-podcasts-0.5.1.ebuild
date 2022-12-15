@@ -296,7 +296,7 @@ inherit cargo meson gnome2-utils xdg
 
 DESCRIPTION="Podcast app for GNOME"
 HOMEPAGE="https://wiki.gnome.org/Apps/Podcasts https://gitlab.gnome.org/World/podcasts"
-SRC_URI="https://gitlab.gnome.org/World/podcasts/-/archive/${PV/_/-}/podcasts-${PV/_/-}.tar.gz
+SRC_URI="https://gitlab.gnome.org/World/podcasts/-/archive/${PV/_/-}/podcasts-${PV/_/-}.tar.bz2
 	$(cargo_crate_uris ${CRATES})"
 
 LICENSE="Apache-2.0 Apache-2.0-with-LLVM-exceptions BSD-2 BSL-1.1 GPL-3+ ISC MIT Unlicense ZLIB"
