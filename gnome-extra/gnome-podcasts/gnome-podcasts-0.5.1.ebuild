@@ -323,7 +323,8 @@ RDEPEND="${DEPEND}"
 BDEPEND=""
 
 PATCHES=( "${FILESDIR}/0001-scripts-cargo.sh-unset-CARGO_HOME.patch"
-	"${FILESDIR}/0002-podcasts-gtk-Cargo.toml-update-gettext-rs-to-release.patch" )
+	"${FILESDIR}/0002-podcasts-gtk-Cargo.toml-update-gettext-rs-to-release.patch"
+	"${FILESDIR}/meson-0.61.0.patch" )
 
 S="${WORKDIR}/podcasts-${PV/_/-}"
 
