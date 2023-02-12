@@ -1,4 +1,4 @@
-# Copyright 2022 Gentoo Authors
+# Copyright 2022-2023 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -301,7 +301,7 @@ SRC_URI="https://gitlab.gnome.org/World/podcasts/-/archive/${PV/_/-}/podcasts-${
 
 LICENSE="Apache-2.0 Apache-2.0-with-LLVM-exceptions BSD-2 BSL-1.1 GPL-3+ ISC MIT Unlicense ZLIB"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="~amd64"
 RESTRICT="mirror"
 
 DEPEND="
