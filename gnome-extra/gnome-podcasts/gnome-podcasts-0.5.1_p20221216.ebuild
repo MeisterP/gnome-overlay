@@ -1,0 +1,356 @@
+# Copyright 2022-2023 Gentoo Authors
+# Distributed under the terms of the GNU General Public License v2
+
+EAPI=8
+
+CRATES="
+	aho-corasick-0.7.19
+	ammonia-3.2.1
+	android_system_properties-0.1.5
+	anyhow-1.0.66
+	atom_syndication-0.11.0
+	atty-0.2.14
+	autocfg-1.1.0
+	base64-0.13.1
+	bitflags-1.3.2
+	bumpalo-3.11.1
+	bytes-1.2.1
+	cairo-rs-0.15.12
+	cairo-sys-rs-0.15.1
+	cc-1.0.74
+	cfg-expr-0.11.0
+	cfg-if-1.0.0
+	chrono-0.4.22
+	codespan-reporting-0.11.1
+	core-foundation-0.9.3
+	core-foundation-sys-0.8.3
+	crossbeam-channel-0.5.6
+	crossbeam-deque-0.8.2
+	crossbeam-epoch-0.9.11
+	crossbeam-utils-0.8.12
+	ctor-0.1.26
+	cxx-1.0.80
+	cxxbridge-flags-1.0.80
+	cxxbridge-macro-1.0.80
+	cxx-build-1.0.80
+	darling-0.12.4
+	darling-0.14.2
+	darling_core-0.12.4
+	darling_core-0.14.2
+	darling_macro-0.12.4
+	darling_macro-0.14.2
+	dbus-0.6.5
+	derive_builder-0.10.2
+	derive_builder-0.11.2
+	derive_builder_core-0.10.2
+	derive_builder_core-0.11.2
+	derive_builder_macro-0.10.2
+	derive_builder_macro-0.11.2
+	diesel-2.0.2
+	diesel_derives-2.0.1
+	diesel_migrations-2.0.0
+	diff-0.1.13
+	diligent-date-parser-0.1.3
+	dirs-4.0.0
+	dirs-sys-0.3.7
+	either-1.8.0
+	encoding_rs-0.8.31
+	env_logger-0.7.1
+	fastrand-1.8.0
+	field-offset-0.3.4
+	fnv-1.0.7
+	foreign-types-0.3.2
+	foreign-types-shared-0.1.1
+	form_urlencoded-1.1.0
+	fragile-1.2.2
+	fragile-2.0.0
+	fuchsia-cprng-0.1.1
+	futf-0.1.5
+	futures-0.3.25
+	futures-channel-0.3.25
+	futures-core-0.3.25
+	futures-executor-0.3.25
+	futures-io-0.3.25
+	futures-macro-0.3.25
+	futures-sink-0.3.25
+	futures-task-0.3.25
+	futures-util-0.3.25
+	gdk4-0.4.8
+	gdk4-sys-0.4.8
+	gdk-pixbuf-0.15.11
+	gdk-pixbuf-sys-0.15.10
+	getrandom-0.1.16
+	getrandom-0.2.8
+	gio-0.15.12
+	gio-sys-0.15.10
+	glib-0.15.12
+	glib-macros-0.15.11
+	glib-sys-0.15.10
+	glob-0.3.0
+	gobject-sys-0.15.10
+	graphene-rs-0.15.1
+	graphene-sys-0.15.10
+	gsk4-0.4.8
+	gsk4-sys-0.4.8
+	gstreamer-0.18.8
+	gstreamer-base-0.18.0
+	gstreamer-base-sys-0.18.0
+	gstreamer-player-0.18.0
+	gstreamer-player-sys-0.18.0
+	gstreamer-sys-0.18.0
+	gstreamer-video-0.18.7
+	gstreamer-video-sys-0.18.3
+	gtk4-0.4.8
+	gtk4-macros-0.4.8
+	gtk4-sys-0.4.8
+	h2-0.3.15
+	hashbrown-0.12.3
+	heck-0.4.0
+	hermit-abi-0.1.19
+	html2text-0.2.1
+	html5ever-0.25.2
+	html5ever-0.26.0
+	http-0.2.8
+	httparse-1.8.0
+	http-body-0.4.5
+	httpdate-1.0.2
+	humansize-1.1.1
+	humantime-1.3.0
+	hyper-0.14.22
+	hyper-tls-0.5.0
+	iana-time-zone-0.1.53
+	iana-time-zone-haiku-0.1.1
+	ident_case-1.0.1
+	idna-0.3.0
+	indexmap-1.9.1
+	instant-0.1.12
+	ipnet-2.5.0
+	itoa-1.0.4
+	js-sys-0.3.60
+	lazy_static-1.4.0
+	libadwaita-0.1.1
+	libadwaita-sys-0.1.0
+	libc-0.2.137
+	libdbus-sys-0.2.2
+	libsqlite3-sys-0.25.2
+	link-cplusplus-1.0.7
+	locale_config-0.2.3
+	lock_api-0.4.9
+	log-0.4.17
+	mac-0.1.1
+	maplit-1.0.2
+	markup5ever-0.10.1
+	markup5ever-0.11.0
+	markup5ever_rcdom-0.1.0
+	memchr-2.5.0
+	memoffset-0.6.5
+	migrations_internals-2.0.0
+	migrations_macros-2.0.0
+	mime-0.3.16
+	mime_guess-2.0.4
+	mio-0.8.5
+	mpris-player-0.6.2
+	muldiv-1.0.1
+	native-tls-0.2.10
+	never-0.1.0
+	new_debug_unreachable-1.0.4
+	num_cpus-1.13.1
+	num-integer-0.1.45
+	num-rational-0.4.1
+	num-traits-0.2.15
+	once_cell-1.16.0
+	open-2.1.3
+	openssl-0.10.42
+	openssl-macros-0.1.0
+	openssl-probe-0.1.5
+	openssl-sys-0.9.77
+	option-operations-0.4.1
+	output_vt100-0.1.3
+	pango-0.15.10
+	pango-sys-0.15.10
+	parking_lot-0.12.1
+	parking_lot_core-0.9.4
+	paste-1.0.9
+	pathdiff-0.2.1
+	percent-encoding-2.2.0
+	pest-2.4.0
+	phf-0.10.1
+	phf-0.8.0
+	phf_codegen-0.10.0
+	phf_codegen-0.8.0
+	phf_generator-0.10.0
+	phf_generator-0.8.0
+	phf_shared-0.10.0
+	phf_shared-0.8.0
+	pin-project-lite-0.2.9
+	pin-utils-0.1.0
+	pkg-config-0.3.26
+	ppv-lite86-0.2.16
+	precomputed-hash-0.1.1
+	pretty_assertions-1.3.0
+	pretty_env_logger-0.4.0
+	pretty-hex-0.3.0
+	proc-macro2-1.0.47
+	proc-macro-crate-1.2.1
+	proc-macro-error-1.0.4
+	proc-macro-error-attr-1.0.4
+	quick-error-1.2.3
+	quick-xml-0.22.0
+	quote-1.0.21
+	r2d2-0.8.10
+	rand-0.4.6
+	rand-0.7.3
+	rand-0.8.5
+	rand_chacha-0.2.2
+	rand_chacha-0.3.1
+	rand_core-0.3.1
+	rand_core-0.4.2
+	rand_core-0.5.1
+	rand_core-0.6.4
+	rand_hc-0.2.0
+	rand_pcg-0.2.1
+	rayon-1.5.3
+	rayon-core-1.9.3
+	rdrand-0.4.0
+	redox_syscall-0.2.16
+	redox_users-0.4.3
+	regex-1.6.0
+	regex-syntax-0.6.27
+	remove_dir_all-0.5.3
+	reqwest-0.11.12
+	rfc822_sanitizer-0.3.6
+	rss-2.0.1
+	rustc_version-0.3.3
+	ryu-1.0.11
+	schannel-0.1.20
+	scheduled-thread-pool-0.2.6
+	scopeguard-1.1.0
+	scratch-1.0.2
+	security-framework-2.7.0
+	security-framework-sys-2.6.1
+	semver-0.11.0
+	semver-parser-0.10.2
+	serde-1.0.147
+	serde_derive-1.0.147
+	serde_json-1.0.87
+	serde_urlencoded-0.7.1
+	siphasher-0.3.10
+	slab-0.4.7
+	smallvec-1.10.0
+	socket2-0.4.7
+	string_cache-0.8.4
+	string_cache_codegen-0.5.2
+	strsim-0.10.0
+	syn-1.0.103
+	system-deps-6.0.3
+	tempdir-0.3.7
+	tempfile-3.3.0
+	tendril-0.4.3
+	termcolor-1.1.3
+	thiserror-1.0.37
+	thiserror-impl-1.0.37
+	time-0.1.44
+	tinyvec-1.6.0
+	tinyvec_macros-0.1.0
+	tokio-1.21.2
+	tokio-macros-1.8.0
+	tokio-native-tls-0.3.0
+	tokio-util-0.7.4
+	toml-0.5.9
+	tower-service-0.3.2
+	tracing-0.1.37
+	tracing-core-0.1.30
+	try-lock-0.2.3
+	ucd-trie-0.1.5
+	unicase-2.6.0
+	unicode-bidi-0.3.8
+	unicode-ident-1.0.5
+	unicode-normalization-0.1.22
+	unicode-width-0.1.10
+	url-2.3.1
+	utf-8-0.7.6
+	vcpkg-0.2.15
+	version_check-0.9.4
+	version-compare-0.1.0
+	want-0.3.0
+	wasi-0.10.0+wasi-snapshot-preview1
+	wasi-0.11.0+wasi-snapshot-preview1
+	wasi-0.9.0+wasi-snapshot-preview1
+	wasm-bindgen-0.2.83
+	wasm-bindgen-backend-0.2.83
+	wasm-bindgen-futures-0.4.33
+	wasm-bindgen-macro-0.2.83
+	wasm-bindgen-macro-support-0.2.83
+	wasm-bindgen-shared-0.2.83
+	web-sys-0.3.60
+	winapi-0.3.9
+	winapi-i686-pc-windows-gnu-0.4.0
+	winapi-util-0.1.5
+	winapi-x86_64-pc-windows-gnu-0.4.0
+	windows_aarch64_gnullvm-0.42.0
+	windows_aarch64_msvc-0.36.1
+	windows_aarch64_msvc-0.42.0
+	windows_i686_gnu-0.36.1
+	windows_i686_gnu-0.42.0
+	windows_i686_msvc-0.36.1
+	windows_i686_msvc-0.42.0
+	windows-sys-0.36.1
+	windows-sys-0.42.0
+	windows_x86_64_gnu-0.36.1
+	windows_x86_64_gnu-0.42.0
+	windows_x86_64_gnullvm-0.42.0
+	windows_x86_64_msvc-0.36.1
+	windows_x86_64_msvc-0.42.0
+	winreg-0.10.1
+	xdg-2.4.1
+	xml5ever-0.16.2
+	xml-rs-0.8.4
+	yansi-0.5.1
+"
+
+declare -A GIT_CRATES=(
+	[gettext-rs]="https://github.com/danigm/gettext-rs;61938b9f5f1d3bdc31f9839f53fabe5ccf136a78"
+)
+
+inherit cargo meson gnome2-utils xdg
+
+DESCRIPTION="Podcast app for GNOME"
+HOMEPAGE="https://wiki.gnome.org/Apps/Podcasts https://gitlab.gnome.org/World/podcasts"
+
+COMMIT="906932675d3ed6e41ea64d09c74fddc55255543f"
+SRC_URI="https://gitlab.gnome.org/World/podcasts/-/archive/${COMMIT}/podcasts-${COMMIT}.tar.bz2 -> ${P}.tar.bz2
+	$(cargo_crate_uris ${CRATES})"
+
+LICENSE="Apache-2.0 Apache-2.0-with-LLVM-exceptions BSD Boost-1.0 GPL-3+ ISC MIT Unicode-DFS-2016 Unlicense ZLIB"
+SLOT="0"
+KEYWORDS="~amd64"
+RESTRICT="mirror"
+
+DEPEND="
+	dev-db/sqlite
+	dev-libs/glib
+	dev-libs/gobject-introspection
+	dev-libs/openssl
+	gui-libs/gtk
+	gui-libs/libadwaita
+	media-plugins/gst-plugins-meta
+	sys-apps/dbus
+	x11-libs/gdk-pixbuf
+	"
+RDEPEND="${DEPEND}"
+BDEPEND=""
+
+# https://gitlab.gnome.org/World/podcasts/-/merge_requests/231
+PATCHES=( "${FILESDIR}/0.5.1-unset-CARGO_HOME.patch" "${FILESDIR}/231.patch" )
+
+S="${WORKDIR}/podcasts-${COMMIT}"
+
+pkg_postinst() {
+	xdg_pkg_postinst
+	gnome2_schemas_update
+}
+
+pkg_postrm() {
+	xdg_pkg_postrm
+	gnome2_schemas_update
+}

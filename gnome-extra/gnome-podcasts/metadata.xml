@@ -7,5 +7,6 @@
 	</maintainer>
 	<upstream>
 		<remote-id type="gnome-gitlab">World/podcasts</remote-id>
+		<remote-id type="github">danigm/gettext-rs</remote-id>
 	</upstream>
 </pkgmetadata>
