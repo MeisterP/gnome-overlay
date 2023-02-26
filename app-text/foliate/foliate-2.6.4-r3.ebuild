@@ -31,6 +31,9 @@ src_prepare() {
 	python_fix_shebang build-aux/meson
 	xdg_environment_reset
 
+	# https://github.com/johnfactotum/foliate/issues/931
+	sed -i "s/'WebKit2': '4.0'/'WebKit2': '4.1'/" src/main.js || die
+
 	plocale_find_changes "${S}"/po '' '.po'
 
 	rm_po() {
