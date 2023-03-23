@@ -4,10 +4,12 @@
 EAPI=8
 
 CRATES="
+		aho-corasick-0.7.19
 	aho-corasick-0.7.19
 	ammonia-3.2.1
 	android_system_properties-0.1.5
 	anyhow-1.0.66
+	atomic_refcell-0.1.9
 	atom_syndication-0.11.0
 	atty-0.2.14
 	autocfg-1.1.0
@@ -15,8 +17,8 @@ CRATES="
 	bitflags-1.3.2
 	bumpalo-3.11.1
 	bytes-1.2.1
-	cairo-rs-0.15.12
-	cairo-sys-rs-0.15.1
+	cairo-rs-0.17.0
+	cairo-sys-rs-0.17.0
 	cc-1.0.74
 	cfg-expr-0.11.0
 	cfg-if-1.0.0
@@ -75,34 +77,38 @@ CRATES="
 	futures-sink-0.3.25
 	futures-task-0.3.25
 	futures-util-0.3.25
-	gdk4-0.4.8
-	gdk4-sys-0.4.8
-	gdk-pixbuf-0.15.11
-	gdk-pixbuf-sys-0.15.10
+	gdk4-0.6.2
+	gdk4-sys-0.6.2
+	gdk-pixbuf-0.17.0
+	gdk-pixbuf-sys-0.17.0
 	getrandom-0.1.16
 	getrandom-0.2.8
-	gio-0.15.12
-	gio-sys-0.15.10
+	gio-0.17.2
+	gio-sys-0.17.0
 	glib-0.15.12
+	glib-0.17.2
 	glib-macros-0.15.11
+	glib-macros-0.17.2
 	glib-sys-0.15.10
+	glib-sys-0.17.2
 	glob-0.3.0
 	gobject-sys-0.15.10
-	graphene-rs-0.15.1
-	graphene-sys-0.15.10
-	gsk4-0.4.8
-	gsk4-sys-0.4.8
-	gstreamer-0.18.8
-	gstreamer-base-0.18.0
-	gstreamer-base-sys-0.18.0
-	gstreamer-player-0.18.0
-	gstreamer-player-sys-0.18.0
-	gstreamer-sys-0.18.0
-	gstreamer-video-0.18.7
-	gstreamer-video-sys-0.18.3
-	gtk4-0.4.8
-	gtk4-macros-0.4.8
-	gtk4-sys-0.4.8
+	gobject-sys-0.17.0
+	graphene-rs-0.17.1
+	graphene-sys-0.17.0
+	gsk4-0.6.2
+	gsk4-sys-0.6.2
+	gstreamer-0.20.2
+	gstreamer-base-0.20.0
+	gstreamer-base-sys-0.20.0
+	gstreamer-player-0.20.0
+	gstreamer-player-sys-0.20.0
+	gstreamer-sys-0.20.0
+	gstreamer-video-0.20.2
+	gstreamer-video-sys-0.20.0
+	gtk4-0.6.2
+	gtk4-macros-0.6.0
+	gtk4-sys-0.6.2
 	h2-0.3.15
 	hashbrown-0.12.3
 	heck-0.4.0
@@ -128,8 +134,8 @@ CRATES="
 	itoa-1.0.4
 	js-sys-0.3.60
 	lazy_static-1.4.0
-	libadwaita-0.1.1
-	libadwaita-sys-0.1.0
+	libadwaita-0.3.1
+	libadwaita-sys-0.3.0
 	libc-0.2.137
 	libdbus-sys-0.2.2
 	libsqlite3-sys-0.25.2
@@ -164,10 +170,10 @@ CRATES="
 	openssl-macros-0.1.0
 	openssl-probe-0.1.5
 	openssl-sys-0.9.77
-	option-operations-0.4.1
+	option-operations-0.5.0
 	output_vt100-0.1.3
-	pango-0.15.10
-	pango-sys-0.15.10
+	pango-0.17.0
+	pango-sys-0.17.0
 	parking_lot-0.12.1
 	parking_lot_core-0.9.4
 	paste-1.0.9
@@ -317,7 +323,7 @@ inherit cargo meson gnome2-utils xdg
 DESCRIPTION="Podcast app for GNOME"
 HOMEPAGE="https://wiki.gnome.org/Apps/Podcasts https://gitlab.gnome.org/World/podcasts"
 
-COMMIT="906932675d3ed6e41ea64d09c74fddc55255543f"
+COMMIT="283fa3cd6c2557b01a8288ccafa62f3f45a652c5"
 SRC_URI="https://gitlab.gnome.org/World/podcasts/-/archive/${COMMIT}/podcasts-${COMMIT}.tar.bz2 -> ${P}.tar.bz2
 	$(cargo_crate_uris ${CRATES})"
 
