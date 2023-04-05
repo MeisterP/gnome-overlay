@@ -1,24 +1,21 @@
-From 1f4b149ebb7a893bf68f024cdf6c5a2532f7b328 Mon Sep 17 00:00:00 2001
-From: Poncho <poncho@spahan.ch>
-Date: Sun, 16 Jan 2022 13:06:29 +0100
-Subject: [PATCH 1/2] scripts/cargo.sh: unset CARGO_HOME
-
----
- scripts/cargo.sh | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/scripts/cargo.sh b/scripts/cargo.sh
-index 63030dd..ce2bb25 100755
---- a/scripts/cargo.sh
-+++ b/scripts/cargo.sh
-@@ -7,7 +7,6 @@ export MESON_SOURCE_ROOT="$2"
- export OUTPUT="$3"
- export PROFILE="$4"
- export CARGO_TARGET_DIR="$MESON_BUILD_ROOT"/target
--export CARGO_HOME="$MESON_BUILD_ROOT"/cargo-home
+diff --git a/podcasts-gtk/src/meson.build b/podcasts-gtk/src/meson.build
+index a992b6a..7b55e9b 100644
+--- a/podcasts-gtk/src/meson.build
++++ b/podcasts-gtk/src/meson.build
+@@ -28,8 +28,6 @@ else
+   message('Building in debug mode')
+ endif
  
- TARGET=debug
- ARGS=()
--- 
-2.34.1
-
+-cargo_env = [ 'CARGO_HOME=' + meson.project_build_root() / 'cargo-home' ]
+-
+ cargo_release = custom_target('cargo-build',
+                         build_by_default: true,
+                         build_always_stale: true,
+@@ -39,7 +37,6 @@ cargo_release = custom_target('cargo-build',
+                         console: true,
+                         depends: podcasts_resources,
+                         command: ['env',
+-                                  cargo_env,
+                                   cargo, 'build',
+                                   cargo_options,
+                                   '&&',
