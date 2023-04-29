@@ -344,15 +344,15 @@ SLOT="0"
 KEYWORDS="~amd64"
 
 DEPEND="
-	dev-db/sqlite
-	dev-libs/glib
+	>=dev-db/sqlite-3.20
+	>=dev-libs/glib-2.76
 	dev-libs/gobject-introspection
-	dev-libs/openssl
-	gui-libs/gtk
-	gui-libs/libadwaita
-	media-plugins/gst-plugins-meta
+	>=dev-libs/openssl-1.0
+	>=gui-libs/gtk-4.10.0
+	>=gui-libs/libadwaita-1.3
+	>=media-plugins/gst-plugins-meta-1.16
 	sys-apps/dbus
-	x11-libs/gdk-pixbuf
+	>=x11-libs/gdk-pixbuf-2.0
 	"
 RDEPEND="${DEPEND}"
 BDEPEND=""
