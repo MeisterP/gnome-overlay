@@ -140,6 +140,7 @@ CRATES="
 	libc-0.2.147
 	libdbus-sys-0.2.5
 	libsqlite3-sys-0.26.0
+	linkify-0.10.0
 	linux-raw-sys-0.3.8
 	linux-raw-sys-0.4.3
 	locale_config-0.2.3
@@ -330,7 +331,7 @@ inherit cargo meson gnome2-utils xdg
 DESCRIPTION="Podcast app for GNOME"
 HOMEPAGE="https://wiki.gnome.org/Apps/Podcasts https://gitlab.gnome.org/World/podcasts"
 
-COMMIT="a0fc748a83f94b02c443022c30aa8dbbae3241f3"
+COMMIT="440bf88119b62e5076ab3c255ada65d1bc2d5a6a"
 SRC_URI="https://gitlab.gnome.org/World/podcasts/-/archive/${COMMIT}/podcasts-${COMMIT}.tar.bz2 -> ${P}.tar.bz2
 	$(cargo_crate_uris ${CRATES})"
 
@@ -352,8 +353,7 @@ DEPEND="
 RDEPEND="${DEPEND}"
 BDEPEND=""
 
-# https://gitlab.gnome.org/World/podcasts/-/merge_requests/231
-PATCHES=( "${FILESDIR}/0.5.1-unset-CARGO_HOME.patch" "${FILESDIR}/231.patch" )
+PATCHES=( "${FILESDIR}/0.5.1-unset-CARGO_HOME.patch" )
 
 S="${WORKDIR}/podcasts-${COMMIT}"
 
