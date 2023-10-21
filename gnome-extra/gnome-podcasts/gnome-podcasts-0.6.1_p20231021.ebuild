@@ -41,7 +41,6 @@ CRATES="
 	diesel_derives@2.1.1
 	diesel_migrations@2.1.0
 	diesel_table_macro_syntax@0.1.0
-	diff@0.1.13
 	diligent-date-parser@0.1.4
 	either@1.9.0
 	encoding_rs@0.8.33
@@ -93,8 +92,8 @@ CRATES="
 	gstreamer@0.21.0
 	gstreamer-base@0.21.0
 	gstreamer-base-sys@0.21.0
-	gstreamer-player@0.21.0
-	gstreamer-player-sys@0.21.0
+	gstreamer-play@0.21.0
+	gstreamer-play-sys@0.21.0
 	gstreamer-sys@0.21.0
 	gstreamer-video@0.21.0
 	gstreamer-video-sys@0.21.0
@@ -190,7 +189,6 @@ CRATES="
 	ppv-lite86@0.2.17
 	precomputed-hash@0.1.1
 	pretty-hex@0.3.0
-	pretty_assertions@1.4.0
 	pretty_env_logger@0.5.0
 	proc-macro-crate@1.3.1
 	proc-macro-error@1.0.4
@@ -305,7 +303,6 @@ CRATES="
 	xdg@2.5.2
 	xml-rs@0.8.16
 	xml5ever@0.17.0
-	yansi@0.5.1
 "
 
 declare -A GIT_CRATES=(
@@ -317,7 +314,7 @@ inherit cargo meson gnome2-utils xdg
 DESCRIPTION="Podcast app for GNOME"
 HOMEPAGE="https://wiki.gnome.org/Apps/Podcasts https://gitlab.gnome.org/World/podcasts"
 
-COMMIT="bd5bc150aebe45871940e1c3774a2a236a6f6daf"
+COMMIT="b5fe3a9fac7e2ac594fd644a41d224b529262c60"
 SRC_URI="https://gitlab.gnome.org/World/podcasts/-/archive/${COMMIT}/podcasts-${COMMIT}.tar.bz2 -> ${P}.tar.bz2
 	$(cargo_crate_uris ${CRATES})"
 
@@ -332,7 +329,8 @@ DEPEND="
 	>=dev-libs/openssl-1.0
 	>=gui-libs/gtk-4.10.0
 	>=gui-libs/libadwaita-1.3
-	>=media-plugins/gst-plugins-meta-1.16
+	>=media-plugins/gst-plugins-meta-1.20
+	>=media-libs/gstreamer-1.22
 	sys-apps/dbus
 	>=x11-libs/gdk-pixbuf-2.0
 	"
