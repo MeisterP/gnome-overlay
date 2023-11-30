@@ -335,7 +335,6 @@ DEPEND="
 	>=x11-libs/gdk-pixbuf-2.0
 	"
 RDEPEND="${DEPEND}"
-BDEPEND=""
 
 PATCHES=( "${FILESDIR}/0.5.1-unset-CARGO_HOME.patch" )
 
