@@ -1,4 +1,4 @@
-# Copyright 2022-2023 Gentoo Authors
+# Copyright 2022-2024 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -85,7 +85,6 @@ CRATES="
 	form_urlencoded@1.2.0
 	fragile@2.0.0
 	futf@0.1.5
-	futures@0.3.29
 	futures-channel@0.3.29
 	futures-core@0.3.29
 	futures-executor@0.3.29
@@ -117,13 +116,13 @@ CRATES="
 	gsk4@0.7.3
 	gsk4-sys@0.7.3
 	gstreamer@0.21.1
-	gstreamer-base@0.21.0
+	gstreamer-base@0.21.2
 	gstreamer-base-sys@0.21.1
-	gstreamer-play@0.21.0
+	gstreamer-play@0.21.2
 	gstreamer-play-sys@0.21.0
 	gstreamer-sys@0.21.1
-	gstreamer-video@0.21.1
-	gstreamer-video-sys@0.21.1
+	gstreamer-video@0.21.2
+	gstreamer-video-sys@0.21.2
 	gtk4@0.7.3
 	gtk4-macros@0.7.2
 	gtk4-sys@0.7.3
@@ -356,16 +355,12 @@ CRATES="
 	zvariant_utils@1.0.1
 "
 
-declare -A GIT_CRATES=(
-	[gettext-rs]="https://github.com/danigm/gettext-rs;61938b9f5f1d3bdc31f9839f53fabe5ccf136a78"
-)
-
 inherit cargo meson gnome2-utils xdg
 
 DESCRIPTION="Podcast app for GNOME"
 HOMEPAGE="https://wiki.gnome.org/Apps/Podcasts https://gitlab.gnome.org/World/podcasts"
 
-COMMIT="20d734d359b977267118ccf0907848e5d418e4c3"
+COMMIT="9e0babcde9159eb1370868987c4dc58fd51e6038"
 SRC_URI="https://gitlab.gnome.org/World/podcasts/-/archive/${COMMIT}/podcasts-${COMMIT}.tar.bz2 -> ${P}.tar.bz2
 	$(cargo_crate_uris ${CRATES})"
 
@@ -379,7 +374,7 @@ DEPEND="
 	dev-libs/gobject-introspection
 	>=dev-libs/openssl-1.0
 	>=gui-libs/gtk-4.10.0
-	>=gui-libs/libadwaita-1.3
+	>=gui-libs/libadwaita-1.4
 	>=media-plugins/gst-plugins-meta-1.20
 	>=media-libs/gstreamer-1.22
 	sys-apps/dbus
