@@ -34,8 +34,8 @@ CRATES="
 	base64@0.21.5
 	bitflags@1.3.2
 	bitflags@2.4.1
-	block@0.1.6
 	block-buffer@0.10.4
+	block@0.1.6
 	blocking@1.4.1
 	bumpalo@3.14.0
 	byteorder@1.5.0
@@ -47,8 +47,8 @@ CRATES="
 	cfg-if@1.0.0
 	chrono@0.4.31
 	concurrent-queue@2.3.0
-	core-foundation@0.9.3
 	core-foundation-sys@0.8.4
+	core-foundation@0.9.3
 	cpufeatures@0.2.11
 	crossbeam-utils@0.8.16
 	crypto-common@0.1.6
@@ -73,15 +73,15 @@ CRATES="
 	env_logger@0.10.0
 	equivalent@1.0.1
 	errno@0.3.5
+	event-listener-strategy@0.3.0
 	event-listener@2.5.3
 	event-listener@3.0.1
-	event-listener-strategy@0.3.0
 	fastrand@1.9.0
 	fastrand@2.0.1
 	field-offset@0.3.6
 	fnv@1.0.7
-	foreign-types@0.3.2
 	foreign-types-shared@0.1.1
+	foreign-types@0.3.2
 	form_urlencoded@1.2.0
 	fragile@2.0.0
 	futf@0.1.5
@@ -95,37 +95,37 @@ CRATES="
 	futures-sink@0.3.29
 	futures-task@0.3.29
 	futures-util@0.3.29
-	gdk-pixbuf@0.18.3
 	gdk-pixbuf-sys@0.18.0
-	gdk4@0.7.3
+	gdk-pixbuf@0.18.3
 	gdk4-sys@0.7.2
+	gdk4@0.7.3
 	generic-array@0.14.7
 	getrandom@0.2.10
 	gettext-rs@0.7.0
 	gettext-sys@0.21.3
 	gimli@0.28.0
-	gio@0.18.3
 	gio-sys@0.18.1
-	glib@0.18.3
+	gio@0.18.3
 	glib-macros@0.18.3
 	glib-sys@0.18.1
+	glib@0.18.3
 	glob@0.3.1
 	gobject-sys@0.18.0
 	graphene-rs@0.18.1
 	graphene-sys@0.18.1
-	gsk4@0.7.3
 	gsk4-sys@0.7.3
-	gstreamer@0.21.1
-	gstreamer-base@0.21.2
+	gsk4@0.7.3
 	gstreamer-base-sys@0.21.1
-	gstreamer-play@0.21.2
+	gstreamer-base@0.21.2
 	gstreamer-play-sys@0.21.0
+	gstreamer-play@0.21.2
 	gstreamer-sys@0.21.1
-	gstreamer-video@0.21.2
 	gstreamer-video-sys@0.21.2
-	gtk4@0.7.3
+	gstreamer-video@0.21.2
+	gstreamer@0.21.1
 	gtk4-macros@0.7.2
 	gtk4-sys@0.7.3
+	gtk4@0.7.3
 	h2@0.3.21
 	hashbrown@0.12.3
 	hashbrown@0.14.2
@@ -134,16 +134,16 @@ CRATES="
 	hex@0.4.3
 	html2text@0.6.0
 	html5ever@0.26.0
-	http@0.2.9
 	http-body@0.4.5
+	http@0.2.9
 	httparse@1.8.0
 	httpdate@1.0.3
 	humansize@1.1.1
 	humantime@2.1.0
-	hyper@0.14.27
 	hyper-tls@0.5.0
-	iana-time-zone@0.1.58
+	hyper@0.14.27
 	iana-time-zone-haiku@0.1.2
+	iana-time-zone@0.1.58
 	ident_case@1.0.1
 	idna@0.4.0
 	indexmap@1.9.3
@@ -158,8 +158,8 @@ CRATES="
 	itoa@1.0.9
 	js-sys@0.3.65
 	lazy_static@1.4.0
-	libadwaita@0.5.3
 	libadwaita-sys@0.5.3
+	libadwaita@0.5.3
 	libc@0.2.150
 	libsqlite3-sys@0.26.0
 	linkify@0.10.0
@@ -192,20 +192,20 @@ CRATES="
 	num-rational@0.4.1
 	num-traits@0.2.17
 	num_cpus@1.16.0
-	objc@0.2.7
 	objc-foundation@0.1.1
+	objc@0.2.7
 	objc_id@0.1.1
 	object@0.32.1
 	once_cell@1.18.0
 	open@5.0.0
-	openssl@0.10.59
 	openssl-macros@0.1.1
 	openssl-probe@0.1.5
 	openssl-sys@0.9.95
+	openssl@0.10.59
 	option-operations@0.5.0
 	ordered-stream@0.2.0
-	pango@0.18.3
 	pango-sys@0.18.0
+	pango@0.18.3
 	parking@2.2.0
 	parking_lot@0.12.1
 	parking_lot_core@0.9.9
@@ -229,8 +229,8 @@ CRATES="
 	pretty_env_logger@0.5.0
 	proc-macro-crate@1.3.1
 	proc-macro-crate@2.0.0
-	proc-macro-error@1.0.4
 	proc-macro-error-attr@1.0.4
+	proc-macro-error@1.0.4
 	proc-macro2@1.0.69
 	quick-xml@0.30.0
 	quote@1.0.33
@@ -239,9 +239,9 @@ CRATES="
 	rand_chacha@0.3.1
 	rand_core@0.6.4
 	redox_syscall@0.4.1
-	regex@1.10.2
 	regex-automata@0.4.3
 	regex-syntax@0.8.2
+	regex@1.10.2
 	reqwest@0.11.22
 	rfc822_sanitizer@0.3.6
 	rss@2.0.6
@@ -253,8 +253,8 @@ CRATES="
 	schannel@0.1.22
 	scheduled-thread-pool@0.2.7
 	scopeguard@1.2.0
-	security-framework@2.9.2
 	security-framework-sys@2.9.1
+	security-framework@2.9.2
 	semver@1.0.20
 	serde@1.0.190
 	serde_derive@1.0.190
@@ -275,34 +275,34 @@ CRATES="
 	strsim@0.10.0
 	syn@1.0.109
 	syn@2.0.38
-	system-configuration@0.5.1
 	system-configuration-sys@0.5.0
+	system-configuration@0.5.1
 	system-deps@6.2.0
 	target-lexicon@0.12.12
 	temp-dir@0.1.11
 	tempfile@3.8.1
 	tendril@0.4.3
 	termcolor@1.3.0
-	thiserror@1.0.50
 	thiserror-impl@1.0.50
-	time@0.3.30
+	thiserror@1.0.50
 	time-core@0.1.2
 	time-macros@0.2.15
+	time@0.3.30
 	tinyvec@1.6.0
 	tinyvec_macros@0.1.1
-	tokio@1.33.0
 	tokio-macros@2.1.0
 	tokio-native-tls@0.3.1
 	tokio-util@0.7.10
+	tokio@1.33.0
 	toml@0.7.8
 	toml@0.8.6
 	toml_datetime@0.6.5
 	toml_edit@0.19.15
 	toml_edit@0.20.7
 	tower-service@0.3.2
-	tracing@0.1.40
 	tracing-attributes@0.1.27
 	tracing-core@0.1.32
+	tracing@0.1.40
 	try-lock@0.2.4
 	typenum@1.17.0
 	uds_windows@1.0.2
@@ -319,18 +319,18 @@ CRATES="
 	waker-fn@1.1.1
 	want@0.3.1
 	wasi@0.11.0+wasi-snapshot-preview1
-	wasm-bindgen@0.2.88
 	wasm-bindgen-backend@0.2.88
 	wasm-bindgen-futures@0.4.38
-	wasm-bindgen-macro@0.2.88
 	wasm-bindgen-macro-support@0.2.88
+	wasm-bindgen-macro@0.2.88
 	wasm-bindgen-shared@0.2.88
+	wasm-bindgen@0.2.88
 	wasm-streams@0.3.0
 	web-sys@0.3.65
-	winapi@0.3.9
 	winapi-i686-pc-windows-gnu@0.4.0
 	winapi-util@0.1.6
 	winapi-x86_64-pc-windows-gnu@0.4.0
+	winapi@0.3.9
 	windows-core@0.51.1
 	windows-sys@0.48.0
 	windows-targets@0.48.5
@@ -343,8 +343,8 @@ CRATES="
 	windows_x86_64_msvc@0.48.5
 	winnow@0.5.19
 	winreg@0.50.0
-	xdg@2.5.2
 	xdg-home@1.0.0
+	xdg@2.5.2
 	xml-rs@0.8.19
 	xml5ever@0.17.0
 	zbus@3.14.1
@@ -362,9 +362,9 @@ HOMEPAGE="https://wiki.gnome.org/Apps/Podcasts https://gitlab.gnome.org/World/po
 
 COMMIT="9e0babcde9159eb1370868987c4dc58fd51e6038"
 SRC_URI="https://gitlab.gnome.org/World/podcasts/-/archive/${COMMIT}/podcasts-${COMMIT}.tar.bz2 -> ${P}.tar.bz2
-	$(cargo_crate_uris ${CRATES})"
+	${CARGO_CRATE_URIS}"
 
-LICENSE="Apache-2.0 Apache-2.0-with-LLVM-exceptions BSD Boost-1.0 GPL-3+ ISC MIT Unicode-DFS-2016 Unlicense ZLIB"
+LICENSE+="Apache-2.0 Apache-2.0-with-LLVM-exceptions BSD GPL-3+ MIT MPL-2.0 Unicode-DFS-2016"
 SLOT="0"
 KEYWORDS="~amd64"
 
