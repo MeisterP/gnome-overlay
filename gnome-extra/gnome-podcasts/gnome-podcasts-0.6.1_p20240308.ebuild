@@ -19,7 +19,6 @@ CRATES="
 	async-io@1.13.0
 	async-io@2.1.0
 	async-lock@2.8.0
-	async-lock@3.0.0
 	async-oneshot@0.5.0
 	async-process@1.8.1
 	async-recursion@1.0.5
@@ -182,7 +181,7 @@ CRATES="
 	mime_guess@2.0.4
 	miniz_oxide@0.7.1
 	mio@0.8.9
-	mpris-server@0.4.2
+	mpris-server@0.7.0
 	muldiv@1.0.1
 	native-tls@0.2.11
 	never@0.1.0
@@ -360,9 +359,10 @@ inherit cargo meson gnome2-utils xdg
 DESCRIPTION="Podcast app for GNOME"
 HOMEPAGE="https://wiki.gnome.org/Apps/Podcasts https://gitlab.gnome.org/World/podcasts"
 
-COMMIT="9e0babcde9159eb1370868987c4dc58fd51e6038"
+COMMIT="728e27c12b4f3b2bf80ca0dd60c260c4e58923a5"
 SRC_URI="https://gitlab.gnome.org/World/podcasts/-/archive/${COMMIT}/podcasts-${COMMIT}.tar.bz2 -> ${P}.tar.bz2
 	${CARGO_CRATE_URIS}"
+S="${WORKDIR}/podcasts-${COMMIT}"
 
 LICENSE+="Apache-2.0 Apache-2.0-with-LLVM-exceptions BSD GPL-3+ MIT MPL-2.0 Unicode-DFS-2016"
 SLOT="0"
@@ -383,8 +383,6 @@ DEPEND="
 RDEPEND="${DEPEND}"
 
 PATCHES=( "${FILESDIR}/0.5.1-unset-CARGO_HOME.patch" )
-
-S="${WORKDIR}/podcasts-${COMMIT}"
 
 pkg_postinst() {
 	xdg_pkg_postinst
