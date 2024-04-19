@@ -11,20 +11,19 @@ CRATES="
 	android-tzdata@0.1.1
 	android_system_properties@0.1.5
 	anyhow@1.0.75
-	async-broadcast@0.5.1
-	async-channel@1.9.0
-	async-channel@2.0.0
-	async-executor@1.6.0
-	async-fs@1.6.0
-	async-io@1.13.0
-	async-io@2.1.0
+	async-broadcast@0.7.0
+	async-channel@2.2.0
+	async-executor@1.8.0
+	async-fs@2.1.1
+	async-io@2.3.2
 	async-lock@2.8.0
+	async-lock@3.3.0
 	async-oneshot@0.5.0
-	async-process@1.8.1
+	async-process@2.1.0
 	async-recursion@1.0.5
 	async-signal@0.2.5
-	async-task@4.5.0
-	async-trait@0.1.74
+	async-task@4.7.0
+	async-trait@0.1.78
 	atom_syndication@0.12.2
 	atomic-waker@1.1.2
 	atomic_refcell@0.1.13
@@ -35,15 +34,15 @@ CRATES="
 	bitflags@2.4.1
 	block-buffer@0.10.4
 	block@0.1.6
-	blocking@1.4.1
+	blocking@1.5.1
 	bumpalo@3.14.0
-	byteorder@1.5.0
 	bytes@1.5.0
-	cairo-rs@0.18.3
-	cairo-sys-rs@0.18.2
+	cairo-rs@0.19.2
+	cairo-sys-rs@0.19.2
 	cc@1.0.83
 	cfg-expr@0.15.5
 	cfg-if@1.0.0
+	cfg_aliases@0.1.1
 	chrono@0.4.31
 	concurrent-queue@2.3.0
 	core-foundation-sys@0.8.4
@@ -67,15 +66,17 @@ CRATES="
 	diligent-date-parser@0.1.4
 	either@1.9.0
 	encoding_rs@0.8.33
-	enumflags2@0.7.8
-	enumflags2_derive@0.7.8
+	endi@1.1.0
+	enumflags2@0.7.9
+	enumflags2_derive@0.7.9
 	env_logger@0.10.0
 	equivalent@1.0.1
 	errno@0.3.5
-	event-listener-strategy@0.3.0
+	event-listener-strategy@0.4.0
+	event-listener-strategy@0.5.0
 	event-listener@2.5.3
-	event-listener@3.0.1
-	fastrand@1.9.0
+	event-listener@4.0.3
+	event-listener@5.2.0
 	fastrand@2.0.1
 	field-offset@0.3.6
 	fnv@1.0.7
@@ -85,50 +86,51 @@ CRATES="
 	fragile@2.0.0
 	futf@0.1.5
 	futures-channel@0.3.29
-	futures-core@0.3.29
+	futures-core@0.3.30
 	futures-executor@0.3.29
-	futures-io@0.3.29
-	futures-lite@1.13.0
-	futures-macro@0.3.29
+	futures-io@0.3.30
+	futures-lite@2.3.0
+	futures-macro@0.3.30
 	futures-micro@0.5.0
-	futures-sink@0.3.29
-	futures-task@0.3.29
-	futures-util@0.3.29
-	gdk-pixbuf-sys@0.18.0
-	gdk-pixbuf@0.18.3
-	gdk4-sys@0.7.2
-	gdk4@0.7.3
+	futures-sink@0.3.30
+	futures-task@0.3.30
+	futures-util@0.3.30
+	gdk-pixbuf-sys@0.19.0
+	gdk-pixbuf@0.19.2
+	gdk4-sys@0.8.1
+	gdk4@0.8.1
 	generic-array@0.14.7
 	getrandom@0.2.10
 	gettext-rs@0.7.0
 	gettext-sys@0.21.3
 	gimli@0.28.0
-	gio-sys@0.18.1
-	gio@0.18.3
-	glib-macros@0.18.3
-	glib-sys@0.18.1
-	glib@0.18.3
+	gio-sys@0.19.0
+	gio@0.19.3
+	glib-macros@0.19.3
+	glib-sys@0.19.0
+	glib@0.19.3
 	glob@0.3.1
-	gobject-sys@0.18.0
-	graphene-rs@0.18.1
-	graphene-sys@0.18.1
-	gsk4-sys@0.7.3
-	gsk4@0.7.3
-	gstreamer-base-sys@0.21.1
-	gstreamer-base@0.21.2
-	gstreamer-play-sys@0.21.0
-	gstreamer-play@0.21.2
-	gstreamer-sys@0.21.1
-	gstreamer-video-sys@0.21.2
-	gstreamer-video@0.21.2
-	gstreamer@0.21.1
-	gtk4-macros@0.7.2
-	gtk4-sys@0.7.3
-	gtk4@0.7.3
+	gobject-sys@0.19.0
+	graphene-rs@0.19.2
+	graphene-sys@0.19.0
+	gsk4-sys@0.8.1
+	gsk4@0.8.1
+	gstreamer-base-sys@0.22.0
+	gstreamer-base@0.22.0
+	gstreamer-play-sys@0.22.0
+	gstreamer-play@0.22.0
+	gstreamer-sys@0.22.2
+	gstreamer-video-sys@0.22.1
+	gstreamer-video@0.22.1
+	gstreamer@0.22.3
+	gtk4-macros@0.8.1
+	gtk4-sys@0.8.1
+	gtk4@0.8.1
 	h2@0.3.21
 	hashbrown@0.12.3
 	hashbrown@0.14.2
 	heck@0.4.1
+	heck@0.5.0
 	hermit-abi@0.3.3
 	hex@0.4.3
 	html2text@0.6.0
@@ -147,22 +149,19 @@ CRATES="
 	idna@0.4.0
 	indexmap@1.9.3
 	indexmap@2.1.0
-	instant@0.1.12
-	io-lifetimes@1.0.11
 	ipnet@2.9.0
 	is-docker@0.2.0
 	is-terminal@0.4.9
 	is-wsl@0.4.0
-	itertools@0.11.0
+	itertools@0.12.1
 	itoa@1.0.9
 	js-sys@0.3.65
 	lazy_static@1.4.0
-	libadwaita-sys@0.5.3
-	libadwaita@0.5.3
-	libc@0.2.150
+	libadwaita-sys@0.6.0
+	libadwaita@0.6.0
+	libc@0.2.153
 	libsqlite3-sys@0.26.0
 	linkify@0.10.0
-	linux-raw-sys@0.3.8
 	linux-raw-sys@0.4.10
 	locale_config@0.3.0
 	lock_api@0.4.11
@@ -172,8 +171,7 @@ CRATES="
 	maplit@1.0.2
 	markup5ever@0.11.0
 	markup5ever_rcdom@0.2.0
-	memchr@2.6.4
-	memoffset@0.7.1
+	memchr@2.7.1
 	memoffset@0.9.0
 	migrations_internals@2.1.0
 	migrations_macros@2.1.0
@@ -181,12 +179,12 @@ CRATES="
 	mime_guess@2.0.4
 	miniz_oxide@0.7.1
 	mio@0.8.9
-	mpris-server@0.7.0
+	mpris-server@0.8.0
 	muldiv@1.0.1
 	native-tls@0.2.11
 	never@0.1.0
 	new_debug_unreachable@1.0.4
-	nix@0.26.4
+	nix@0.28.0
 	num-integer@0.1.45
 	num-rational@0.4.1
 	num-traits@0.2.17
@@ -203,8 +201,8 @@ CRATES="
 	openssl@0.10.59
 	option-operations@0.5.0
 	ordered-stream@0.2.0
-	pango-sys@0.18.0
-	pango@0.18.3
+	pango-sys@0.19.0
+	pango@0.19.3
 	parking@2.2.0
 	parking_lot@0.12.1
 	parking_lot_core@0.9.9
@@ -218,35 +216,31 @@ CRATES="
 	pin-project-lite@0.2.13
 	pin-utils@0.1.0
 	piper@0.2.1
-	pkg-config@0.3.27
-	polling@2.8.0
+	pkg-config@0.3.30
 	polling@3.3.0
 	powerfmt@0.2.0
 	ppv-lite86@0.2.17
 	precomputed-hash@0.1.1
-	pretty-hex@0.3.0
 	pretty_env_logger@0.5.0
-	proc-macro-crate@1.3.1
-	proc-macro-crate@2.0.0
+	proc-macro-crate@3.1.0
 	proc-macro-error-attr@1.0.4
 	proc-macro-error@1.0.4
-	proc-macro2@1.0.69
+	proc-macro2@1.0.79
 	quick-xml@0.30.0
-	quote@1.0.33
+	quote@1.0.35
 	r2d2@0.8.10
 	rand@0.8.5
 	rand_chacha@0.3.1
 	rand_core@0.6.4
 	redox_syscall@0.4.1
-	regex-automata@0.4.3
+	regex-automata@0.4.6
 	regex-syntax@0.8.2
-	regex@1.10.2
+	regex@1.10.3
 	reqwest@0.11.22
 	rfc822_sanitizer@0.3.6
 	rss@2.0.6
 	rustc-demangle@0.1.23
 	rustc_version@0.4.0
-	rustix@0.37.27
 	rustix@0.38.21
 	ryu@1.0.15
 	schannel@0.1.22
@@ -258,14 +252,14 @@ CRATES="
 	serde@1.0.190
 	serde_derive@1.0.190
 	serde_json@1.0.108
-	serde_repr@0.1.17
+	serde_repr@0.1.18
 	serde_spanned@0.6.4
 	serde_urlencoded@0.7.1
 	sha1@0.10.6
 	signal-hook-registry@1.4.1
 	siphasher@0.3.11
 	slab@0.4.9
-	smallvec@1.11.1
+	smallvec@1.13.2
 	socket2@0.4.10
 	socket2@0.5.5
 	static_assertions@1.1.0
@@ -273,7 +267,7 @@ CRATES="
 	string_cache_codegen@0.5.2
 	strsim@0.10.0
 	syn@1.0.109
-	syn@2.0.38
+	syn@2.0.53
 	system-configuration-sys@0.5.0
 	system-configuration@0.5.1
 	system-deps@6.2.0
@@ -298,13 +292,15 @@ CRATES="
 	toml_datetime@0.6.5
 	toml_edit@0.19.15
 	toml_edit@0.20.7
+	toml_edit@0.21.1
 	tower-service@0.3.2
 	tracing-attributes@0.1.27
 	tracing-core@0.1.32
 	tracing@0.1.40
+	trait-variant@0.1.2
 	try-lock@0.2.4
 	typenum@1.17.0
-	uds_windows@1.0.2
+	uds_windows@1.1.0
 	unicase@2.7.0
 	unicode-bidi@0.3.13
 	unicode-ident@1.0.12
@@ -315,7 +311,6 @@ CRATES="
 	vcpkg@0.2.15
 	version-compare@0.1.1
 	version_check@0.9.4
-	waker-fn@1.1.1
 	want@0.3.1
 	wasi@0.11.0+wasi-snapshot-preview1
 	wasm-bindgen-backend@0.2.88
@@ -332,26 +327,35 @@ CRATES="
 	winapi@0.3.9
 	windows-core@0.51.1
 	windows-sys@0.48.0
+	windows-sys@0.52.0
 	windows-targets@0.48.5
+	windows-targets@0.52.4
 	windows_aarch64_gnullvm@0.48.5
+	windows_aarch64_gnullvm@0.52.4
 	windows_aarch64_msvc@0.48.5
+	windows_aarch64_msvc@0.52.4
 	windows_i686_gnu@0.48.5
+	windows_i686_gnu@0.52.4
 	windows_i686_msvc@0.48.5
+	windows_i686_msvc@0.52.4
 	windows_x86_64_gnu@0.48.5
+	windows_x86_64_gnu@0.52.4
 	windows_x86_64_gnullvm@0.48.5
+	windows_x86_64_gnullvm@0.52.4
 	windows_x86_64_msvc@0.48.5
+	windows_x86_64_msvc@0.52.4
 	winnow@0.5.19
 	winreg@0.50.0
-	xdg-home@1.0.0
+	xdg-home@1.1.0
 	xdg@2.5.2
 	xml-rs@0.8.19
 	xml5ever@0.17.0
-	zbus@3.14.1
-	zbus_macros@3.14.1
-	zbus_names@2.6.0
-	zvariant@3.15.0
-	zvariant_derive@3.15.0
-	zvariant_utils@1.0.1
+	zbus@4.1.2
+	zbus_macros@4.1.2
+	zbus_names@3.0.0
+	zvariant@4.0.2
+	zvariant_derive@4.0.2
+	zvariant_utils@1.1.0
 "
 
 inherit cargo meson gnome2-utils xdg
@@ -359,7 +363,7 @@ inherit cargo meson gnome2-utils xdg
 DESCRIPTION="Podcast app for GNOME"
 HOMEPAGE="https://wiki.gnome.org/Apps/Podcasts https://gitlab.gnome.org/World/podcasts"
 
-COMMIT="728e27c12b4f3b2bf80ca0dd60c260c4e58923a5"
+COMMIT="f1cfdc61198c920c3be4e3a75f3c7311d0e528ce"
 SRC_URI="https://gitlab.gnome.org/World/podcasts/-/archive/${COMMIT}/podcasts-${COMMIT}.tar.bz2 -> ${P}.tar.bz2
 	${CARGO_CRATE_URIS}"
 S="${WORKDIR}/podcasts-${COMMIT}"
@@ -370,7 +374,7 @@ KEYWORDS="~amd64"
 
 DEPEND="
 	>=dev-db/sqlite-3.20
-	>=dev-libs/glib-2.76
+	>=dev-libs/glib-2.78
 	dev-libs/gobject-introspection
 	>=dev-libs/openssl-1.0
 	>=gui-libs/gtk-4.10.0
@@ -382,7 +386,10 @@ DEPEND="
 	"
 RDEPEND="${DEPEND}"
 
-PATCHES=( "${FILESDIR}/0.5.1-unset-CARGO_HOME.patch" )
+PATCHES=( "${FILESDIR}/0.5.1-unset-CARGO_HOME.patch"
+	"${FILESDIR}/0001-Revert-Use-gnome-feature-instead-of-adding-a-gtk-fea.patch"
+	"${FILESDIR}/0002-Revert-discovery-Announce-the-search-no-provider-err.patch"
+	"${FILESDIR}/0003-Revert-discovery-add-a-spinner-on-the-search-result-.patch" )
 
 pkg_postinst() {
 	xdg_pkg_postinst
