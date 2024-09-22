@@ -33,7 +33,7 @@ src_compile() {
 
 src_install() {
 	cmake_src_install
-	newenvd - 99qadwaitadecorations <<-EOF
-		QT_WAYLAND_DECORATION=adwaita
-	EOF
+	#newenvd - 99qadwaitadecorations <<-EOF
+	#	QT_WAYLAND_DECORATION=adwaita
+	#EOF
 }
