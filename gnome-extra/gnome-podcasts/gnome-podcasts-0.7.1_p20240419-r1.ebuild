@@ -374,7 +374,7 @@ KEYWORDS="~amd64"
 
 DEPEND="
 	>=dev-db/sqlite-3.20
-	>=dev-libs/glib-2.78
+	>=dev-libs/glib-2.80
 	dev-libs/gobject-introspection
 	>=dev-libs/openssl-1.0
 	>=gui-libs/gtk-4.10.0
@@ -386,10 +386,7 @@ DEPEND="
 	"
 RDEPEND="${DEPEND}"
 
-PATCHES=( "${FILESDIR}/0.5.1-unset-CARGO_HOME.patch"
-	"${FILESDIR}/0001-Revert-Use-gnome-feature-instead-of-adding-a-gtk-fea.patch"
-	"${FILESDIR}/0002-Revert-discovery-Announce-the-search-no-provider-err.patch"
-	"${FILESDIR}/0003-Revert-discovery-add-a-spinner-on-the-search-result-.patch" )
+PATCHES=( "${FILESDIR}/0.5.1-unset-CARGO_HOME.patch" )
 
 pkg_postinst() {
 	xdg_pkg_postinst
