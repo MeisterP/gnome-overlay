@@ -119,6 +119,8 @@ src_configure() {
 	local emesonargs=(
 		-Dtracker_core=system
 
+		-Dlandlock=disabled
+
 		-Dman=true
 		-Dextract=true
 		$(meson_use test functional_tests)
