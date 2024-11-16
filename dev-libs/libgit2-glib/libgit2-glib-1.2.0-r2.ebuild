@@ -20,7 +20,7 @@ RDEPEND="
 	>=dev-libs/gobject-introspection-1.54:=
 	>=dev-libs/glib-2.44.0:2
 	>=dev-libs/libgit2-0.26.0:0=[ssh?]
-	>=dev-libs/libgit2-1.8.0
+	>=dev-libs/libgit2-1.8.2
 	python? (
 		${PYTHON_DEPS}
 		dev-python/pygobject:3[${PYTHON_USEDEP}]
@@ -34,7 +34,7 @@ BDEPEND="
 	vala? ( $(vala_depend) )
 "
 
-PATCHES=( "${FILESDIR}/libgit2-glib-1.2.0-libgit2_1.8.patch" )
+PATCHES=( "${FILESDIR}/libgit2-1.8.x.patch" )
 
 src_prepare() {
 	default
