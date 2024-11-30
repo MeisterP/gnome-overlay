@@ -13,5 +13,6 @@ LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64"
 
-RDEPEND="${DEPEND}"
+RDEPEND="${DEPEND}
+	<gui-libs/gtk-4.16"
 BDEPEND="dev-lang/sassc"

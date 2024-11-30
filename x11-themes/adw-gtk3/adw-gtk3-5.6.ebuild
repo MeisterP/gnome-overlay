@@ -11,7 +11,8 @@ SRC_URI="https://github.com/lassekongo83/adw-gtk3/archive/refs/tags/v${PV}.tar.g
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64"
 
-RDEPEND="${DEPEND}"
+RDEPEND="${DEPEND}
+	>=gui-libs/gtk-4.16"
 BDEPEND="dev-lang/sassc"
