@@ -1,4 +1,4 @@
-# Copyright 2023-2024 Gentoo Authors
+# Copyright 2023-2025 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -12,7 +12,7 @@ LICENSE="LGPL-2+"
 SLOT="4"
 KEYWORDS="~amd64"
 
-IUSE="aqua broadway cloudproviders colord cups examples +introspection sysprof test vulkan wayland +X cpu_flags_x86_f16c"
+IUSE="aqua broadway cloudproviders colord cups examples gstreamer +introspection sysprof test vulkan wayland +X cpu_flags_x86_f16c"
 REQUIRED_USE="
 	|| ( aqua wayland X )
 	test? ( introspection )
@@ -38,6 +38,14 @@ COMMON_DEPEND="
 	colord? ( >=x11-misc/colord-0.1.9:0= )
 	cups? ( >=net-print/cups-2.0 )
 	examples? ( gnome-base/librsvg:2 )
+	gstreamer? (
+		>=media-libs/gstreamer-1.24.0:1.0
+		>=media-libs/gst-plugins-bad-1.24.0:1.0
+		|| (
+			>=media-libs/gst-plugins-base-1.24.0:1.0[gles2]
+			>=media-libs/gst-plugins-base-1.24.0:1.0[opengl]
+		)
+	)
 	introspection? ( >=dev-libs/gobject-introspection-1.76:= )
 	vulkan? ( >=media-libs/vulkan-loader-1.3:= )
 	wayland? (
@@ -147,7 +155,7 @@ src_configure() {
 		$(meson_use aqua macos-backend)
 
 		# Media backends
-		-Dmedia-gstreamer=disabled
+		$(meson_feature gstreamer media-gstreamer)
 
 		# Print backends
 		-Dprint-cpdb=disabled
