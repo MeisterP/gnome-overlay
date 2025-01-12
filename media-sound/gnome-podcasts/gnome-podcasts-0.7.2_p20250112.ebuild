@@ -1,4 +1,4 @@
-# Copyright 2022-2024 Gentoo Authors
+# Copyright 2022-2025 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -11,11 +11,11 @@ CRATES="
 	ammonia@4.0.0
 	android-tzdata@0.1.1
 	android_system_properties@0.1.5
-	anyhow@1.0.93
+	anyhow@1.0.95
 	arbitrary@1.4.1
 	arg_enum_proc_macro@0.3.4
 	arrayvec@0.7.6
-	async-broadcast@0.7.1
+	async-broadcast@0.7.2
 	async-channel@2.3.1
 	async-executor@1.13.1
 	async-fs@2.1.2
@@ -26,8 +26,8 @@ CRATES="
 	async-recursion@1.1.1
 	async-signal@0.2.10
 	async-task@4.7.1
-	async-trait@0.1.83
-	atom_syndication@0.12.5
+	async-trait@0.1.85
+	atom_syndication@0.12.6
 	atomic-waker@1.1.2
 	atomic_refcell@0.1.13
 	autocfg@1.4.0
@@ -37,34 +37,34 @@ CRATES="
 	base64@0.22.1
 	bit_field@0.10.2
 	bitflags@1.3.2
-	bitflags@2.6.0
+	bitflags@2.7.0
 	bitstream-io@2.6.0
 	block-buffer@0.10.4
 	block@0.1.6
 	blocking@1.6.1
 	built@0.7.5
 	bumpalo@3.16.0
-	bytemuck@1.19.0
+	bytemuck@1.21.0
 	byteorder-lite@0.1.0
 	byteorder@1.5.0
-	bytes@1.8.0
-	cairo-rs@0.20.5
-	cairo-sys-rs@0.20.0
-	cc@1.2.1
+	bytes@1.9.0
+	cairo-rs@0.20.7
+	cairo-sys-rs@0.20.7
+	cc@1.2.9
 	cfg-expr@0.15.8
-	cfg-expr@0.17.1
+	cfg-expr@0.17.2
 	cfg-if@1.0.0
 	cfg_aliases@0.2.1
-	chrono@0.4.38
+	chrono@0.4.39
 	color_quant@1.1.0
 	concurrent-queue@2.5.0
 	core-foundation-sys@0.8.7
 	core-foundation@0.9.4
-	cpufeatures@0.2.15
+	cpufeatures@0.2.16
 	crc32fast@1.4.2
-	crossbeam-deque@0.8.5
+	crossbeam-deque@0.8.6
 	crossbeam-epoch@0.9.18
-	crossbeam-utils@0.8.20
+	crossbeam-utils@0.8.21
 	crunchy@0.2.2
 	crypto-common@0.1.6
 	darling@0.20.10
@@ -74,7 +74,7 @@ CRATES="
 	derive_builder@0.20.2
 	derive_builder_core@0.20.2
 	derive_builder_macro@0.20.2
-	diesel@2.2.4
+	diesel@2.2.6
 	diesel_derives@2.2.3
 	diesel_migrations@2.2.0
 	diesel_table_macro_syntax@0.2.0
@@ -89,12 +89,12 @@ CRATES="
 	enumflags2_derive@0.7.10
 	env_logger@0.10.2
 	equivalent@1.0.1
-	errno@0.3.9
-	event-listener-strategy@0.5.2
-	event-listener@5.3.1
+	errno@0.3.10
+	event-listener-strategy@0.5.3
+	event-listener@5.4.0
 	exr@1.73.0
-	fastrand@2.2.0
-	fdeflate@0.3.6
+	fastrand@2.3.0
+	fdeflate@0.3.7
 	field-offset@0.3.6
 	flate2@1.0.35
 	fnv@1.0.7
@@ -107,63 +107,62 @@ CRATES="
 	futures-core@0.3.31
 	futures-executor@0.3.31
 	futures-io@0.3.31
-	futures-lite@2.5.0
+	futures-lite@2.6.0
 	futures-macro@0.3.31
 	futures-micro@0.5.0
 	futures-sink@0.3.31
 	futures-task@0.3.31
 	futures-util@0.3.31
-	gdk-pixbuf-sys@0.20.4
-	gdk-pixbuf@0.20.4
-	gdk4-sys@0.9.4
-	gdk4@0.9.4
+	gdk-pixbuf-sys@0.20.7
+	gdk-pixbuf@0.20.7
+	gdk4-sys@0.9.5
+	gdk4@0.9.5
 	generic-array@0.14.7
 	getrandom@0.2.15
 	gettext-rs@0.7.2
 	gettext-sys@0.22.5
 	gif@0.13.1
 	gimli@0.31.1
-	gio-sys@0.20.6
-	gio@0.20.6
-	glib-macros@0.20.5
-	glib-sys@0.20.6
-	glib@0.20.6
-	glob@0.3.1
-	gobject-sys@0.20.4
-	graphene-rs@0.20.4
-	graphene-sys@0.20.4
-	gsk4-sys@0.9.4
-	gsk4@0.9.4
-	gstreamer-base-sys@0.23.3
-	gstreamer-base@0.23.3
-	gstreamer-play-sys@0.23.2
-	gstreamer-play@0.23.2
-	gstreamer-sys@0.23.3
-	gstreamer-video-sys@0.23.3
-	gstreamer-video@0.23.3
-	gstreamer@0.23.3
-	gtk4-macros@0.9.3
-	gtk4-sys@0.9.4
-	gtk4@0.9.4
-	h2@0.4.6
+	gio-sys@0.20.8
+	gio@0.20.7
+	glib-macros@0.20.7
+	glib-sys@0.20.7
+	glib@0.20.7
+	glob@0.3.2
+	gobject-sys@0.20.7
+	graphene-rs@0.20.7
+	graphene-sys@0.20.7
+	gsk4-sys@0.9.5
+	gsk4@0.9.5
+	gstreamer-base-sys@0.23.4
+	gstreamer-base@0.23.4
+	gstreamer-play-sys@0.23.4
+	gstreamer-play@0.23.4
+	gstreamer-sys@0.23.4
+	gstreamer-video-sys@0.23.4
+	gstreamer-video@0.23.4
+	gstreamer@0.23.4
+	gtk4-macros@0.9.5
+	gtk4-sys@0.9.5
+	gtk4@0.9.5
+	h2@0.4.7
 	half@2.4.1
-	hashbrown@0.15.1
+	hashbrown@0.15.2
 	heck@0.5.0
-	hermit-abi@0.3.9
 	hermit-abi@0.4.0
 	hex@0.4.3
 	html2text@0.12.6
 	html5ever@0.27.0
 	http-body-util@0.1.2
 	http-body@1.0.1
-	http@1.1.0
+	http@1.2.0
 	httparse@1.9.5
 	humansize@2.1.3
 	humantime@2.1.0
-	hyper-rustls@0.27.3
+	hyper-rustls@0.27.5
 	hyper-tls@0.6.0
 	hyper-util@0.1.10
-	hyper@1.5.0
+	hyper@1.5.2
 	iana-time-zone-haiku@0.1.2
 	iana-time-zone@0.1.61
 	icu_collections@1.5.0
@@ -179,10 +178,10 @@ CRATES="
 	ident_case@1.0.1
 	idna@1.0.3
 	idna_adapter@1.2.0
-	image-webp@0.2.0
+	image-webp@0.2.1
 	image@0.25.5
 	imgref@1.11.0
-	indexmap@2.6.0
+	indexmap@2.7.0
 	interpolate_name@0.2.4
 	ipnet@2.10.1
 	is-docker@0.2.0
@@ -190,21 +189,21 @@ CRATES="
 	is-wsl@0.4.0
 	itertools@0.12.1
 	itertools@0.13.0
-	itoa@1.0.11
+	itoa@1.0.14
 	jobserver@0.1.32
 	jpeg-decoder@0.3.1
-	js-sys@0.3.72
+	js-sys@0.3.76
 	lazy_static@1.5.0
 	lebe@0.5.2
 	libadwaita-sys@0.7.1
 	libadwaita@0.7.1
-	libc@0.2.164
+	libc@0.2.169
 	libfuzzer-sys@0.4.8
 	libm@0.2.11
 	libsqlite3-sys@0.30.1
 	linkify@0.10.0
-	linux-raw-sys@0.4.14
-	litemap@0.7.3
+	linux-raw-sys@0.4.15
+	litemap@0.7.4
 	locale_config@0.3.0
 	lock_api@0.4.12
 	log@0.4.22
@@ -222,8 +221,8 @@ CRATES="
 	mime@0.3.17
 	mime_guess@2.0.5
 	minimal-lexical@0.2.1
-	miniz_oxide@0.8.0
-	mio@1.0.2
+	miniz_oxide@0.8.2
+	mio@1.0.3
 	mpris-server@0.8.1
 	muldiv@1.0.1
 	native-tls@0.2.12
@@ -241,48 +240,48 @@ CRATES="
 	objc-foundation@0.1.1
 	objc@0.2.7
 	objc_id@0.1.1
-	object@0.36.5
+	object@0.36.7
 	once_cell@1.20.2
-	open@5.3.1
+	open@5.3.2
 	openssl-macros@0.1.1
 	openssl-probe@0.1.5
 	openssl-sys@0.9.104
 	openssl@0.10.68
 	option-operations@0.5.0
 	ordered-stream@0.2.0
-	pango-sys@0.20.4
-	pango@0.20.6
+	pango-sys@0.20.7
+	pango@0.20.7
 	parking@2.2.1
 	parking_lot@0.12.3
 	parking_lot_core@0.9.10
 	paste@1.0.15
-	pathdiff@0.2.2
+	pathdiff@0.2.3
 	percent-encoding@2.3.1
-	phf@0.11.2
-	phf_codegen@0.11.2
+	phf@0.11.3
+	phf_codegen@0.11.3
 	phf_generator@0.10.0
-	phf_generator@0.11.2
+	phf_generator@0.11.3
 	phf_shared@0.10.0
-	phf_shared@0.11.2
-	pin-project-lite@0.2.15
+	phf_shared@0.11.3
+	pin-project-lite@0.2.16
 	pin-utils@0.1.0
 	piper@0.2.4
 	pkg-config@0.3.31
-	png@0.17.14
+	png@0.17.16
 	polling@3.7.4
 	powerfmt@0.2.0
 	ppv-lite86@0.2.20
 	precomputed-hash@0.1.1
 	pretty_env_logger@0.5.0
 	proc-macro-crate@3.2.0
-	proc-macro2@1.0.89
+	proc-macro2@1.0.93
 	profiling-procmacros@1.0.16
 	profiling@1.0.16
 	pure-rust-locales@0.8.1
 	qoi@0.4.1
 	quick-error@2.0.1
-	quick-xml@0.37.0
-	quote@1.0.37
+	quick-xml@0.37.2
+	quote@1.0.38
 	r2d2@0.8.10
 	rand@0.8.5
 	rand_chacha@0.3.1
@@ -291,32 +290,32 @@ CRATES="
 	ravif@0.11.11
 	rayon-core@1.12.1
 	rayon@1.10.0
-	redox_syscall@0.5.7
+	redox_syscall@0.5.8
 	regex-automata@0.4.9
 	regex-syntax@0.8.5
 	regex@1.11.1
-	reqwest@0.12.9
+	reqwest@0.12.12
 	rfc822_sanitizer@0.3.6
 	rgb@0.8.50
 	ring@0.17.8
-	rss@2.0.10
+	rss@2.0.11
 	rustc-demangle@0.1.24
 	rustc_version@0.4.1
-	rustix@0.38.40
+	rustix@0.38.43
 	rustls-pemfile@2.2.0
-	rustls-pki-types@1.10.0
+	rustls-pki-types@1.10.1
 	rustls-webpki@0.102.8
-	rustls@0.23.17
+	rustls@0.23.21
 	ryu@1.0.18
-	schannel@0.1.26
+	schannel@0.1.27
 	scheduled-thread-pool@0.2.7
 	scopeguard@1.2.0
-	security-framework-sys@2.12.1
+	security-framework-sys@2.14.0
 	security-framework@2.11.1
-	semver@1.0.23
-	serde@1.0.215
-	serde_derive@1.0.215
-	serde_json@1.0.133
+	semver@1.0.24
+	serde@1.0.217
+	serde_derive@1.0.217
+	serde_json@1.0.135
 	serde_repr@0.1.19
 	serde_spanned@0.6.8
 	serde_urlencoded@0.7.1
@@ -326,9 +325,10 @@ CRATES="
 	simd-adler32@0.3.7
 	simd_helpers@0.1.0
 	siphasher@0.3.11
+	siphasher@1.0.1
 	slab@0.4.9
 	smallvec@1.13.2
-	socket2@0.5.7
+	socket2@0.5.8
 	spin@0.9.8
 	stable_deref_trait@1.2.0
 	static_assertions@1.1.0
@@ -336,8 +336,8 @@ CRATES="
 	string_cache_codegen@0.5.2
 	strsim@0.11.1
 	subtle@2.6.1
-	syn@2.0.87
-	sync_wrapper@1.0.1
+	syn@2.0.96
+	sync_wrapper@1.0.2
 	synstructure@0.13.1
 	system-configuration-sys@0.6.0
 	system-configuration@0.6.1
@@ -345,37 +345,41 @@ CRATES="
 	system-deps@7.0.3
 	target-lexicon@0.12.16
 	temp-dir@0.1.14
-	tempfile@3.14.0
+	tempfile@3.15.0
 	tendril@0.4.3
 	termcolor@1.4.1
 	thiserror-impl@1.0.69
+	thiserror-impl@2.0.11
 	thiserror@1.0.69
+	thiserror@2.0.11
 	tiff@0.9.1
 	time-core@0.1.2
-	time-macros@0.2.18
-	time@0.3.36
+	time-macros@0.2.19
+	time@0.3.37
 	tinystr@0.7.6
-	tokio-macros@2.4.0
+	tokio-macros@2.5.0
 	tokio-native-tls@0.3.1
-	tokio-rustls@0.26.0
-	tokio-util@0.7.12
-	tokio@1.41.1
+	tokio-rustls@0.26.1
+	tokio-util@0.7.13
+	tokio@1.43.0
 	toml@0.8.19
 	toml_datetime@0.6.8
 	toml_edit@0.22.22
+	tower-layer@0.3.3
 	tower-service@0.3.3
-	tracing-attributes@0.1.27
-	tracing-core@0.1.32
-	tracing@0.1.40
+	tower@0.5.2
+	tracing-attributes@0.1.28
+	tracing-core@0.1.33
+	tracing@0.1.41
 	trait-variant@0.1.2
 	try-lock@0.2.5
 	typenum@1.17.0
 	uds_windows@1.1.0
-	unicase@2.8.0
-	unicode-ident@1.0.13
+	unicase@2.8.1
+	unicode-ident@1.0.14
 	unicode-width@0.1.13
 	untrusted@0.9.0
-	url@2.5.3
+	url@2.5.4
 	utf-8@0.7.6
 	utf16_iter@1.0.5
 	utf8_iter@1.0.4
@@ -385,14 +389,14 @@ CRATES="
 	version_check@0.9.5
 	want@0.3.1
 	wasi@0.11.0+wasi-snapshot-preview1
-	wasm-bindgen-backend@0.2.95
-	wasm-bindgen-futures@0.4.45
-	wasm-bindgen-macro-support@0.2.95
-	wasm-bindgen-macro@0.2.95
-	wasm-bindgen-shared@0.2.95
-	wasm-bindgen@0.2.95
+	wasm-bindgen-backend@0.2.99
+	wasm-bindgen-futures@0.4.49
+	wasm-bindgen-macro-support@0.2.99
+	wasm-bindgen-macro@0.2.99
+	wasm-bindgen-shared@0.2.99
+	wasm-bindgen@0.2.99
 	wasm-streams@0.4.2
-	web-sys@0.3.72
+	web-sys@0.3.76
 	weezl@0.1.8
 	winapi-i686-pc-windows-gnu@0.4.0
 	winapi-util@0.1.9
@@ -413,28 +417,28 @@ CRATES="
 	windows_x86_64_gnu@0.52.6
 	windows_x86_64_gnullvm@0.52.6
 	windows_x86_64_msvc@0.52.6
-	winnow@0.6.20
+	winnow@0.6.24
 	write16@1.0.0
 	writeable@0.5.5
 	xdg-home@1.3.0
 	xdg@2.5.2
-	xml-rs@0.8.23
+	xml-rs@0.8.25
 	xml5ever@0.18.1
-	yoke-derive@0.7.4
-	yoke@0.7.4
+	yoke-derive@0.7.5
+	yoke@0.7.5
 	zbus@4.4.0
 	zbus_macros@4.4.0
 	zbus_names@3.0.0
 	zerocopy-derive@0.7.35
 	zerocopy@0.7.35
-	zerofrom-derive@0.1.4
-	zerofrom@0.1.4
+	zerofrom-derive@0.1.5
+	zerofrom@0.1.5
 	zeroize@1.8.1
 	zerovec-derive@0.10.3
 	zerovec@0.10.4
 	zune-core@0.4.12
 	zune-inflate@0.2.54
-	zune-jpeg@0.4.13
+	zune-jpeg@0.4.14
 	zvariant@4.2.0
 	zvariant_derive@4.2.0
 	zvariant_utils@2.1.0
@@ -445,7 +449,7 @@ inherit cargo meson gnome2-utils xdg
 DESCRIPTION="Podcast app for GNOME"
 HOMEPAGE="https://wiki.gnome.org/Apps/Podcasts https://gitlab.gnome.org/World/podcasts"
 
-COMMIT="25b893fecfc8d988c1df6a2449dc72da7470008a"
+COMMIT="a7c98d8ce415b93ce0ec8fa240442c0b8499b338"
 SRC_URI="https://gitlab.gnome.org/World/podcasts/-/archive/${COMMIT}/podcasts-${COMMIT}.tar.bz2 -> ${P}.tar.bz2
 	${CARGO_CRATE_URIS}"
 S="${WORKDIR}/podcasts-${COMMIT}"
@@ -459,7 +463,7 @@ DEPEND="
 	>=dev-libs/glib-2.82
 	dev-libs/gobject-introspection
 	>=dev-libs/openssl-1.0
-	>=gui-libs/gtk-4.15.0
+	>=gui-libs/gtk-4.15.3
 	>=gui-libs/libadwaita-1.6
 	>=media-plugins/gst-plugins-meta-1.20
 	>=media-libs/gstreamer-1.22
