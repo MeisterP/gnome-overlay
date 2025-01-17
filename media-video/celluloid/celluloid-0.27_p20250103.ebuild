@@ -1,4 +1,4 @@
-# Copyright 1999-2024 Gentoo Authors
+# Copyright 1999-2025 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -9,7 +9,7 @@ DESCRIPTION="Simple GTK+ frontend for mpv"
 HOMEPAGE="https://celluloid-player.github.io/"
 #SRC_URI="https://github.com/celluloid-player/celluloid/releases/download/v${PV}/${P}.tar.xz"
 
-MY_COMMIT="aecc0f33bebab922f5687153b73182ad6355283b"
+MY_COMMIT="3bc705b1f0e38f5df5c6c3629a068dd80cae735f"
 SRC_URI="https://github.com/celluloid-player/celluloid/archive/${MY_COMMIT}.tar.gz -> ${P}.tar.gz"
 S="${WORKDIR}/celluloid-${MY_COMMIT}"
 
