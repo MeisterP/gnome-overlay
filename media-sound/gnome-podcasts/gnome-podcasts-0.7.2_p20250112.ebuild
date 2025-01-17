@@ -465,7 +465,7 @@ DEPEND="
 	>=dev-libs/openssl-1.0
 	>=gui-libs/gtk-4.15.3
 	>=gui-libs/libadwaita-1.6
-	>=media-plugins/gst-plugins-meta-1.20
+	>=media-plugins/gst-plugins-meta-1.20[http]
 	>=media-libs/gstreamer-1.22
 	sys-apps/dbus
 	>=x11-libs/gdk-pixbuf-2.0
