@@ -9,7 +9,7 @@ DESCRIPTION="Simple GTK+ frontend for mpv"
 HOMEPAGE="https://celluloid-player.github.io/"
 #SRC_URI="https://github.com/celluloid-player/celluloid/releases/download/v${PV}/${P}.tar.xz"
 
-MY_COMMIT="e85639506d9c500e1f5d8ee0261c9a5d352fff3f"
+MY_COMMIT="4a0941a526821f3c05630c453c6a2c3f759fa2d8"
 SRC_URI="https://github.com/celluloid-player/celluloid/archive/${MY_COMMIT}.tar.gz -> ${P}.tar.gz"
 S="${WORKDIR}/celluloid-${MY_COMMIT}"
 
