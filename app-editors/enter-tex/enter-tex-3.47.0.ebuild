@@ -6,7 +6,7 @@ EAPI=8
 inherit gnome.org gnome2-utils meson vala xdg
 
 DESCRIPTION="Integrated LaTeX environment for GNOME"
-HOMEPAGE="https://gitlab.gnome.org/swilmet/enter-tex"
+HOMEPAGE="https://gitlab.gnome.org/World/gedit/enter-tex"
 
 LICENSE="GPL-3+"
 SLOT="0"
