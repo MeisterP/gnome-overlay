@@ -83,6 +83,11 @@ BDEPEND="
 	)
 "
 
+PATCHES=(
+	# https://bugs.gentoo.org/951343
+	"${FILESDIR}/ffmpeg.patch"
+)
+
 python_check_deps() {
 	python_has_version -b \
 		"dev-python/pygobject[${PYTHON_USEDEP}]" \
