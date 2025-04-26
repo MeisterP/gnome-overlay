@@ -15,4 +15,4 @@ KEYWORDS="~amd64"
 
 RDEPEND="${DEPEND}
 	>=gui-libs/gtk-4.16"
-BDEPEND="dev-lang/sassc"
+BDEPEND="dev-util/dart-sass"
