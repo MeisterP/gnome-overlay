@@ -126,6 +126,7 @@ BDEPEND="
 	dev-util/wayland-scanner
 	dev-util/gdbus-codegen
 	dev-util/glib-utils
+	dev-python/argcomplete
 	>=sys-devel/gettext-0.19.8
 	virtual/pkgconfig
 	gtk-doc? ( >=dev-util/gi-docgen-2021.1 )
@@ -197,7 +198,6 @@ src_configure() {
 		$(meson_use input_devices_wacom libwacom)
 		-Dsound_player=true
 		-Dstartup_notification=true
-		$(meson_feature libdisplay libdisplay_info)
 		$(meson_use X sm)
 		$(meson_use introspection)
 		$(meson_use gtk-doc docs)
