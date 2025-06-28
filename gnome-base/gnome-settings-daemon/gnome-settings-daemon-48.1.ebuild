@@ -12,7 +12,7 @@ HOMEPAGE="https://gitlab.gnome.org/GNOME/gnome-settings-daemon"
 LICENSE="GPL-2+ LGPL-2+"
 SLOT="0"
 
-KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~loong ~ppc ~ppc64 ~riscv ~x86 ~amd64-linux ~x86-linux"
+KEYWORDS="~amd64"
 
 IUSE="+colord debug elogind modemmanager smartcard systemd test wayland"
 RESTRICT="!test? ( test )"
