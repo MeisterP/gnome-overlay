@@ -14,5 +14,5 @@ SLOT="0"
 KEYWORDS="~amd64"
 
 RDEPEND="${DEPEND}
-	>=gui-libs/gtk-4.16"
+	>=gui-libs/gtk-4.20"
 BDEPEND="dev-util/dart-sass"
