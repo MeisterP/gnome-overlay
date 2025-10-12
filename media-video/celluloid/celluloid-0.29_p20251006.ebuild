@@ -9,7 +9,7 @@ DESCRIPTION="Simple GTK+ frontend for mpv"
 HOMEPAGE="https://celluloid-player.github.io/"
 #SRC_URI="https://github.com/celluloid-player/celluloid/releases/download/v${PV}/${P}.tar.xz"
 
-MY_COMMIT="6f04da5cb47099edc82189e6bd19ee8b04a4f8e0"
+MY_COMMIT="c977dfb8f882430b69eee153e3608e9b14255867"
 SRC_URI="https://github.com/celluloid-player/celluloid/archive/${MY_COMMIT}.tar.gz -> ${P}.tar.gz"
 S="${WORKDIR}/celluloid-${MY_COMMIT}"
 
@@ -19,7 +19,7 @@ KEYWORDS="~amd64"
 
 RDEPEND=">=dev-libs/glib-2.68:2
 	>=gui-libs/gtk-4.16:4
-	>=gui-libs/libadwaita-1.6.0:1
+	>=gui-libs/libadwaita-1.8.0:1
 	>=media-video/mpv-0.32:=[libmpv]
 	media-libs/libepoxy"
 DEPEND="${RDEPEND}"
