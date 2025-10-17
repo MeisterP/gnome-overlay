@@ -2,7 +2,7 @@ diff --git a/podcasts-gtk/src/meson.build b/podcasts-gtk/src/meson.build
 index 8bf8a006..69682b0a 100644
 --- a/podcasts-gtk/src/meson.build
 +++ b/podcasts-gtk/src/meson.build
-@@ -29,8 +29,6 @@ else
+@@ -29,8 +29,6 @@
    message('Building in debug mode')
  endif
  
@@ -11,7 +11,7 @@ index 8bf8a006..69682b0a 100644
  cargo_release = custom_target('cargo-build',
                          build_by_default: true,
                          build_always_stale: true,
-@@ -40,7 +38,6 @@ cargo_release = custom_target('cargo-build',
+@@ -40,7 +38,6 @@
                          console: true,
                          depends: podcasts_resources,
                          command: ['env',

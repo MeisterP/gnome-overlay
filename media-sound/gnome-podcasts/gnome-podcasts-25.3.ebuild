@@ -6,7 +6,7 @@ EAPI=8
 inherit cargo meson gnome2-utils xdg
 
 RUST_MIN_VER="1.85.0"
-ECARGO_VENDOR="${WORKDIR}/gnome-podcasts-25.2/vendor"
+ECARGO_VENDOR="${WORKDIR}/gnome-podcasts-${PV}/vendor"
 
 DESCRIPTION="Podcast app for GNOME"
 HOMEPAGE="https://wiki.gnome.org/Apps/Podcasts https://gitlab.gnome.org/World/podcasts"
@@ -22,7 +22,7 @@ DEPEND="
 	dev-libs/gobject-introspection
 	>=dev-libs/openssl-1.0
 	>=gui-libs/gtk-4.15.3
-	>=gui-libs/libadwaita-1.6
+	>=gui-libs/libadwaita-1.8
 	>=media-plugins/gst-plugins-meta-1.20[http]
 	>=media-libs/gstreamer-1.22
 	sys-apps/dbus
@@ -30,7 +30,7 @@ DEPEND="
 	"
 RDEPEND="${DEPEND}"
 
-PATCHES=( "${FILESDIR}/25.2-unset-CARGO_HOME.patch" )
+PATCHES=( "${FILESDIR}/25.3-unset-CARGO_HOME.patch" )
 
 pkg_postinst() {
 	xdg_pkg_postinst
