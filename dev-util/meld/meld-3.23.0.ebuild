@@ -8,7 +8,7 @@ PYTHON_REQ_USE="xml(+)"
 inherit gnome.org gnome2-utils meson python-single-r1 xdg
 
 DESCRIPTION="A graphical diff and merge tool"
-HOMEPAGE="http://meldmerge.org/"
+HOMEPAGE="https://meldmerge.org/"
 
 LICENSE="GPL-2+"
 SLOT="0"
