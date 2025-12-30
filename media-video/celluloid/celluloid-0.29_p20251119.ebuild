@@ -3,7 +3,8 @@
 
 EAPI=8
 
-inherit gnome2-utils meson xdg
+PYTHON_COMPAT=( python3_{11..14} )
+inherit flag-o-matic gnome2-utils meson python-any-r1 xdg
 
 DESCRIPTION="Simple GTK+ frontend for mpv"
 HOMEPAGE="https://celluloid-player.github.io/"
@@ -16,18 +17,33 @@ S="${WORKDIR}/celluloid-${MY_COMMIT}"
 LICENSE="GPL-3+"
 SLOT="0"
 KEYWORDS="~amd64"
+IUSE="wayland X"
 
-RDEPEND=">=dev-libs/glib-2.68:2
-	>=gui-libs/gtk-4.16:4
+RDEPEND="
+	>=dev-libs/glib-2.68:2
+	>=gui-libs/gtk-4.16:4[wayland?,X?]
 	>=gui-libs/libadwaita-1.8.0:1
 	>=media-video/mpv-0.32:=[libmpv]
-	media-libs/libepoxy"
+	media-libs/libepoxy
+	x11-libs/gdk-pixbuf:2
+"
 DEPEND="${RDEPEND}"
-BDEPEND="dev-libs/appstream-glib
+BDEPEND="
+	${PYTHON_DEPS}
+	dev-libs/appstream-glib
 	dev-util/gdbus-codegen
 	dev-util/glib-utils
 	>=sys-devel/gettext-0.19.8
-	virtual/pkgconfig"
+	virtual/pkgconfig
+"
+
+src_configure() {
+	# defang automagic dependencies
+	use X || append-cppflags -DGENTOO_GTK_HIDE_X11
+	use wayland || append-cppflags -DGENTOO_GTK_HIDE_WAYLAND
+
+	meson_src_configure
+}
 
 pkg_postinst() {
 	xdg_pkg_postinst
