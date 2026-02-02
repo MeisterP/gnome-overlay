@@ -1,4 +1,4 @@
-# Copyright 1999-2025 Gentoo Authors
+# Copyright 1999-2026 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -7,6 +7,9 @@ inherit gnome.org meson
 DESCRIPTION="A set of backgrounds packaged with the GNOME desktop"
 HOMEPAGE="https://gitlab.gnome.org/GNOME/gnome-backgrounds"
 
+SRC_URI="https://download.gnome.org/sources/gnome-backgrounds/50/gnome-backgrounds-50.alpha.tar.xz"
+S="${WORKDIR}/gnome-backgrounds-50.alpha"
+
 LICENSE="CC-BY-SA-2.0 CC-BY-SA-3.0 CC-BY-2.0 CC-BY-4.0"
 SLOT="0"
 KEYWORDS="~amd64"
@@ -14,5 +17,6 @@ KEYWORDS="~amd64"
 RDEPEND="
 	media-libs/libjxl[gdk-pixbuf]
 	gnome-base/librsvg
+	x11-libs/gdk-pixbuf[jpeg]
 "
 BDEPEND=">=sys-devel/gettext-0.19.8"
