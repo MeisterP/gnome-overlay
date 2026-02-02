@@ -11,7 +11,7 @@ CRATES="
 
 RUST_MIN_VER="1.85.0"
 
-inherit cargo meson vala
+inherit gnome.org cargo meson vala
 
 DESCRIPTION="Sandboxed and extendable image loading library"
 HOMEPAGE="https://gitlab.gnome.org/GNOME/glycin"
