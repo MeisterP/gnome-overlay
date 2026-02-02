@@ -1,8 +1,8 @@
-# Copyright 1999-2025 Gentoo Authors
+# Copyright 1999-2026 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
-PYTHON_COMPAT=( python3_{10..14} )
+PYTHON_COMPAT=( python3_{11..14} )
 
 inherit gnome.org gnome2-utils python-any-r1 meson udev virtualx xdg
 
@@ -16,12 +16,12 @@ KEYWORDS="~amd64"
 
 IUSE="+colord +cups debug elogind input_devices_wacom modemmanager networkmanager smartcard systemd test wayland"
 RESTRICT="!test? ( test )"
-REQUIRED_USE="^^ ( elogind systemd )"
+REQUIRED_USE="?? ( elogind systemd )"
 
 COMMON_DEPEND="
 	>=sci-geosciences/geocode-glib-3.10:2
 	>=dev-libs/glib-2.70:2
-	>=gnome-base/gnome-desktop-3.37.1:3=
+	>=gnome-base/gnome-desktop-44.0:4=
 	>=gnome-base/gsettings-desktop-schemas-46.0
 	>=x11-libs/gtk+-3.15.3:3[X,wayland?]
 	>=dev-libs/libgweather-4.2.0:4=
@@ -85,7 +85,7 @@ BDEPEND="
 "
 
 PATCHES=(
-# TODO
+# Wacom code is not included anymore
 #	"${FILESDIR}"/42.1-build-Make-wacom-optional-and-controllable-via-meson.patch
 	"${FILESDIR}"/${PN}-3.38.1-build-Allow-NM-optional-on-Linux.patch
 )
@@ -114,9 +114,9 @@ src_configure() {
 		$(meson_use networkmanager network_manager)
 		-Drfkill=true
 		$(meson_use smartcard)
-# TODO
 #		$(meson_use input_devices_wacom wacom)
 #		$(meson_use wayland)
+		$(meson_use wayland xwayland)
 		$(meson_use modemmanager wwan)
 	)
 	meson_src_configure
