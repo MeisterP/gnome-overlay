@@ -87,7 +87,7 @@ RDEPEND="
 	systemd? ( sys-apps/systemd )
 	input_devices_wacom? ( >=dev-libs/libwacom-0.13:= )
 	screencast? ( >=media-video/pipewire-1.2.7:= )
-	introspection? ( >=dev-libs/gobject-introspection-1.54:= )
+	introspection? ( >=dev-libs/gobject-introspection-1.82.0:= )
 	test? (
 		>=x11-libs/gtk+-3.19.8:3[X,introspection?]
 		>=dev-utils/umockdev-0.3.0
@@ -96,7 +96,7 @@ RDEPEND="
 "
 
 X11_CLIENT_DEPS="
-	>=gui-libs/gtk-4.0.0:4[X,introspection?]
+	>=gui-libs/gtk-4.14.0:4[X,introspection?]
 	media-libs/libglvnd[X]
 	>=x11-libs/libX11-1.7.0
 	>=x11-libs/libXcomposite-0.4
