@@ -4,9 +4,9 @@
 EAPI=8
 
 CRATES="
-	glycin@3.0.1
-	glycin-common@1.0.0
-	glycin-utils@4.0.2
+	glycin@3.0.8
+	glycin-common@1.0.3
+	glycin-utils@4.0.4
 "
 
 RUST_MIN_VER="1.85.0"
