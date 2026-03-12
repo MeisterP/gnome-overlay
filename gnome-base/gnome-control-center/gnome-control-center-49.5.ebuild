@@ -142,7 +142,7 @@ PATCHES=(
 	# Fix some absolute paths to be appropriate for Gentoo
 	"${FILESDIR}/0001-exherbo-optionalise-kerberos-based-authentication.patch"
 	"${FILESDIR}/0002-exherbo-optionalise-cups-support.patch"
-	"${FILESDIR}/0003-${PV}-optionalise-nm-bluetooth-wacom.patch"
+	"${FILESDIR}/0003-49.3-optionalise-nm-bluetooth-wacom.patch"
 	"${FILESDIR}/0004-optionalise-gnome-online-accounts.patch"
 	"${FILESDIR}/0005-replace-absolute-paths.patch"
 )
