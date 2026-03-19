@@ -5,14 +5,13 @@ EAPI=8
 
 inherit meson
 
-DESCRIPTION="The theme from libadwaita ported to GTK-3 "
+DESCRIPTION="The theme from libadwaita ported to GTK-3"
 HOMEPAGE="https://github.com/lassekongo83/adw-gtk3"
 SRC_URI="https://github.com/lassekongo83/adw-gtk3/archive/refs/tags/v${PV}.tar.gz -> ${P}.tar.gz"
 
-LICENSE="GPL-3"
+LICENSE="LGPL-2.1"
 SLOT="0"
 KEYWORDS="~amd64"
 
-RDEPEND="${DEPEND}
-	>=gui-libs/gtk-4.20"
-BDEPEND="dev-util/dart-sass"
+IDEPEND="dev-util/dart-sass"
+RDEPEND=">=gui-libs/gtk-4.20.0:4"
