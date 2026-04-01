@@ -16,7 +16,6 @@ RESTRICT="!test? ( test )"
 
 # GTK3 still used by thumbnailer: https://gitlab.gnome.org/GNOME/polari/-/issues/223
 DEPEND="
-	x11-libs/gtk+:3[introspection]
 	gui-libs/gtk:4[introspection]
 	gui-libs/libadwaita:1[introspection]
 	net-libs/telepathy-glib[introspection]
@@ -42,6 +41,8 @@ BDEPEND="
 		dev-libs/json-glib
 	)
 "
+
+PATCHES=( "${FILESDIR}/0001-Remove-URL-preview-feature.patch" )
 
 pkg_postinst() {
 	xdg_pkg_postinst
