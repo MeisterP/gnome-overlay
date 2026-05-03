@@ -34,7 +34,7 @@ REQUIRED_USE="
 
 # TODO: Handle llvm slots via llvm.eclass; see plugins/clang/meson.build
 RDEPEND="
-	>=dev-libs/glib-2.75:2
+	>=dev-libs/glib-2.85:2
 	>=gui-libs/gtk-4.15.5:4[introspection]
 	>=gui-libs/libadwaita-1.6_alpha:1
 	>=gui-libs/libpanel-1.7.0:1
