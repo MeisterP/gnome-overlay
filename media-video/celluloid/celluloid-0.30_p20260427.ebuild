@@ -3,7 +3,7 @@
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{11..14} )
+PYTHON_COMPAT=( python3_{12..14} )
 inherit flag-o-matic gnome2-utils meson python-any-r1 xdg
 
 DESCRIPTION="Simple GTK+ frontend for mpv"
