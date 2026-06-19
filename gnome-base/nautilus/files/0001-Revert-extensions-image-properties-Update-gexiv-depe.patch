@@ -1,0 +1,154 @@
+From 930ab1ea4e92f049965a56b899f77937e17e3159 Mon Sep 17 00:00:00 2001
+From: Poncho <poncho@spahan.ch>
+Date: Fri, 19 Jun 2026 17:12:06 +0200
+Subject: [PATCH] Revert "extensions/image-properties: Update gexiv dependency
+ to 0.16"
+
+This reverts commit 220a3f644d397937da3895e9a80dc1ca7c70f3c9.
+---
+ build-aux/flatpak/org.gnome.Nautilus.json     | 21 +-------
+ .../nautilus-image-properties-model.c         | 49 ++++++++-----------
+ meson.build                                   |  2 +-
+ 3 files changed, 24 insertions(+), 48 deletions(-)
+
+diff --git a/build-aux/flatpak/org.gnome.Nautilus.json b/build-aux/flatpak/org.gnome.Nautilus.json
+index 1bb0b4bb6..05520f240 100644
+--- a/build-aux/flatpak/org.gnome.Nautilus.json
++++ b/build-aux/flatpak/org.gnome.Nautilus.json
+@@ -38,23 +38,6 @@
+     "--add-policy=LocalSearch3.dbus:org.freedesktop.Tracker3.Miner.Files=tracker:Video"
+   ],
+   "modules": [
+-    {
+-      "name": "inih",
+-      "buildsystem": "meson",
+-      "config-opts": [
+-        "-Ddefault_library=shared",
+-        "-Ddistro_install=true",
+-        "-Dwith_INIReader=true",
+-        "-Dtests=false"
+-      ],
+-      "sources": [
+-        {
+-          "type": "archive",
+-          "url": "https://github.com/benhoyt/inih/archive/refs/tags/r62.tar.gz",
+-          "sha256": "9c15fa751bb8093d042dae1b9f125eb45198c32c6704cd5481ccde460d4f8151"
+-        }
+-      ]
+-    },
+     {
+       "name": "exiv2",
+       "config-opts": [
+@@ -66,7 +49,7 @@
+         {
+           "type": "git",
+           "url": "https://github.com/Exiv2/exiv2.git",
+-          "branch": "0.28.x"
++          "branch": "0.27-maintenance"
+         }
+       ]
+     },
+@@ -85,7 +68,7 @@
+         {
+           "type": "git",
+           "url": "https://gitlab.gnome.org/GNOME/gexiv2.git",
+-          "tag": "0.16.0"
++          "tag": "gexiv2-0.14.2"
+         }
+       ]
+     },
+diff --git a/extensions/image-properties/nautilus-image-properties-model.c b/extensions/image-properties/nautilus-image-properties-model.c
+index ed10adb08..0d5bc9ac1 100644
+--- a/extensions/image-properties/nautilus-image-properties-model.c
++++ b/extensions/image-properties/nautilus-image-properties-model.c
+@@ -109,7 +109,7 @@ static void
+ append_gexiv_basic_info (NautilusImagesPropertiesModel *self)
+ {
+     const char *mime_type = gexiv2_metadata_get_mime_type (self->md);
+-    GExiv2Orientation orientation = gexiv2_metadata_get_orientation (self->md, NULL);
++    GExiv2Orientation orientation = gexiv2_metadata_try_get_orientation (self->md, NULL);
+     int width = gexiv2_metadata_get_pixel_width (self->md);
+     int height = gexiv2_metadata_get_pixel_height (self->md);
+ 
+@@ -178,15 +178,15 @@ append_gexiv2_tag (NautilusImagesPropertiesModel  *self,
+ 
+     for (const char **i = tag_names; *i != NULL; i++)
+     {
+-        if (gexiv2_metadata_has_tag (self->md, *i, NULL))
++        if (gexiv2_metadata_try_has_tag (self->md, *i, NULL))
+         {
+-            g_autofree char *tag_value = gexiv2_metadata_get_tag_interpreted_string (self->md,
+-                                                                                     *i,
+-                                                                                     NULL);
++            g_autofree char *tag_value = NULL;
++
++            tag_value = gexiv2_metadata_try_get_tag_interpreted_string (self->md, *i, NULL);
+ 
+             if (tag_description == NULL)
+             {
+-                tag_description = gexiv2_metadata_get_tag_description (*i, NULL);
++                tag_description = gexiv2_metadata_try_get_tag_description (*i, NULL);
+             }
+ 
+             /* don't add empty tags - try next one */
+@@ -229,29 +229,22 @@ append_gexiv2_info (NautilusImagesPropertiesModel *self)
+     append_gexiv2_tag (self, rights, _("Copyright"));
+     append_gexiv2_tag (self, rating, _("Rating"));
+ 
+-    gexiv2_metadata_get_gps_info (self->md, &longitude, &latitude, &altitude, NULL);
+-
+-    if (isnan (longitude) == 0 && isinf (longitude) == 0 &&
+-        isnan (latitude) == 0 && isinf (latitude) == 0)
++    if (gexiv2_metadata_try_get_gps_info (self->md, &longitude, &latitude, &altitude, NULL))
+     {
+-        g_autoptr (GString) gps_coords = g_string_new ("");
+-
+-        g_string_append_printf (gps_coords, "%f° %s %f° %s",
+-                                latitude,
+-                                /* Translators: "N" and "S" stand for
+-                                 * north and south in GPS coordinates. */
+-                                latitude >= 0 ? _("N") : _("S"),
+-                                longitude,
+-                                /* Translators: "E" and "W" stand for
+-                                 * east and west in GPS coordinates. */
+-                                longitude >= 0 ? _("E") : _("W"));
+-
+-        if (isnan (altitude) == 0 && isinf (altitude) == 0)
+-        {
+-            g_string_append_printf (gps_coords, " (%.0f m)", altitude);
+-        }
+-
+-        append_item (self, _("Coordinates"), gps_coords->str);
++        g_autofree char *gps_coords = NULL;
++
++        gps_coords = g_strdup_printf ("%f° %s %f° %s (%.0f m)",
++                                      fabs (latitude),
++                                      /* Translators: "N" and "S" stand for
++                                       * north and south in GPS coordinates. */
++                                      latitude >= 0 ? _("N") : _("S"),
++                                      fabs (longitude),
++                                      /* Translators: "E" and "W" stand for
++                                       * east and west in GPS coordinates. */
++                                      longitude >= 0 ? _("E") : _("W"),
++                                      altitude);
++
++        append_item (self, _("Coordinates"), gps_coords);
+     }
+ }
+ 
+diff --git a/meson.build b/meson.build
+index 305532d53..ba706b929 100644
+--- a/meson.build
++++ b/meson.build
+@@ -127,7 +127,7 @@ dependency('wayland-client', required: gtk_wayland.found())
+ selinux = dependency('libselinux', version: '>= 2.0', required: get_option('selinux'))
+ cloudproviders = dependency('cloudproviders', version: '>= 0.3.1', required: get_option('cloudproviders'))
+ if get_option('extensions')
+-  gexiv = dependency('gexiv2-0.16', version: '>= 0.16.0')
++  gexiv = dependency('gexiv2', version: '>= 0.14.2')
+   gdkpixbuf = dependency('gdk-pixbuf-2.0', version: '>= 2.30.0')
+   gst_tag_dep = dependency('gstreamer-tag-1.0')
+   gst_pbutils_dep = dependency('gstreamer-pbutils-1.0')
+-- 
+2.53.0
+
