@@ -53,7 +53,7 @@ BDEPEND="
 "
 PDEPEND="
 	gnome? ( x11-themes/adwaita-icon-theme )
-	previewer? ( >=gnome-extra/sushi-0.1.9 )
+	previewer? ( >=gnome-extra/sushi-50.0 )
 	>=gnome-base/gvfs-1.14[gtk(+)]
 " # Need gvfs[gtk] for recent:/// support; always built (without USE=gtk) since gvfs-1.34
 
