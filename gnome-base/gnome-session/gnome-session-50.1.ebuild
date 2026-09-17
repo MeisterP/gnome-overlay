@@ -57,7 +57,6 @@ src_configure() {
 		$(meson_use doc docbook)
 		-Dman=true
 		-Dsystemduserunitdir="$(systemd_get_userunitdir)"
-		$(meson_use systemd systemd)
 	)
 	meson_src_configure
 }
