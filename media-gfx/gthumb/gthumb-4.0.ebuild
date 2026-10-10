@@ -21,7 +21,7 @@ RDEPEND="
 	>=dev-libs/libportal-0.9:=[gtk]
 	media-libs/gstreamer:1.0
 	media-libs/gst-plugins-base:1.0
-	media-plugins/gst-plugins-gtk:1.0
+	media-plugins/gst-plugin-gtk4:1.0
 	>=media-libs/lcms-2.6:2
 	>=media-gfx/exiv2-0.28:=
 	>=media-libs/libpng-1.6:0=
